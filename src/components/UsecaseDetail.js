@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -25,19 +25,16 @@ const UsecaseDetail = ({ usecases }) => {
   const navigate = useNavigate();
   const usecase = usecases.find(u => u.id === parseInt(id));
 
-  if (!usecase) {
-    return (
-      <Box>
-        <Typography variant="h5" color="error">Use case not found</Typography>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate('/usecases')}
-          sx={{ mt: 2 }}
-        >
-          Back to Use Cases
-        </Button>
-      </Box>
-    );
+  // Redirect to usecases list if usecase is not found or not approved
+  useEffect(() => {
+    if (!usecase || usecase.status !== 'approved') {
+      navigate('/usecases');
+    }
+  }, [usecase, navigate]);
+
+  // Don't render anything while redirecting
+  if (!usecase || usecase.status !== 'approved') {
+    return null;
   }
 
   return (
@@ -67,27 +64,11 @@ const UsecaseDetail = ({ usecases }) => {
                   label={usecase.sdlc_phase} 
                   color="secondary"
                 />
-                {usecase.status === 'pending' && (
-                  <Chip
-                    icon={<PendingIcon />}
-                    label="Pending Approval"
-                    color="warning"
-                  />
-                )}
-                {usecase.status === 'approved' && (
-                  <Chip
-                    icon={<CheckCircleIcon />}
-                    label="Approved"
-                    color="success"
-                  />
-                )}
-                {usecase.status === 'rejected' && (
-                  <Chip
-                    icon={<CancelIcon />}
-                    label="Rejected"
-                    color="error"
-                  />
-                )}
+                <Chip
+                  icon={<CheckCircleIcon />}
+                  label="Approved"
+                  color="success"
+                />
               </Stack>
             </Box>
           </Box>

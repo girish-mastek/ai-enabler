@@ -18,7 +18,8 @@ const UsecasePage = ({ searchQuery, usecases }) => {
       tools_used: {}
     };
 
-    usecases.forEach(usecase => {
+    // Only count approved usecases for filters
+    usecases.filter(usecase => usecase.status === 'approved').forEach(usecase => {
       // Count industries
       if (usecase.service_line) {
         filters.service_line[usecase.service_line] = (filters.service_line[usecase.service_line] || 0) + 1;
@@ -41,6 +42,9 @@ const UsecasePage = ({ searchQuery, usecases }) => {
   // Filter use cases based on selected filters and search query
   const filteredUsecases = useMemo(() => {
     return usecases.filter(usecase => {
+      // First check if usecase is approved
+      if (usecase.status !== 'approved') return false;
+
       // Check if any filters are selected
       const hasSelectedFilters = Object.values(selectedFilters).some(
         category => Object.values(category).some(isSelected => isSelected)
