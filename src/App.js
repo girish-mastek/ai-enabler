@@ -18,13 +18,17 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-// Import pages
+// Import pages and components
 import HomePage from './pages/HomePage';
 import UsecasePage from './pages/UsecasePage';
 import AdminPage from './pages/AdminPage';
+import LoginPage from './pages/LoginPage';
 import UsecaseDetail from './components/UsecaseDetail';
 import AddUsecaseForm from './components/AddUsecaseForm';
+import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import * as api from './services/api';
 
 // Theme configuration
@@ -55,11 +59,17 @@ const theme = createTheme({
 // Separate component for the navigation bar to use hooks
 function NavigationBar({ searchQuery, setSearchQuery, handleOpenDialog }) {
   const navigate = useNavigate();
+  const { user, logout, isAuthorized } = useAuth();
 
   const handleSearchClick = () => {
     if (searchQuery.trim()) {
       navigate('/usecases');
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
@@ -146,7 +156,20 @@ function NavigationBar({ searchQuery, setSearchQuery, handleOpenDialog }) {
       </Button>
       <Button color="inherit" component={Link} to="/">Home</Button>
       <Button color="inherit" component={Link} to="/usecases">Usecases</Button>
-      <Button color="inherit" component={Link} to="/admin">Admin</Button>
+      {isAuthorized() && (
+        <Button color="inherit" component={Link} to="/admin">Admin</Button>
+      )}
+      {user ? (
+        <Button 
+          color="inherit" 
+          onClick={handleLogout}
+          startIcon={<LogoutIcon />}
+        >
+          Logout
+        </Button>
+      ) : (
+        <Button color="inherit" component={Link} to="/login">Login</Button>
+      )}
     </Toolbar>
   );
 }
@@ -256,118 +279,125 @@ function App() {
 
   if (loading) {
     return (
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh' 
-        }}
-      >
-        <CircularProgress />
-      </Box>
+      <ThemeProvider theme={theme}>
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            height: '100vh' 
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      </ThemeProvider>
     );
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Container 
-          disableGutters 
-          maxWidth={false}
-          sx={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            minHeight: '100vh',
-            width: '100%',
-            overflowX: 'hidden'
-          }}
-        >
-          <AppBar 
-            position="static" 
-            elevation={0} 
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Container 
+            disableGutters 
+            maxWidth={false}
             sx={{ 
-              borderBottom: 1, 
-              borderColor: 'grey.200',
-              width: '100%'
-            }}
-          >
-            <Box sx={{ width: '100%', maxWidth: '1920px', mx: 'auto' }}>
-              <NavigationBar 
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                handleOpenDialog={handleOpenDialog}
-              />
-            </Box>
-          </AppBar>
-          
-          <Box 
-            component="main" 
-            sx={{ 
-              flexGrow: 1,
+              display: 'flex', 
+              flexDirection: 'column', 
+              minHeight: '100vh',
               width: '100%',
               overflowX: 'hidden'
             }}
           >
-            <Routes>
-              <Route path="/" element={<HomePage searchQuery={searchQuery} />} />
-              <Route 
-                path="/usecases" 
-                element={
-                  <UsecasePage 
-                    searchQuery={searchQuery} 
-                    usecases={usecases}
-                  />
-                } 
-              />
-              <Route 
-                path="/usecases/:id" 
-                element={
-                  <UsecaseDetail 
-                    usecases={usecases}
-                  />
-                } 
-              />
-              <Route 
-                path="/admin" 
-                element={
-                  <AdminPage 
-                    usecases={usecases}
-                    onApprove={handleApproveUseCase}
-                    onReject={handleRejectUseCase}
-                    onDelete={handleDeleteUseCase}
-                  />
-                } 
-              />
-            </Routes>
-          </Box>
-        </Container>
-
-        {/* Dialog rendered outside the main container */}
-        <AddUsecaseForm
-          open={isAddDialogOpen}
-          onClose={handleCloseDialog}
-          onSubmit={handleAddUseCase}
-        />
-
-        <Snackbar
-          open={!!alert}
-          autoHideDuration={6000}
-          onClose={() => setAlert(null)}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          {alert && (
-            <Alert 
-              onClose={() => setAlert(null)} 
-              severity={alert.severity}
-              sx={{ width: '100%' }}
+            <AppBar 
+              position="static" 
+              elevation={0} 
+              sx={{ 
+                borderBottom: 1, 
+                borderColor: 'grey.200',
+                width: '100%'
+              }}
             >
-              {alert.message}
-            </Alert>
-          )}
-        </Snackbar>
-      </Router>
-    </ThemeProvider>
+              <Box sx={{ width: '100%', maxWidth: '1920px', mx: 'auto' }}>
+                <NavigationBar 
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  handleOpenDialog={handleOpenDialog}
+                />
+              </Box>
+            </AppBar>
+            
+            <Box 
+              component="main" 
+              sx={{ 
+                flexGrow: 1,
+                width: '100%',
+                overflowX: 'hidden'
+              }}
+            >
+              <Routes>
+                <Route path="/" element={<HomePage searchQuery={searchQuery} />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route 
+                  path="/usecases" 
+                  element={
+                    <UsecasePage 
+                      searchQuery={searchQuery} 
+                      usecases={usecases}
+                    />
+                  } 
+                />
+                <Route 
+                  path="/usecases/:id" 
+                  element={
+                    <UsecaseDetail 
+                      usecases={usecases}
+                    />
+                  } 
+                />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute>
+                      <AdminPage 
+                        usecases={usecases}
+                        onApprove={handleApproveUseCase}
+                        onReject={handleRejectUseCase}
+                        onDelete={handleDeleteUseCase}
+                      />
+                    </ProtectedRoute>
+                  } 
+                />
+              </Routes>
+            </Box>
+          </Container>
+
+          {/* Dialog rendered outside the main container */}
+          <AddUsecaseForm
+            open={isAddDialogOpen}
+            onClose={handleCloseDialog}
+            onSubmit={handleAddUseCase}
+          />
+
+          <Snackbar
+            open={!!alert}
+            autoHideDuration={6000}
+            onClose={() => setAlert(null)}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+            {alert && (
+              <Alert 
+                onClose={() => setAlert(null)} 
+                severity={alert.severity}
+                sx={{ width: '100%' }}
+              >
+                {alert.message}
+              </Alert>
+            )}
+          </Snackbar>
+        </Router>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

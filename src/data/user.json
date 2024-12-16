@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "firstname": "John",
+    "lastname": "Doe",
+    "email": "john.doe@example.com",
+    "employee_id": "E12345",
+    "username": "johndoe",
+    "password": "password123",
+    "role": "superuser"
+  },
+  {
+    "id": 2,
+    "firstname": "Jane",
+    "lastname": "Smith",
+    "email": "jane.smith@example.com",
+    "employee_id": "E12346",
+    "username": "janesmith",
+    "password": "password456",
+    "role": "moderator"
+  },
+  {
+    "id": 3,
+    "firstname": "Alice",
+    "lastname": "Johnson",
+    "email": "alice.johnson@example.com",
+    "employee_id": "E12347",
+    "username": "alicejohnson",
+    "password": "password789",
+    "role": "employee"
+  }
+]
