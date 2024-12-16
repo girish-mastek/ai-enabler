@@ -15,26 +15,24 @@ import {
   Stack,
   Tabs,
   Tab,
-  Alert
+  Alert,
+  Snackbar
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import usecases from '../data/usecases.json';
 
-const AdminPage = () => {
-  const [usecaseList, setUsecaseList] = useState(usecases);
+const AdminPage = ({ usecases, onApprove, onReject }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [alert, setAlert] = useState(null);
 
-  const pendingUsecases = usecaseList.filter(usecase => usecase.status === 'pending');
-  const approvedUsecases = usecaseList.filter(usecase => usecase.status === 'approved');
+  const pendingUsecases = usecases.filter(usecase => usecase.status === 'pending');
+  const approvedUsecases = usecases.filter(usecase => usecase.status === 'approved');
+  const rejectedUsecases = usecases.filter(usecase => usecase.status === 'rejected');
 
   const handleApprove = (id) => {
-    setUsecaseList(prev => prev.map(usecase => 
-      usecase.id === id ? { ...usecase, status: 'approved' } : usecase
-    ));
+    onApprove(id);
     setAlert({
       severity: 'success',
       message: 'Use case approved successfully'
@@ -42,20 +40,10 @@ const AdminPage = () => {
   };
 
   const handleReject = (id) => {
-    setUsecaseList(prev => prev.map(usecase => 
-      usecase.id === id ? { ...usecase, status: 'rejected' } : usecase
-    ));
+    onReject(id);
     setAlert({
       severity: 'info',
       message: 'Use case rejected'
-    });
-  };
-
-  const handleDelete = (id) => {
-    setUsecaseList(prev => prev.filter(usecase => usecase.id !== id));
-    setAlert({
-      severity: 'success',
-      message: 'Use case deleted successfully'
     });
   };
 
@@ -69,6 +57,7 @@ const AdminPage = () => {
             <TableCell>Service Line</TableCell>
             <TableCell>SDLC Phase</TableCell>
             <TableCell>Tools</TableCell>
+            <TableCell>Submitted At</TableCell>
             <TableCell align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -104,6 +93,9 @@ const AdminPage = () => {
                   ))}
                 </Stack>
               </TableCell>
+              <TableCell>
+                {new Date(usecase.submittedAt).toLocaleDateString()}
+              </TableCell>
               <TableCell align="right">
                 <Stack direction="row" spacing={1} justifyContent="flex-end">
                   {showModeration && (
@@ -133,7 +125,6 @@ const AdminPage = () => {
                   <Button
                     startIcon={<DeleteIcon />}
                     color="error"
-                    onClick={() => handleDelete(usecase.id)}
                   >
                     Delete
                   </Button>
@@ -157,16 +148,6 @@ const AdminPage = () => {
         </Typography>
       </Box>
 
-      {alert && (
-        <Alert 
-          severity={alert.severity} 
-          onClose={() => setAlert(null)}
-          sx={{ mb: 3 }}
-        >
-          {alert.message}
-        </Alert>
-      )}
-
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs 
           value={activeTab} 
@@ -174,6 +155,7 @@ const AdminPage = () => {
         >
           <Tab label={`Pending (${pendingUsecases.length})`} />
           <Tab label={`Approved (${approvedUsecases.length})`} />
+          <Tab label={`Rejected (${rejectedUsecases.length})`} />
         </Tabs>
       </Box>
 
@@ -202,6 +184,36 @@ const AdminPage = () => {
           )}
         </>
       )}
+
+      {activeTab === 2 && (
+        <>
+          <Typography variant="h6" gutterBottom>
+            Rejected Use Cases
+          </Typography>
+          {rejectedUsecases.length === 0 ? (
+            <Alert severity="info">No rejected use cases</Alert>
+          ) : (
+            <UseCaseTable usecases={rejectedUsecases} />
+          )}
+        </>
+      )}
+
+      <Snackbar
+        open={!!alert}
+        autoHideDuration={6000}
+        onClose={() => setAlert(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        {alert && (
+          <Alert 
+            onClose={() => setAlert(null)} 
+            severity={alert.severity}
+            sx={{ width: '100%' }}
+          >
+            {alert.message}
+          </Alert>
+        )}
+      </Snackbar>
     </Container>
   );
 };

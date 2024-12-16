@@ -8,12 +8,15 @@ import {
   Box,
   Button,
   Grid,
-  Paper
+  Paper,
+  Stack
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import usecases from '../data/usecases.json';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import PendingIcon from '@mui/icons-material/Pending';
 
-const UsecaseDetail = () => {
+const UsecaseDetail = ({ usecases }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const usecase = usecases.find(u => u.id === parseInt(id));
@@ -45,21 +48,44 @@ const UsecaseDetail = () => {
 
       <Card sx={{ mb: 4 }}>
         <CardContent>
-          <Typography variant="h4" gutterBottom>
-            {usecase.title}
-          </Typography>
-          
-          <Box sx={{ mb: 3 }}>
-            <Chip 
-              label={usecase.service_line} 
-              color="primary" 
-              sx={{ mr: 1 }} 
-            />
-            <Chip 
-              label={usecase.sdlc_phase} 
-              color="secondary" 
-              sx={{ mr: 1 }} 
-            />
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
+            <Box>
+              <Typography variant="h4" gutterBottom>
+                {usecase.title}
+              </Typography>
+              
+              <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
+                <Chip 
+                  label={usecase.service_line} 
+                  color="primary"
+                />
+                <Chip 
+                  label={usecase.sdlc_phase} 
+                  color="secondary"
+                />
+                {usecase.status === 'pending' && (
+                  <Chip
+                    icon={<PendingIcon />}
+                    label="Pending Approval"
+                    color="warning"
+                  />
+                )}
+                {usecase.status === 'approved' && (
+                  <Chip
+                    icon={<CheckCircleIcon />}
+                    label="Approved"
+                    color="success"
+                  />
+                )}
+                {usecase.status === 'rejected' && (
+                  <Chip
+                    icon={<CancelIcon />}
+                    label="Rejected"
+                    color="error"
+                  />
+                )}
+              </Stack>
+            </Box>
           </Box>
 
           <Typography variant="body1" paragraph>
@@ -67,34 +93,38 @@ const UsecaseDetail = () => {
           </Typography>
 
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Paper sx={{ p: 2, height: '100%' }}>
-                <Typography variant="h6" gutterBottom>
-                  Tools Used
-                </Typography>
-                <Box>
-                  {usecase.tools_used.map((tool, index) => (
-                    <Chip 
-                      key={index}
-                      label={tool}
-                      sx={{ mr: 1, mb: 1 }}
-                      variant="outlined"
-                    />
-                  ))}
-                </Box>
-              </Paper>
-            </Grid>
+            {usecase.tools_used && (
+              <Grid item xs={12} md={6}>
+                <Paper sx={{ p: 2, height: '100%' }}>
+                  <Typography variant="h6" gutterBottom>
+                    Tools Used
+                  </Typography>
+                  <Box>
+                    {usecase.tools_used.map((tool, index) => (
+                      <Chip 
+                        key={index}
+                        label={tool}
+                        sx={{ mr: 1, mb: 1 }}
+                        variant="outlined"
+                      />
+                    ))}
+                  </Box>
+                </Paper>
+              </Grid>
+            )}
             
-            <Grid item xs={12} md={6}>
-              <Paper sx={{ p: 2, height: '100%' }}>
-                <Typography variant="h6" gutterBottom>
-                  Business Impact
-                </Typography>
-                <Typography variant="body1">
-                  {usecase.business_impact}
-                </Typography>
-              </Paper>
-            </Grid>
+            {usecase.business_impact && (
+              <Grid item xs={12} md={6}>
+                <Paper sx={{ p: 2, height: '100%' }}>
+                  <Typography variant="h6" gutterBottom>
+                    Business Impact
+                  </Typography>
+                  <Typography variant="body1">
+                    {usecase.business_impact}
+                  </Typography>
+                </Paper>
+              </Grid>
+            )}
           </Grid>
 
           {usecase.project_link && (
@@ -109,6 +139,24 @@ const UsecaseDetail = () => {
                 View Project
               </Button>
             </Box>
+          )}
+
+          {usecase.submittedAt && (
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ mt: 3 }}
+            >
+              Submitted on: {new Date(usecase.submittedAt).toLocaleDateString()}
+            </Typography>
+          )}
+          {usecase.moderatedAt && (
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+            >
+              Moderated on: {new Date(usecase.moderatedAt).toLocaleDateString()}
+            </Typography>
           )}
         </CardContent>
       </Card>

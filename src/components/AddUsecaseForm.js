@@ -101,12 +101,33 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
       business_impact: [],
       media: []
     });
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      title: '',
+      description: '',
+      service_line: '',
+      sdlc_phase: '',
+      project_link: '',
+      tools_used: [],
+      business_impact: [],
+      media: []
+    });
     onClose();
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>
+    <Dialog 
+      open={open} 
+      onClose={handleCancel}
+      maxWidth="md" 
+      fullWidth
+      aria-labelledby="add-usecase-dialog-title"
+      disablePortal={false}
+      keepMounted={false}
+    >
+      <DialogTitle id="add-usecase-dialog-title">
         <Typography variant="h5" component="div">
           Add New Use Case
         </Typography>
@@ -121,6 +142,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
               name="title"
               value={formData.title}
               onChange={handleChange}
+              autoFocus
             />
 
             <TextField
@@ -140,7 +162,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
                 name="service_line"
                 value={formData.service_line}
                 onChange={handleChange}
-                label="service_line"
+                label="Service Line"
               >
                 {SERVICE_LINE.map((service_line) => (
                   <MenuItem key={service_line} value={service_line}>
@@ -226,7 +248,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleCancel}>Cancel</Button>
         <Button 
           variant="contained" 
           onClick={handleSubmit}

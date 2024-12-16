@@ -12,8 +12,11 @@ import {
   Stack
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import PendingIcon from '@mui/icons-material/Pending';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
-const UsecaseList = ({ usecases }) => {
+const UsecaseList = ({ usecases, onApprove, onReject }) => {
   const navigate = useNavigate();
 
   if (usecases.length === 0) {
@@ -55,7 +58,7 @@ const UsecaseList = ({ usecases }) => {
               bgcolor: 'white',
               borderRadius: 1,
               border: '1px solid',
-              borderColor: 'grey.200',
+              borderColor: usecase.status === 'pending' ? 'warning.light' : 'grey.200',
               transition: 'all 0.2s ease-in-out',
               '&:hover': {
                 borderColor: 'primary.main',
@@ -71,21 +74,32 @@ const UsecaseList = ({ usecases }) => {
           >
             <CardContent sx={{ p: 2.5, pb: 1, flexGrow: 1 }}>
               <Stack spacing={2}>
-                {/* Title and Description */}
+                {/* Title, Status, and Description */}
                 <Box>
-                  <Typography 
-                    variant="h6" 
-                    component="h2"
-                    sx={{ 
-                      fontWeight: 600,
-                      fontSize: '1rem',
-                      lineHeight: 1.4,
-                      mb: 1.5,
-                      color: 'text.primary'
-                    }}
-                  >
-                    {usecase.title}
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                    <Typography 
+                      variant="h6" 
+                      component="h2"
+                      sx={{ 
+                        fontWeight: 600,
+                        fontSize: '1rem',
+                        lineHeight: 1.4,
+                        color: 'text.primary',
+                        flexGrow: 1
+                      }}
+                    >
+                      {usecase.title}
+                    </Typography>
+                    {usecase.status === 'pending' && (
+                      <Chip
+                        icon={<PendingIcon />}
+                        label="Pending"
+                        size="small"
+                        color="warning"
+                        sx={{ ml: 1 }}
+                      />
+                    )}
+                  </Box>
                   <Typography 
                     variant="body2" 
                     color="text.secondary"
@@ -182,7 +196,31 @@ const UsecaseList = ({ usecases }) => {
               </Stack>
             </CardContent>
 
-            <CardActions sx={{ p: 2, pt: 1.5 }}>
+            <CardActions sx={{ p: 2, pt: 1.5, flexDirection: 'column', gap: 1 }}>
+              {usecase.status === 'pending' && onApprove && onReject && (
+                <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    startIcon={<CheckCircleIcon />}
+                    onClick={() => onApprove(usecase.id)}
+                    fullWidth
+                    size="small"
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<CancelIcon />}
+                    onClick={() => onReject(usecase.id)}
+                    fullWidth
+                    size="small"
+                  >
+                    Reject
+                  </Button>
+                </Box>
+              )}
               <Button 
                 className="learn-more-btn"
                 fullWidth

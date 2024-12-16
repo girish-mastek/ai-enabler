@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import { 
   Box,
@@ -10,7 +10,10 @@ import {
   createTheme,
   TextField,
   InputAdornment,
-  IconButton
+  IconButton,
+  Container,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
@@ -21,6 +24,7 @@ import UsecasePage from './pages/UsecasePage';
 import AdminPage from './pages/AdminPage';
 import UsecaseDetail from './components/UsecaseDetail';
 import AddUsecaseForm from './components/AddUsecaseForm';
+import initialUsecases from './data/usecases.json';
 
 // Theme configuration
 const theme = createTheme({
@@ -143,27 +147,80 @@ function NavigationBar({ searchQuery, setSearchQuery, handleOpenDialog }) {
 function App() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [usecases, setUsecases] = useState(() => {
+    const savedUsecases = localStorage.getItem('usecases');
+    return savedUsecases ? JSON.parse(savedUsecases) : initialUsecases;
+  });
+  const [alert, setAlert] = useState(null);
+
+  // Save usecases to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('usecases', JSON.stringify(usecases));
+  }, [usecases]);
 
   const handleOpenDialog = () => {
-    console.log('Opening dialog...');
     setIsAddDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
-    console.log('Closing dialog...');
     setIsAddDialogOpen(false);
   };
 
   const handleAddUseCase = (usecase) => {
-    console.log('Adding new usecase:', usecase);
-    // In a real application, this would be an API call
+    const newUsecase = {
+      ...usecase,
+      status: 'pending',
+      submittedAt: new Date().toISOString(),
+      business_impact: usecase.business_impact.join(', '), // Convert array to comma-separated string
+      media: [] // Initialize empty media array
+    };
+    
+    setUsecases(prevUsecases => [newUsecase, ...prevUsecases]);
+    setAlert({
+      severity: 'success',
+      message: 'Use case submitted successfully'
+    });
     handleCloseDialog();
+  };
+
+  const handleApproveUseCase = (id) => {
+    setUsecases(prevUsecases => prevUsecases.map(usecase => 
+      usecase.id === id 
+        ? { 
+            ...usecase, 
+            status: 'approved',
+            moderatedAt: new Date().toISOString()
+          } 
+        : usecase
+    ));
+    setAlert({
+      severity: 'success',
+      message: 'Use case approved successfully'
+    });
+  };
+
+  const handleRejectUseCase = (id) => {
+    setUsecases(prevUsecases => prevUsecases.map(usecase => 
+      usecase.id === id 
+        ? { 
+            ...usecase, 
+            status: 'rejected',
+            moderatedAt: new Date().toISOString()
+          } 
+        : usecase
+    ));
+    setAlert({
+      severity: 'info',
+      message: 'Use case rejected'
+    });
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <Box 
+        <Container 
+          disableGutters 
+          maxWidth={false}
           sx={{ 
             display: 'flex', 
             flexDirection: 'column', 
@@ -200,18 +257,60 @@ function App() {
           >
             <Routes>
               <Route path="/" element={<HomePage searchQuery={searchQuery} />} />
-              <Route path="/usecases" element={<UsecasePage searchQuery={searchQuery} />} />
-              <Route path="/usecases/:id" element={<UsecaseDetail />} />
-              <Route path="/admin" element={<AdminPage />} />
+              <Route 
+                path="/usecases" 
+                element={
+                  <UsecasePage 
+                    searchQuery={searchQuery} 
+                    usecases={usecases}
+                  />
+                } 
+              />
+              <Route 
+                path="/usecases/:id" 
+                element={
+                  <UsecaseDetail 
+                    usecases={usecases}
+                  />
+                } 
+              />
+              <Route 
+                path="/admin" 
+                element={
+                  <AdminPage 
+                    usecases={usecases}
+                    onApprove={handleApproveUseCase}
+                    onReject={handleRejectUseCase}
+                  />
+                } 
+              />
             </Routes>
           </Box>
+        </Container>
 
-          <AddUsecaseForm
-            open={isAddDialogOpen}
-            onClose={handleCloseDialog}
-            onSubmit={handleAddUseCase}
-          />
-        </Box>
+        {/* Dialog rendered outside the main container */}
+        <AddUsecaseForm
+          open={isAddDialogOpen}
+          onClose={handleCloseDialog}
+          onSubmit={handleAddUseCase}
+        />
+
+        <Snackbar
+          open={!!alert}
+          autoHideDuration={6000}
+          onClose={() => setAlert(null)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          {alert && (
+            <Alert 
+              onClose={() => setAlert(null)} 
+              severity={alert.severity}
+              sx={{ width: '100%' }}
+            >
+              {alert.message}
+            </Alert>
+          )}
+        </Snackbar>
       </Router>
     </ThemeProvider>
   );

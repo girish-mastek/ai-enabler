@@ -2,13 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { Box, Typography, Grid } from '@mui/material';
 import UsecaseList from '../components/UsecaseList';
 import FilterSidebar from '../components/FilterSidebar';
-import usecases from '../data/usecases.json';
 
-const UsecasePage = ({ searchQuery }) => {
-  // Only show approved use cases
-  const approvedUsecases = usecases.filter(usecase => usecase.status === 'approved');
-
-  // Initialize filter state
+const UsecasePage = ({ searchQuery, usecases }) => {
   const [selectedFilters, setSelectedFilters] = useState({
     service_line: {},
     sdlc_phase: {},
@@ -23,7 +18,7 @@ const UsecasePage = ({ searchQuery }) => {
       tools_used: {}
     };
 
-    approvedUsecases.forEach(usecase => {
+    usecases.forEach(usecase => {
       // Count industries
       if (usecase.service_line) {
         filters.service_line[usecase.service_line] = (filters.service_line[usecase.service_line] || 0) + 1;
@@ -41,11 +36,11 @@ const UsecasePage = ({ searchQuery }) => {
     });
 
     return filters;
-  }, [approvedUsecases]);
+  }, [usecases]);
 
   // Filter use cases based on selected filters and search query
   const filteredUsecases = useMemo(() => {
-    return approvedUsecases.filter(usecase => {
+    return usecases.filter(usecase => {
       // Check if any filters are selected
       const hasSelectedFilters = Object.values(selectedFilters).some(
         category => Object.values(category).some(isSelected => isSelected)
@@ -56,8 +51,8 @@ const UsecasePage = ({ searchQuery }) => {
       const searchMatch = !searchQuery || (
         usecase.title.toLowerCase().includes(searchLower) ||
         usecase.description.toLowerCase().includes(searchLower) ||
-        usecase.service_line.toLowerCase().includes(searchLower) ||
-        usecase.sdlc_phase.toLowerCase().includes(searchLower) ||
+        usecase.service_line?.toLowerCase().includes(searchLower) ||
+        usecase.sdlc_phase?.toLowerCase().includes(searchLower) ||
         usecase.tools_used?.some(tool => tool.toLowerCase().includes(searchLower)) ||
         usecase.business_impact?.toLowerCase().includes(searchLower)
       );
@@ -79,7 +74,7 @@ const UsecasePage = ({ searchQuery }) => {
 
       return searchMatch && industryMatch && sdlcMatch && toolsMatch;
     });
-  }, [approvedUsecases, selectedFilters, searchQuery]);
+  }, [usecases, selectedFilters, searchQuery]);
 
   const handleFilterChange = (newFilters) => {
     setSelectedFilters(newFilters);
