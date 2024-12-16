@@ -106,11 +106,11 @@ const UsecaseList = ({ usecases }) => {
 
                 {/* Tags */}
                 <Stack spacing={1.5}>
-                  {/* Industry & SDLC Phase */}
+                  {/* service_line & SDLC Phase */}
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {usecase.industry && (
+                    {usecase.service_line && (
                       <Chip 
-                        label={usecase.industry} 
+                        label={usecase.service_line} 
                         size="small" 
                         sx={{ 
                           height: '24px',

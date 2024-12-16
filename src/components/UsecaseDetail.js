@@ -51,7 +51,7 @@ const UsecaseDetail = () => {
           
           <Box sx={{ mb: 3 }}>
             <Chip 
-              label={usecase.industry} 
+              label={usecase.service_line} 
               color="primary" 
               sx={{ mr: 1 }} 
             />

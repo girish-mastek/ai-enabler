@@ -16,16 +16,11 @@ import {
   DialogActions
 } from '@mui/material';
 
-const INDUSTRIES = [
-  'Technology',
-  'Finance',
-  'Customer Service',
-  'E-commerce',
-  'Manufacturing',
-  'Marketing',
-  'Healthcare',
-  'Education',
-  'Retail'
+const SERVICE_LINE = [
+  'Oracle',
+  'Data',
+  'Engineering',
+  'Salesforce',
 ];
 
 const SDLC_PHASES = [
@@ -63,7 +58,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    industry: '',
+    service_line: '',
     sdlc_phase: '',
     project_link: '',
     tools_used: [],
@@ -99,7 +94,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
     setFormData({
       title: '',
       description: '',
-      industry: '',
+      service_line: '',
       sdlc_phase: '',
       project_link: '',
       tools_used: [],
@@ -140,16 +135,16 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
             />
 
             <FormControl fullWidth required>
-              <InputLabel>Industry</InputLabel>
+              <InputLabel>Service Line</InputLabel>
               <Select
-                name="industry"
-                value={formData.industry}
+                name="service_line"
+                value={formData.service_line}
                 onChange={handleChange}
-                label="Industry"
+                label="service_line"
               >
-                {INDUSTRIES.map((industry) => (
-                  <MenuItem key={industry} value={industry}>
-                    {industry}
+                {SERVICE_LINE.map((service_line) => (
+                  <MenuItem key={service_line} value={service_line}>
+                    {service_line}
                   </MenuItem>
                 ))}
               </Select>

@@ -64,8 +64,8 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
             }}
           >
             <Typography sx={{ fontSize: '0.875rem', fontWeight: 500 }}>
-              Industry
-              {getSelectedCount('industry') > 0 && (
+              Service Line
+              {getSelectedCount('service_line') > 0 && (
                 <Typography 
                   component="span" 
                   sx={{ 
@@ -74,21 +74,21 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
                     fontWeight: 'bold'
                   }}
                 >
-                  ({getSelectedCount('industry')})
+                  ({getSelectedCount('service_line')})
                 </Typography>
               )}
             </Typography>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 1.5 }}>
             <FormGroup>
-              {Object.entries(filters.industry).map(([value, count]) => (
+              {Object.entries(filters.service_line).map(([value, count]) => (
                 <FormControlLabel
                   key={value}
                   control={
                     <Checkbox
                       size="small"
-                      checked={selectedFilters.industry[value] || false}
-                      onChange={() => handleFilterChange('industry', value)}
+                      checked={selectedFilters.service_line[value] || false}
+                      onChange={() => handleFilterChange('service_line', value)}
                     />
                   }
                   label={

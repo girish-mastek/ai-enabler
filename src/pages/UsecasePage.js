@@ -4,13 +4,13 @@ import UsecaseList from '../components/UsecaseList';
 import FilterSidebar from '../components/FilterSidebar';
 import usecases from '../data/usecases.json';
 
-const UsecasePage = () => {
+const UsecasePage = ({ searchQuery }) => {
   // Only show approved use cases
   const approvedUsecases = usecases.filter(usecase => usecase.status === 'approved');
 
   // Initialize filter state
   const [selectedFilters, setSelectedFilters] = useState({
-    industry: {},
+    service_line: {},
     sdlc_phase: {},
     tools_used: {}
   });
@@ -18,15 +18,15 @@ const UsecasePage = () => {
   // Compute available filters and their counts
   const availableFilters = useMemo(() => {
     const filters = {
-      industry: {},
+      service_line: {},
       sdlc_phase: {},
       tools_used: {}
     };
 
     approvedUsecases.forEach(usecase => {
       // Count industries
-      if (usecase.industry) {
-        filters.industry[usecase.industry] = (filters.industry[usecase.industry] || 0) + 1;
+      if (usecase.service_line) {
+        filters.service_line[usecase.service_line] = (filters.service_line[usecase.service_line] || 0) + 1;
       }
 
       // Count SDLC phases
@@ -43,7 +43,7 @@ const UsecasePage = () => {
     return filters;
   }, [approvedUsecases]);
 
-  // Filter use cases based on selected filters
+  // Filter use cases based on selected filters and search query
   const filteredUsecases = useMemo(() => {
     return approvedUsecases.filter(usecase => {
       // Check if any filters are selected
@@ -51,12 +51,23 @@ const UsecasePage = () => {
         category => Object.values(category).some(isSelected => isSelected)
       );
 
-      // If no filters are selected, show all use cases
-      if (!hasSelectedFilters) return true;
+      // Apply search filter
+      const searchLower = searchQuery?.toLowerCase() || '';
+      const searchMatch = !searchQuery || (
+        usecase.title.toLowerCase().includes(searchLower) ||
+        usecase.description.toLowerCase().includes(searchLower) ||
+        usecase.service_line.toLowerCase().includes(searchLower) ||
+        usecase.sdlc_phase.toLowerCase().includes(searchLower) ||
+        usecase.tools_used?.some(tool => tool.toLowerCase().includes(searchLower)) ||
+        usecase.business_impact?.toLowerCase().includes(searchLower)
+      );
+
+      // If no filters are selected, only apply search
+      if (!hasSelectedFilters) return searchMatch;
 
       // Check industry filter
-      const industryMatch = Object.keys(selectedFilters.industry).length === 0 ||
-        (usecase.industry && selectedFilters.industry[usecase.industry]);
+      const industryMatch = Object.keys(selectedFilters.service_line).length === 0 ||
+        (usecase.service_line && selectedFilters.service_line[usecase.service_line]);
 
       // Check SDLC phase filter
       const sdlcMatch = Object.keys(selectedFilters.sdlc_phase).length === 0 ||
@@ -66,9 +77,9 @@ const UsecasePage = () => {
       const toolsMatch = Object.keys(selectedFilters.tools_used).length === 0 ||
         usecase.tools_used?.some(tool => selectedFilters.tools_used[tool]);
 
-      return industryMatch && sdlcMatch && toolsMatch;
+      return searchMatch && industryMatch && sdlcMatch && toolsMatch;
     });
-  }, [approvedUsecases, selectedFilters]);
+  }, [approvedUsecases, selectedFilters, searchQuery]);
 
   const handleFilterChange = (newFilters) => {
     setSelectedFilters(newFilters);

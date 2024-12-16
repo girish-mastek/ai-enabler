@@ -66,7 +66,7 @@ const AdminPage = () => {
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell>Title</TableCell>
-            <TableCell>Industry</TableCell>
+            <TableCell>Service Line</TableCell>
             <TableCell>SDLC Phase</TableCell>
             <TableCell>Tools</TableCell>
             <TableCell align="right">Actions</TableCell>
@@ -79,7 +79,7 @@ const AdminPage = () => {
               <TableCell>{usecase.title}</TableCell>
               <TableCell>
                 <Chip 
-                  label={usecase.industry} 
+                  label={usecase.service_line} 
                   size="small" 
                   color="primary" 
                 />
