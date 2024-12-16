@@ -1,74 +1,69 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchUsecases } from '../services/api';
-import { 
+import {
   Grid,
   Card,
   CardContent,
-  Typography,
   CardActions,
+  Typography,
   Button,
-  Box,
-  Chip
+  Chip,
+  Box
 } from '@mui/material';
-import { ArrowForward as ArrowForwardIcon } from '@mui/icons-material';
 
-function UsecaseList() {
-  const [usecases, setUsecases] = useState([]);
+const UsecaseList = ({ usecases }) => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchUsecases().then(setUsecases);
-  }, []);
-
-  const handleLearnMore = (id) => {
-    navigate(`/usecases/${id}`);
-  };
 
   return (
     <Grid container spacing={3}>
       {usecases.map((usecase) => (
         <Grid item xs={12} sm={6} md={4} key={usecase.id}>
           <Card 
-            elevation={2}
             sx={{ 
-              height: '100%',
-              display: 'flex',
+              height: '100%', 
+              display: 'flex', 
               flexDirection: 'column',
-              transition: '0.3s',
               '&:hover': {
-                transform: 'translateY(-5px)',
-                boxShadow: 3
+                boxShadow: 6
               }
             }}
           >
             <CardContent sx={{ flexGrow: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
+              <Typography gutterBottom variant="h6" component="h2">
                 {usecase.title}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" paragraph>
                 {usecase.description}
               </Typography>
-              <Box sx={{ mt: 2 }}>
-                <Chip 
-                  label="Gen AI" 
-                  size="small" 
-                  color="primary" 
-                  sx={{ mr: 1 }}
-                />
-                <Chip 
-                  label="Use Case" 
-                  size="small" 
-                  color="secondary"
-                />
+              <Box sx={{ mb: 1 }}>
+                {usecase.industry && (
+                  <Chip 
+                    label={usecase.industry} 
+                    size="small" 
+                    sx={{ mr: 1, mb: 1 }} 
+                    color="primary"
+                  />
+                )}
+                {usecase.sdlc_phase && (
+                  <Chip 
+                    label={usecase.sdlc_phase} 
+                    size="small" 
+                    sx={{ mr: 1, mb: 1 }} 
+                    color="secondary"
+                  />
+                )}
               </Box>
+              {usecase.tools_used && usecase.tools_used.length > 0 && (
+                <Typography variant="body2" color="text.secondary">
+                  Tools: {usecase.tools_used.join(', ')}
+                </Typography>
+              )}
             </CardContent>
             <CardActions>
               <Button 
                 size="small" 
-                color="primary" 
-                endIcon={<ArrowForwardIcon />}
-                onClick={() => handleLearnMore(usecase.id)}
+                color="primary"
+                onClick={() => navigate(`/usecases/${usecase.id}`)}
               >
                 Learn More
               </Button>
@@ -78,6 +73,6 @@ function UsecaseList() {
       ))}
     </Grid>
   );
-}
+};
 
 export default UsecaseList;

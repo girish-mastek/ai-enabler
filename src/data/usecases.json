@@ -1,18 +1,105 @@
 [
-    {
-      "id": 1,
-      "title": "Automated Document Summarization",
-      "description": "Summarize lengthy documents into concise summaries."
-    },
-    {
-      "id": 2,
-      "title": "Customer Support Chatbots",
-      "description": "Provide automated customer support via chat interfaces."
-    },
-    {
-      "id": 3,
-      "title": "Fraud Detection System",
-      "description": "Detect fraudulent activities in financial transactions."
-    }
-  ]
-  
+  {
+    "id": 1,
+    "title": "Automated Document Summarization",
+    "description": "Summarize lengthy documents into concise summaries.",
+    "industry": "Finance",
+    "sdlc_phase": "Production",
+    "project_link": "https://example.com/project1",
+    "media": [],
+    "tools_used": ["ChatGPT", "Langchain"],
+    "business_impact": "Cost Reduction, Employee Productivity",
+    "status": "approved",
+    "submittedAt": "2024-01-01T00:00:00.000Z",
+    "moderatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "Customer Support Chatbots",
+    "description": "Provide automated customer support via chat interfaces.",
+    "industry": "Customer Service",
+    "sdlc_phase": "Development",
+    "project_link": "https://example.com/project2",
+    "media": [],
+    "tools_used": ["ChatGPT", "Microsoft Copilot"],
+    "business_impact": "Cost Reduction, Customer Experience",
+    "status": "approved",
+    "submittedAt": "2024-01-01T00:00:00.000Z",
+    "moderatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "title": "Fraud Detection System",
+    "description": "Detect fraudulent activities in financial transactions.",
+    "industry": "Finance",
+    "sdlc_phase": "Testing",
+    "project_link": "https://example.com/project3",
+    "media": [],
+    "tools_used": ["Github Copilot", "Langchain"],
+    "business_impact": "Risk Management & Compliance",
+    "status": "approved",
+    "submittedAt": "2024-01-01T00:00:00.000Z",
+    "moderatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 4,
+    "title": "Personalized Recommendations",
+    "description": "Provide tailored product recommendations to users.",
+    "industry": "E-commerce",
+    "sdlc_phase": "Planning",
+    "project_link": "https://example.com/project4",
+    "media": [
+      {
+        "type": "image",
+        "url": "https://example.com/image1.png"
+      }
+    ],
+    "tools_used": ["ChatGPT", "Streamlit"],
+    "business_impact": "Revenue Growth, Customer Experience",
+    "status": "approved",
+    "submittedAt": "2024-01-01T00:00:00.000Z",
+    "moderatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 5,
+    "title": "Predictive Maintenance",
+    "description": "Predict equipment failures and schedule maintenance proactively.",
+    "industry": "Manufacturing",
+    "sdlc_phase": "Production",
+    "project_link": "https://example.com/project5",
+    "media": [
+      {
+        "type": "video",
+        "url": "https://example.com/video1.mp4"
+      }
+    ],
+    "tools_used": ["Microsoft Copilot", "Langchain"],
+    "business_impact": "Cost Reduction, Product & Service Quality",
+    "status": "approved",
+    "submittedAt": "2024-01-01T00:00:00.000Z",
+    "moderatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 6,
+    "title": "Content Generation",
+    "description": "Generate marketing copy, social media posts, and other content.",
+    "industry": "Marketing",
+    "sdlc_phase": "Production",
+    "project_link": "https://example.com/project6",
+    "media": [],
+    "tools_used": ["ChatGPT", "Github Copilot"],
+    "business_impact": "Revenue Growth, Innovation & Competitive Advantage",
+    "status": "approved",
+    "submittedAt": "2024-01-01T00:00:00.000Z",
+    "moderatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 1734338456055,
+    "title": "AI-Powered Code Review Assistant",
+    "description": "Automate code review process using AI to identify potential bugs, security vulnerabilities, and suggest code improvements. Integrates with version control systems to provide real-time feedback during pull requests.",
+    "industry": "Technology",
+    "sdlc_phase": "Development",
+    "status": "pending",
+    "submittedAt": "2024-01-15T12:00:00.000Z"
+  }
+]
