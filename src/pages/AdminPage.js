@@ -79,7 +79,6 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
             <TableCell>Use Case</TableCell>
             <TableCell>Project</TableCell>
             <TableCell>Service Line</TableCell>
@@ -95,7 +94,6 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
         <TableBody>
           {usecases.map((usecase) => (
             <TableRow key={usecase.id}>
-              <TableCell>{usecase.id}</TableCell>
               <TableCell>
                 <Tooltip title={usecase.usecase || ''}>
                   <Typography variant="body2">
