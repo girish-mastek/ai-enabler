@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Container,
   Typography,
   Button,
   Paper,
@@ -172,7 +171,7 @@ const AdminPage = ({ usecases, onApprove, onReject }) => {
   );
 
   return (
-    <Container>
+    <Box sx={{ p: 3, width: '100%' }}>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom>
           Admin Dashboard
@@ -248,7 +247,7 @@ const AdminPage = ({ usecases, onApprove, onReject }) => {
           </Alert>
         )}
       </Snackbar>
-    </Container>
+    </Box>
   );
 };
 
