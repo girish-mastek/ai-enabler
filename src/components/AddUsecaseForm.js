@@ -4,7 +4,6 @@ import {
   TextField,
   Button,
   Typography,
-  Chip,
   Stack,
   FormControl,
   InputLabel,
@@ -17,8 +16,13 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
-  FormHelperText
+  FormHelperText,
+  Paper,
+  Divider,
+  ToggleButton,
+  ToggleButtonGroup
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 const SERVICE_LINE = [
   'DE&E',
@@ -46,6 +50,27 @@ const TOOLS = [
   'Others',
   'AI Amigo'
 ];
+
+const StyledSection = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  marginBottom: theme.spacing(3),
+  backgroundColor: theme.palette.background.default,
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: 'none',
+  border: `1px solid ${theme.palette.divider}`
+}));
+
+const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
+  margin: theme.spacing(0.5),
+  border: `1px solid ${theme.palette.primary.main}`,
+  '&.Mui-selected': {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark,
+    },
+  },
+}));
 
 const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -119,7 +144,6 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
       [name]: value
     }));
     
-    // Validate on change if field was touched
     if (touched[name]) {
       setErrors(prev => ({
         ...prev,
@@ -140,19 +164,15 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
     }));
   };
 
-  const handleToolsChange = (tool) => {
-    const newToolsUsed = formData.tools_used.includes(tool)
-      ? formData.tools_used.filter(t => t !== tool)
-      : [...formData.tools_used, tool];
-
+  const handleToolsChange = (event, newTools) => {
     setFormData(prev => ({
       ...prev,
-      tools_used: newToolsUsed
+      tools_used: newTools
     }));
 
     setErrors(prev => ({
       ...prev,
-      tools_used: validateField('tools_used', newToolsUsed)
+      tools_used: validateField('tools_used', newTools)
     }));
   };
 
@@ -169,7 +189,6 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Mark all fields as touched
     const touchedFields = {};
     Object.keys(formData).forEach(key => {
       touchedFields[key] = true;
@@ -223,158 +242,193 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
       onClose={handleCancel}
       maxWidth="md" 
       fullWidth
-      aria-labelledby="add-usecase-dialog-title"
-      disablePortal={false}
-      keepMounted={false}
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+          maxHeight: '90vh'
+        }
+      }}
     >
-      <DialogTitle id="add-usecase-dialog-title">
-        <Typography variant="h5" component="div">
-          Add Usecase
+      <DialogTitle>
+        <Typography variant="h5" component="div" sx={{ fontWeight: 600, color: 'primary.main' }}>
+          Add New Use Case
         </Typography>
       </DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-          <Stack spacing={3}>
-            <TextField
-              required
-              fullWidth
-              label="Use Case"
-              name="usecase"
-              value={formData.usecase}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.usecase && Boolean(errors.usecase)}
-              helperText={touched.usecase && errors.usecase}
-              autoFocus
-            />
-
-            <TextField
-              required
-              fullWidth
-              label="Project"
-              name="project"
-              value={formData.project}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.project && Boolean(errors.project)}
-              helperText={touched.project && errors.project}
-            />
-
-            <TextField
-              required
-              fullWidth
-              label="Prompts Used"
-              name="prompts_used"
-              value={formData.prompts_used}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.prompts_used && Boolean(errors.prompts_used)}
-              helperText={touched.prompts_used && errors.prompts_used}
-              multiline
-              rows={4}
-            />
-
-            <FormControl 
-              fullWidth 
-              required
-              error={touched.service_line && Boolean(errors.service_line)}
-            >
-              <InputLabel>Service Line</InputLabel>
-              <Select
-                name="service_line"
-                value={formData.service_line}
+          <StyledSection>
+            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
+              Basic Information
+            </Typography>
+            <Stack spacing={3}>
+              <TextField
+                required
+                fullWidth
+                label="Use Case Title"
+                name="usecase"
+                value={formData.usecase}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                label="Service Line"
-              >
-                {SERVICE_LINE.map((service_line) => (
-                  <MenuItem key={service_line} value={service_line}>
-                    {service_line}
-                  </MenuItem>
-                ))}
-              </Select>
-              {touched.service_line && errors.service_line && (
-                <FormHelperText>{errors.service_line}</FormHelperText>
-              )}
-            </FormControl>
+                error={touched.usecase && Boolean(errors.usecase)}
+                helperText={touched.usecase && errors.usecase}
+                autoFocus
+                variant="outlined"
+              />
 
-            <FormControl 
-              fullWidth 
-              required
-              error={touched.sdlc_phase && Boolean(errors.sdlc_phase)}
-            >
-              <InputLabel>SDLC Phase</InputLabel>
-              <Select
-                name="sdlc_phase"
-                value={formData.sdlc_phase}
+              <TextField
+                required
+                fullWidth
+                label="Project Name"
+                name="project"
+                value={formData.project}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                label="SDLC Phase"
-              >
-                {SDLC_PHASES.map((phase) => (
-                  <MenuItem key={phase} value={phase}>
-                    {phase}
-                  </MenuItem>
-                ))}
-              </Select>
-              {touched.sdlc_phase && errors.sdlc_phase && (
-                <FormHelperText>{errors.sdlc_phase}</FormHelperText>
-              )}
-            </FormControl>
+                error={touched.project && Boolean(errors.project)}
+                helperText={touched.project && errors.project}
+                variant="outlined"
+              />
+            </Stack>
+          </StyledSection>
 
+          <StyledSection>
+            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
+              Details
+            </Typography>
+            <Stack spacing={3}>
+              <TextField
+                required
+                fullWidth
+                label="Prompts Used"
+                name="prompts_used"
+                value={formData.prompts_used}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.prompts_used && Boolean(errors.prompts_used)}
+                helperText={touched.prompts_used && errors.prompts_used}
+                multiline
+                rows={4}
+                variant="outlined"
+              />
+
+              <FormControl 
+                fullWidth 
+                required
+                error={touched.service_line && Boolean(errors.service_line)}
+              >
+                <InputLabel>Service Line</InputLabel>
+                <Select
+                  name="service_line"
+                  value={formData.service_line}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  label="Service Line"
+                >
+                  {SERVICE_LINE.map((service_line) => (
+                    <MenuItem key={service_line} value={service_line}>
+                      {service_line}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {touched.service_line && errors.service_line && (
+                  <FormHelperText>{errors.service_line}</FormHelperText>
+                )}
+              </FormControl>
+
+              <FormControl 
+                fullWidth 
+                required
+                error={touched.sdlc_phase && Boolean(errors.sdlc_phase)}
+              >
+                <InputLabel>SDLC Phase</InputLabel>
+                <Select
+                  name="sdlc_phase"
+                  value={formData.sdlc_phase}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  label="SDLC Phase"
+                >
+                  {SDLC_PHASES.map((phase) => (
+                    <MenuItem key={phase} value={phase}>
+                      {phase}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {touched.sdlc_phase && errors.sdlc_phase && (
+                  <FormHelperText>{errors.sdlc_phase}</FormHelperText>
+                )}
+              </FormControl>
+            </Stack>
+          </StyledSection>
+
+          <StyledSection>
+            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
+              Tools Used
+            </Typography>
             <FormControl 
               fullWidth 
               required
               error={touched.tools_used && Boolean(errors.tools_used)}
             >
-              <Typography variant="body1" sx={{ mb: 1 }}>Tools Used</Typography>
-              <FormGroup>
+              <ToggleButtonGroup
+                value={formData.tools_used}
+                onChange={handleToolsChange}
+                aria-label="tools used"
+                multiple
+                sx={{ flexWrap: 'wrap', justifyContent: 'center' }}
+              >
                 {TOOLS.map((tool) => (
-                  <FormControlLabel
-                    key={tool}
-                    control={
-                      <Checkbox
-                        checked={formData.tools_used.includes(tool)}
-                        onChange={() => handleToolsChange(tool)}
-                      />
-                    }
-                    label={tool}
-                  />
+                  <StyledToggleButton key={tool} value={tool} aria-label={tool}>
+                    {tool}
+                  </StyledToggleButton>
                 ))}
-              </FormGroup>
+              </ToggleButtonGroup>
               {touched.tools_used && errors.tools_used && (
-                <FormHelperText error>{errors.tools_used}</FormHelperText>
+                <FormHelperText error sx={{ mt: 1 }}>{errors.tools_used}</FormHelperText>
               )}
             </FormControl>
+          </StyledSection>
 
-            <TextField
-              required
-              fullWidth
-              label="Estimated Efforts"
-              name="estimated_efforts"
-              value={formData.estimated_efforts}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.estimated_efforts && Boolean(errors.estimated_efforts)}
-              helperText={touched.estimated_efforts && errors.estimated_efforts}
-              placeholder="Enter number of hours"
-              type="number"
-            />
+          <StyledSection>
+            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
+              Effort Tracking
+            </Typography>
+            <Stack spacing={3}>
+              <TextField
+                required
+                fullWidth
+                label="Estimated Efforts (hours)"
+                name="estimated_efforts"
+                value={formData.estimated_efforts}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.estimated_efforts && Boolean(errors.estimated_efforts)}
+                helperText={touched.estimated_efforts && errors.estimated_efforts}
+                type="number"
+                variant="outlined"
+                InputProps={{ inputProps: { min: 0 } }}
+              />
 
-            <TextField
-              required
-              fullWidth
-              label="Actual Hours"
-              name="actual_hours"
-              value={formData.actual_hours}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.actual_hours && Boolean(errors.actual_hours)}
-              helperText={touched.actual_hours && errors.actual_hours}
-              placeholder="Enter number of hours"
-              type="number"
-            />
+              <TextField
+                required
+                fullWidth
+                label="Actual Hours"
+                name="actual_hours"
+                value={formData.actual_hours}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.actual_hours && Boolean(errors.actual_hours)}
+                helperText={touched.actual_hours && errors.actual_hours}
+                type="number"
+                variant="outlined"
+                InputProps={{ inputProps: { min: 0 } }}
+              />
+            </Stack>
+          </StyledSection>
 
+          <StyledSection>
+            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
+              Additional Comments
+            </Typography>
             <TextField
               fullWidth
               label="Comments"
@@ -382,20 +436,34 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
               value={formData.comments}
               onChange={handleChange}
               multiline
-              rows={2}
-              placeholder="Add any additional comments or notes"
+              rows={3}
+              variant="outlined"
+              placeholder="Add any additional comments or notes about this use case"
             />
-          </Stack>
+          </StyledSection>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleCancel}>Cancel</Button>
+      <Divider />
+      <DialogActions sx={{ p: 2.5 }}>
         <Button 
-          variant="contained" 
-          onClick={handleSubmit}
-          color="primary"
+          onClick={handleCancel}
+          variant="outlined"
+          sx={{ 
+            minWidth: 100,
+            mr: 1
+          }}
         >
-          Add Usecase
+          Cancel
+        </Button>
+        <Button 
+          onClick={handleSubmit}
+          variant="contained"
+          sx={{ 
+            minWidth: 100,
+            fontWeight: 600
+          }}
+        >
+          Add Use Case
         </Button>
       </DialogActions>
     </Dialog>
