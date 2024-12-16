@@ -94,7 +94,7 @@ const UsecaseDetail = ({ usecases }) => {
 
           <Grid container spacing={3}>
             {usecase.tools_used && (
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12}>
                 <Paper sx={{ p: 2, height: '100%' }}>
                   <Typography variant="h6" gutterBottom>
                     Tools Used
@@ -112,34 +112,7 @@ const UsecaseDetail = ({ usecases }) => {
                 </Paper>
               </Grid>
             )}
-            
-            {usecase.business_impact && (
-              <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 2, height: '100%' }}>
-                  <Typography variant="h6" gutterBottom>
-                    Business Impact
-                  </Typography>
-                  <Typography variant="body1">
-                    {usecase.business_impact}
-                  </Typography>
-                </Paper>
-              </Grid>
-            )}
           </Grid>
-
-          {usecase.project_link && (
-            <Box sx={{ mt: 3 }}>
-              <Button 
-                variant="contained" 
-                color="primary"
-                href={usecase.project_link}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View Project
-              </Button>
-            </Box>
-          )}
 
           {usecase.submittedAt && (
             <Typography 

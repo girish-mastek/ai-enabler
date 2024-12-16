@@ -5,10 +5,10 @@
     "description": "Summarize lengthy documents into concise summaries.",
     "service_line": "Oracle",
     "sdlc_phase": "Production",
-    "project_link": "https://example.com/project1",
-    "media": [],
-    "tools_used": ["ChatGPT", "Langchain"],
-    "business_impact": "Cost Reduction, Employee Productivity",
+    "tools_used": [
+      "ChatGPT",
+      "Langchain"
+    ],
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -19,10 +19,10 @@
     "description": "Provide automated customer support via chat interfaces.",
     "service_line": "Engineering",
     "sdlc_phase": "Development",
-    "project_link": "https://example.com/project2",
-    "media": [],
-    "tools_used": ["ChatGPT", "Microsoft Copilot"],
-    "business_impact": "Cost Reduction, Customer Experience",
+    "tools_used": [
+      "ChatGPT",
+      "Microsoft Copilot"
+    ],
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -33,10 +33,10 @@
     "description": "Detect fraudulent activities in financial transactions.",
     "service_line": "Data",
     "sdlc_phase": "Testing",
-    "project_link": "https://example.com/project3",
-    "media": [],
-    "tools_used": ["Github Copilot", "Langchain"],
-    "business_impact": "Risk Management & Compliance",
+    "tools_used": [
+      "Github Copilot",
+      "Langchain"
+    ],
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -47,15 +47,10 @@
     "description": "Provide tailored product recommendations to users.",
     "service_line": "Oracle",
     "sdlc_phase": "Planning",
-    "project_link": "https://example.com/project4",
-    "media": [
-      {
-        "type": "image",
-        "url": "https://example.com/image1.png"
-      }
+    "tools_used": [
+      "ChatGPT",
+      "Streamlit"
     ],
-    "tools_used": ["ChatGPT", "Streamlit"],
-    "business_impact": "Revenue Growth, Customer Experience",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -66,15 +61,10 @@
     "description": "Predict equipment failures and schedule maintenance proactively.",
     "service_line": "Salesforce",
     "sdlc_phase": "Production",
-    "project_link": "https://example.com/project5",
-    "media": [
-      {
-        "type": "video",
-        "url": "https://example.com/video1.mp4"
-      }
+    "tools_used": [
+      "Microsoft Copilot",
+      "Langchain"
     ],
-    "tools_used": ["Microsoft Copilot", "Langchain"],
-    "business_impact": "Cost Reduction, Product & Service Quality",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -85,10 +75,10 @@
     "description": "Generate marketing copy, social media posts, and other content.",
     "service_line": "Engineering",
     "sdlc_phase": "Production",
-    "project_link": "https://example.com/project6",
-    "media": [],
-    "tools_used": ["ChatGPT", "Github Copilot"],
-    "business_impact": "Revenue Growth, Innovation & Competitive Advantage",
+    "tools_used": [
+      "ChatGPT",
+      "Github Copilot"
+    ],
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"

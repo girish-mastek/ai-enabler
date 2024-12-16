@@ -170,9 +170,7 @@ function App() {
     const newUsecase = {
       ...usecase,
       status: 'pending',
-      submittedAt: new Date().toISOString(),
-      business_impact: usecase.business_impact.join(', '), // Convert array to comma-separated string
-      media: [] // Initialize empty media array
+      submittedAt: new Date().toISOString()
     };
     
     setUsecases(prevUsecases => [newUsecase, ...prevUsecases]);

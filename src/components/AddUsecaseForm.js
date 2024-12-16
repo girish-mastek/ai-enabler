@@ -42,28 +42,13 @@ const TOOLS = [
   'PyTorch'
 ];
 
-const BUSINESS_IMPACTS = [
-  'Cost Reduction',
-  'Employee Productivity',
-  'Customer Experience',
-  'Revenue Growth',
-  'Risk Management & Compliance',
-  'Innovation & Competitive Advantage',
-  'Product & Service Quality',
-  'Operational Efficiency',
-  'Development Velocity'
-];
-
 const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     service_line: '',
     sdlc_phase: '',
-    project_link: '',
-    tools_used: [],
-    business_impact: [],
-    media: []
+    tools_used: []
   });
 
   const handleChange = (e) => {
@@ -96,10 +81,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
       description: '',
       service_line: '',
       sdlc_phase: '',
-      project_link: '',
-      tools_used: [],
-      business_impact: [],
-      media: []
+      tools_used: []
     });
   };
 
@@ -109,10 +91,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
       description: '',
       service_line: '',
       sdlc_phase: '',
-      project_link: '',
-      tools_used: [],
-      business_impact: [],
-      media: []
+      tools_used: []
     });
     onClose();
   };
@@ -211,39 +190,6 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
                 ))}
               </Select>
             </FormControl>
-
-            <FormControl fullWidth required>
-              <InputLabel>Business Impact</InputLabel>
-              <Select
-                multiple
-                name="business_impact"
-                value={formData.business_impact}
-                onChange={(e) => handleMultiSelect(e, 'business_impact')}
-                label="Business Impact"
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-              >
-                {BUSINESS_IMPACTS.map((impact) => (
-                  <MenuItem key={impact} value={impact}>
-                    {impact}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <TextField
-              fullWidth
-              label="Project Link"
-              name="project_link"
-              value={formData.project_link}
-              onChange={handleChange}
-              placeholder="https://example.com/project"
-            />
           </Stack>
         </Box>
       </DialogContent>

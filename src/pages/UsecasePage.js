@@ -53,8 +53,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
         usecase.description.toLowerCase().includes(searchLower) ||
         usecase.service_line?.toLowerCase().includes(searchLower) ||
         usecase.sdlc_phase?.toLowerCase().includes(searchLower) ||
-        usecase.tools_used?.some(tool => tool.toLowerCase().includes(searchLower)) ||
-        usecase.business_impact?.toLowerCase().includes(searchLower)
+        usecase.tools_used?.some(tool => tool.toLowerCase().includes(searchLower))
       );
 
       // If no filters are selected, only apply search
@@ -123,7 +122,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
             sx={{ maxWidth: 800 }}
           >
             Explore our collection of AI use cases across different industries. 
-            Each case demonstrates practical applications and business impact of AI technologies.
+            Each case demonstrates practical applications of AI technologies.
           </Typography>
         </Box>
       </Box>
