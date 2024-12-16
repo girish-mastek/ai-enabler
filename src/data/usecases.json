@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "title": "Automated Document Summarization",
-    "description": "Summarize lengthy documents into concise summaries.",
+    "usecase": "Automated Document Summarization",
+    "prompts_used": "Summarize lengthy documents into concise summaries.",
     "service_line": "Oracle",
     "sdlc_phase": "Production",
     "tools_used": [
@@ -15,8 +15,8 @@
   },
   {
     "id": 2,
-    "title": "Customer Support Chatbots",
-    "description": "Provide automated customer support via chat interfaces.",
+    "usecase": "Customer Support Chatbots",
+    "prompts_used": "Provide automated customer support via chat interfaces.",
     "service_line": "Engineering",
     "sdlc_phase": "Development",
     "tools_used": [
@@ -29,8 +29,8 @@
   },
   {
     "id": 3,
-    "title": "Fraud Detection System",
-    "description": "Detect fraudulent activities in financial transactions.",
+    "usecase": "Fraud Detection System",
+    "prompts_used": "Detect fraudulent activities in financial transactions.",
     "service_line": "Data",
     "sdlc_phase": "Testing",
     "tools_used": [
@@ -43,8 +43,8 @@
   },
   {
     "id": 4,
-    "title": "Personalized Recommendations",
-    "description": "Provide tailored product recommendations to users.",
+    "usecase": "Personalized Recommendations",
+    "prompts_used": "Provide tailored product recommendations to users.",
     "service_line": "Oracle",
     "sdlc_phase": "Planning",
     "tools_used": [
@@ -57,8 +57,8 @@
   },
   {
     "id": 5,
-    "title": "Predictive Maintenance",
-    "description": "Predict equipment failures and schedule maintenance proactively.",
+    "usecase": "Predictive Maintenance",
+    "prompts_used": "Predict equipment failures and schedule maintenance proactively.",
     "service_line": "Salesforce",
     "sdlc_phase": "Production",
     "tools_used": [
@@ -71,8 +71,8 @@
   },
   {
     "id": 6,
-    "title": "Content Generation",
-    "description": "Generate marketing copy, social media posts, and other content.",
+    "usecase": "Content Generation",
+    "prompts_used": "Generate marketing copy, social media posts, and other content.",
     "service_line": "Engineering",
     "sdlc_phase": "Production",
     "tools_used": [
@@ -85,8 +85,8 @@
   },
   {
     "id": 1734338456055,
-    "title": "AI-Powered Code Review Assistant",
-    "description": "Automate code review process using AI to identify potential bugs, security vulnerabilities, and suggest code improvements. Integrates with version control systems to provide real-time feedback during pull requests.",
+    "usecase": "AI-Powered Code Review Assistant",
+    "prompts_used": "Automate code review process using AI to identify potential bugs, security vulnerabilities, and suggest code improvements. Integrates with version control systems to provide real-time feedback during pull requests.",
     "service_line": "Data",
     "sdlc_phase": "Development",
     "status": "pending",

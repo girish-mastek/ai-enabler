@@ -49,8 +49,8 @@ const UsecasePage = ({ searchQuery, usecases }) => {
       // Apply search filter
       const searchLower = searchQuery?.toLowerCase() || '';
       const searchMatch = !searchQuery || (
-        usecase.title.toLowerCase().includes(searchLower) ||
-        usecase.description.toLowerCase().includes(searchLower) ||
+        usecase.usecase.toLowerCase().includes(searchLower) ||
+        usecase.prompts_used.toLowerCase().includes(searchLower) ||
         usecase.service_line?.toLowerCase().includes(searchLower) ||
         usecase.sdlc_phase?.toLowerCase().includes(searchLower) ||
         usecase.tools_used?.some(tool => tool.toLowerCase().includes(searchLower))

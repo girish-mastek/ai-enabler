@@ -44,8 +44,8 @@ const TOOLS = [
 
 const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
+    usecase: '',
+    prompts_used: '',
     service_line: '',
     sdlc_phase: '',
     tools_used: []
@@ -77,8 +77,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
     };
     onSubmit(newUsecase);
     setFormData({
-      title: '',
-      description: '',
+      usecase: '',
+      prompts_used: '',
       service_line: '',
       sdlc_phase: '',
       tools_used: []
@@ -87,8 +87,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
 
   const handleCancel = () => {
     setFormData({
-      title: '',
-      description: '',
+      usecase: '',
+      prompts_used: '',
       service_line: '',
       sdlc_phase: '',
       tools_used: []
@@ -117,9 +117,9 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
             <TextField
               required
               fullWidth
-              label="Title"
-              name="title"
-              value={formData.title}
+              label="Use Case"
+              name="usecase"
+              value={formData.usecase}
               onChange={handleChange}
               autoFocus
             />
@@ -127,9 +127,9 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
             <TextField
               required
               fullWidth
-              label="Description"
-              name="description"
-              value={formData.description}
+              label="Prompts Used"
+              name="prompts_used"
+              value={formData.prompts_used}
               onChange={handleChange}
               multiline
               rows={4}

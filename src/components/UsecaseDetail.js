@@ -51,7 +51,7 @@ const UsecaseDetail = ({ usecases }) => {
           <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
             <Box>
               <Typography variant="h4" gutterBottom>
-                {usecase.title}
+                {usecase.usecase}
               </Typography>
               
               <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
@@ -89,7 +89,7 @@ const UsecaseDetail = ({ usecases }) => {
           </Box>
 
           <Typography variant="body1" paragraph>
-            {usecase.description}
+            {usecase.prompts_used}
           </Typography>
 
           <Grid container spacing={3}>

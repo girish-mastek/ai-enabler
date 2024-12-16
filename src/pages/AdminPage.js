@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -16,7 +16,8 @@ import {
   Tabs,
   Tab,
   Alert,
-  Snackbar
+  Snackbar,
+  Tooltip
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -26,6 +27,11 @@ import CancelIcon from '@mui/icons-material/Cancel';
 const AdminPage = ({ usecases, onApprove, onReject }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [alert, setAlert] = useState(null);
+
+  // Debug log to check incoming data
+  useEffect(() => {
+    console.log('Usecases in AdminPage:', usecases);
+  }, [usecases]);
 
   const pendingUsecases = usecases.filter(usecase => usecase.status === 'pending');
   const approvedUsecases = usecases.filter(usecase => usecase.status === 'approved');
@@ -47,95 +53,130 @@ const AdminPage = ({ usecases, onApprove, onReject }) => {
     });
   };
 
-  const UseCaseTable = ({ usecases, showModeration = false }) => (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Title</TableCell>
-            <TableCell>Service Line</TableCell>
-            <TableCell>SDLC Phase</TableCell>
-            <TableCell>Tools</TableCell>
-            <TableCell>Submitted At</TableCell>
-            <TableCell align="right">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {usecases.map((usecase) => (
-            <TableRow key={usecase.id}>
-              <TableCell>{usecase.id}</TableCell>
-              <TableCell>{usecase.title}</TableCell>
-              <TableCell>
-                <Chip 
-                  label={usecase.service_line} 
-                  size="small" 
-                  color="primary" 
-                />
-              </TableCell>
-              <TableCell>
-                <Chip 
-                  label={usecase.sdlc_phase} 
-                  size="small" 
-                  color="secondary" 
-                />
-              </TableCell>
-              <TableCell>
-                <Stack direction="row" spacing={1} flexWrap="wrap">
-                  {usecase.tools_used?.map((tool, index) => (
-                    <Chip
-                      key={index}
-                      label={tool}
-                      size="small"
-                      variant="outlined"
-                      sx={{ mb: 0.5 }}
-                    />
-                  ))}
-                </Stack>
-              </TableCell>
-              <TableCell>
-                {new Date(usecase.submittedAt).toLocaleDateString()}
-              </TableCell>
-              <TableCell align="right">
-                <Stack direction="row" spacing={1} justifyContent="flex-end">
-                  {showModeration && (
-                    <>
-                      <Button
-                        startIcon={<CheckCircleIcon />}
-                        color="success"
-                        onClick={() => handleApprove(usecase.id)}
-                      >
-                        Approve
-                      </Button>
-                      <Button
-                        startIcon={<CancelIcon />}
-                        color="error"
-                        onClick={() => handleReject(usecase.id)}
-                      >
-                        Reject
-                      </Button>
-                    </>
-                  )}
-                  <Button
-                    startIcon={<EditIcon />}
-                    color="primary"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    startIcon={<DeleteIcon />}
-                    color="error"
-                  >
-                    Delete
-                  </Button>
-                </Stack>
-              </TableCell>
+  const truncateText = (text, maxLength = 100) => {
+    if (text && text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text || ''; // Return empty string if text is undefined
+  };
+
+  const UseCaseTable = ({ usecases, showModeration = false }) => {
+    // Debug log to check data at table level
+    console.log('Usecases in table:', usecases);
+
+    return (
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Use Case</TableCell>
+              <TableCell>Prompts Used</TableCell>
+              <TableCell>Service Line</TableCell>
+              <TableCell>SDLC Phase</TableCell>
+              <TableCell>Tools</TableCell>
+              <TableCell>Submitted At</TableCell>
+              <TableCell align="right">Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+          </TableHead>
+          <TableBody>
+            {usecases.map((usecase) => {
+              // Debug log for each usecase
+              console.log('Processing usecase:', usecase);
+              
+              return (
+                <TableRow key={usecase.id}>
+                  <TableCell>{usecase.id}</TableCell>
+                  <TableCell>
+                    <Tooltip title={usecase.usecase || ''}>
+                      <Typography variant="body2">
+                        {truncateText(usecase.usecase)}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip title={usecase.prompts_used || ''}>
+                      <Typography variant="body2">
+                        {truncateText(usecase.prompts_used)}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    {usecase.service_line && (
+                      <Chip 
+                        label={usecase.service_line} 
+                        size="small" 
+                        color="primary" 
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {usecase.sdlc_phase && (
+                      <Chip 
+                        label={usecase.sdlc_phase} 
+                        size="small" 
+                        color="secondary" 
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Stack direction="row" spacing={1} flexWrap="wrap">
+                      {usecase.tools_used?.map((tool, index) => (
+                        <Chip
+                          key={index}
+                          label={tool}
+                          size="small"
+                          variant="outlined"
+                          sx={{ mb: 0.5 }}
+                        />
+                      ))}
+                    </Stack>
+                  </TableCell>
+                  <TableCell>
+                    {usecase.submittedAt && new Date(usecase.submittedAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell align="right">
+                    <Stack direction="row" spacing={1} justifyContent="flex-end">
+                      {showModeration && (
+                        <>
+                          <Button
+                            startIcon={<CheckCircleIcon />}
+                            color="success"
+                            onClick={() => handleApprove(usecase.id)}
+                          >
+                            Approve
+                          </Button>
+                          <Button
+                            startIcon={<CancelIcon />}
+                            color="error"
+                            onClick={() => handleReject(usecase.id)}
+                          >
+                            Reject
+                          </Button>
+                        </>
+                      )}
+                      <Button
+                        startIcon={<EditIcon />}
+                        color="primary"
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        startIcon={<DeleteIcon />}
+                        color="error"
+                      >
+                        Delete
+                      </Button>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
 
   return (
     <Container>

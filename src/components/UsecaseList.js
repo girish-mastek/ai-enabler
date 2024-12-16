@@ -74,7 +74,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
           >
             <CardContent sx={{ p: 2.5, pb: 1, flexGrow: 1 }}>
               <Stack spacing={2}>
-                {/* Title, Status, and Description */}
+                {/* Use Case and Status */}
                 <Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
                     <Typography 
@@ -88,7 +88,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                         flexGrow: 1
                       }}
                     >
-                      {usecase.title}
+                      {usecase.usecase}
                     </Typography>
                     {usecase.status === 'pending' && (
                       <Chip
@@ -114,7 +114,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                       overflow: 'hidden'
                     }}
                   >
-                    {usecase.description}
+                    {usecase.prompts_used}
                   </Typography>
                 </Box>
 
