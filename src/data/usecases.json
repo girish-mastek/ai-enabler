@@ -33,7 +33,7 @@
     "comments": "Integrated with existing CRM system, handling 70% of basic queries",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
-    "moderatedAt": "2024-01-01T00:00:00.000Z"
+    "moderatedAt": "2024-12-16T20:01:07.162Z"
   },
   {
     "id": 3,
@@ -106,22 +106,5 @@
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
-  },
-  {
-    "id": 1734338456055,
-    "usecase": "AI-Powered Code Review Assistant",
-    "prompts_used": "Automate code review process using AI to identify potential bugs, security vulnerabilities, and suggest code improvements. Integrates with version control systems to provide real-time feedback during pull requests.",
-    "service_line": "Data",
-    "sdlc_phase": "Development",
-    "tools_used": [
-      "Github Copilot",
-      "ChatGPT"
-    ],
-    "project": "Development Workflow Automation",
-    "estimated_efforts": "90 hours",
-    "actual_hours": "95 hours",
-    "comments": "Currently in beta testing with development team",
-    "status": "pending",
-    "submittedAt": "2024-01-15T12:00:00.000Z"
   }
 ]

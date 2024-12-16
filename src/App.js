@@ -13,7 +13,8 @@ import {
   IconButton,
   Container,
   Snackbar,
-  Alert
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
@@ -24,7 +25,7 @@ import UsecasePage from './pages/UsecasePage';
 import AdminPage from './pages/AdminPage';
 import UsecaseDetail from './components/UsecaseDetail';
 import AddUsecaseForm from './components/AddUsecaseForm';
-import initialUsecases from './data/usecases.json';
+import * as api from './services/api';
 
 // Theme configuration
 const theme = createTheme({
@@ -153,16 +154,28 @@ function NavigationBar({ searchQuery, setSearchQuery, handleOpenDialog }) {
 function App() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [usecases, setUsecases] = useState(() => {
-    const savedUsecases = localStorage.getItem('usecases');
-    return savedUsecases ? JSON.parse(savedUsecases) : initialUsecases;
-  });
+  const [usecases, setUsecases] = useState([]);
   const [alert, setAlert] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Save usecases to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('usecases', JSON.stringify(usecases));
-  }, [usecases]);
+    loadUsecases();
+  }, []);
+
+  const loadUsecases = async () => {
+    try {
+      setLoading(true);
+      const data = await api.getAllUseCases();
+      setUsecases(data);
+    } catch (error) {
+      setAlert({
+        severity: 'error',
+        message: 'Failed to load use cases'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleOpenDialog = () => {
     setIsAddDialogOpen(true);
@@ -172,52 +185,89 @@ function App() {
     setIsAddDialogOpen(false);
   };
 
-  const handleAddUseCase = (usecase) => {
-    const newUsecase = {
-      ...usecase,
-      status: 'pending',
-      submittedAt: new Date().toISOString()
-    };
-    
-    setUsecases(prevUsecases => [newUsecase, ...prevUsecases]);
-    setAlert({
-      severity: 'success',
-      message: 'Use case submitted successfully'
-    });
-    handleCloseDialog();
+  const handleAddUseCase = async (usecase) => {
+    try {
+      const newUsecase = await api.addUseCase(usecase);
+      setUsecases(prevUsecases => [newUsecase, ...prevUsecases]);
+      setAlert({
+        severity: 'success',
+        message: 'Use case submitted successfully'
+      });
+      handleCloseDialog();
+    } catch (error) {
+      setAlert({
+        severity: 'error',
+        message: 'Failed to add use case'
+      });
+    }
   };
 
-  const handleApproveUseCase = (id) => {
-    setUsecases(prevUsecases => prevUsecases.map(usecase => 
-      usecase.id === id 
-        ? { 
-            ...usecase, 
-            status: 'approved',
-            moderatedAt: new Date().toISOString()
-          } 
-        : usecase
-    ));
-    setAlert({
-      severity: 'success',
-      message: 'Use case approved successfully'
-    });
+  const handleApproveUseCase = async (id) => {
+    try {
+      const updatedUsecase = await api.updateUseCaseStatus(id, 'approved');
+      setUsecases(prevUsecases => prevUsecases.map(usecase => 
+        usecase.id === id ? updatedUsecase : usecase
+      ));
+      setAlert({
+        severity: 'success',
+        message: 'Use case approved successfully'
+      });
+    } catch (error) {
+      setAlert({
+        severity: 'error',
+        message: 'Failed to approve use case'
+      });
+    }
   };
 
-  const handleRejectUseCase = (id) => {
-    setUsecases(prevUsecases => prevUsecases.map(usecase => 
-      usecase.id === id 
-        ? { 
-            ...usecase, 
-            status: 'rejected',
-            moderatedAt: new Date().toISOString()
-          } 
-        : usecase
-    ));
-    setAlert({
-      severity: 'info',
-      message: 'Use case rejected'
-    });
+  const handleRejectUseCase = async (id) => {
+    try {
+      const updatedUsecase = await api.updateUseCaseStatus(id, 'rejected');
+      setUsecases(prevUsecases => prevUsecases.map(usecase => 
+        usecase.id === id ? updatedUsecase : usecase
+      ));
+      setAlert({
+        severity: 'info',
+        message: 'Use case rejected'
+      });
+    } catch (error) {
+      setAlert({
+        severity: 'error',
+        message: 'Failed to reject use case'
+      });
+    }
   };
+
+  const handleDeleteUseCase = async (id) => {
+    try {
+      await api.deleteUseCase(id);
+      setUsecases(prevUsecases => prevUsecases.filter(usecase => usecase.id !== id));
+      setAlert({
+        severity: 'success',
+        message: 'Use case deleted successfully'
+      });
+    } catch (error) {
+      setAlert({
+        severity: 'error',
+        message: 'Failed to delete use case'
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh' 
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -285,6 +335,7 @@ function App() {
                     usecases={usecases}
                     onApprove={handleApproveUseCase}
                     onReject={handleRejectUseCase}
+                    onDelete={handleDeleteUseCase}
                   />
                 } 
               />

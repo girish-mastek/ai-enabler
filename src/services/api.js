@@ -1,125 +1,92 @@
-import fs from 'fs';
-import path from 'path';
-
-const USECASES_FILE = path.join(process.cwd(), 'src/data/usecases.json');
+const API_URL = 'http://localhost:3001/api';
 
 // Read all use cases
-export const getAllUseCases = () => {
+export const getAllUseCases = async () => {
   try {
-    const data = fs.readFileSync(USECASES_FILE, 'utf8');
-    return JSON.parse(data);
+    const response = await fetch(`${API_URL}/usecases`);
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error('Error reading usecases.json:', error);
+    console.error('Error fetching usecases:', error);
     return [];
   }
 };
 
 // Add a new use case
-export const addUseCase = (useCase) => {
+export const addUseCase = async (useCase) => {
   try {
-    const useCases = getAllUseCases();
-    const newUseCase = {
-      ...useCase,
-      id: Date.now(),
-      status: 'pending',
-      submittedAt: new Date().toISOString()
-    };
-    useCases.push(newUseCase);
-    fs.writeFileSync(USECASES_FILE, JSON.stringify(useCases, null, 2));
-    return newUseCase;
+    const response = await fetch(`${API_URL}/usecases`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(useCase),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error);
+    return data;
   } catch (error) {
-    console.error('Error adding use case:', error);
+    console.error('Error adding usecase:', error);
     throw error;
   }
 };
 
 // Update use case status (for moderation)
-export const updateUseCaseStatus = (id, status) => {
+export const updateUseCaseStatus = async (id, status) => {
   try {
-    const useCases = getAllUseCases();
-    const index = useCases.findIndex(uc => uc.id === id);
-    if (index !== -1) {
-      useCases[index] = {
-        ...useCases[index],
-        status,
-        moderatedAt: new Date().toISOString()
-      };
-      fs.writeFileSync(USECASES_FILE, JSON.stringify(useCases, null, 2));
-      return useCases[index];
-    }
-    throw new Error('Use case not found');
+    const response = await fetch(`${API_URL}/usecases/${id}/status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error);
+    return data;
   } catch (error) {
-    console.error('Error updating use case status:', error);
+    console.error('Error updating usecase status:', error);
+    throw error;
+  }
+};
+
+// Delete a use case
+export const deleteUseCase = async (id) => {
+  try {
+    const response = await fetch(`${API_URL}/usecases/${id}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error);
+    }
+    return true;
+  } catch (error) {
+    console.error('Error deleting usecase:', error);
     throw error;
   }
 };
 
 // Get pending use cases (for moderation)
-export const getPendingUseCases = () => {
-  try {
-    const useCases = getAllUseCases();
-    return useCases.filter(uc => uc.status === 'pending');
-  } catch (error) {
-    console.error('Error getting pending use cases:', error);
-    return [];
-  }
+export const getPendingUseCases = async () => {
+  const usecases = await getAllUseCases();
+  return usecases.filter(uc => uc.status === 'pending');
 };
 
 // Get approved use cases (for public display)
-export const getApprovedUseCases = () => {
-  try {
-    const useCases = getAllUseCases();
-    return useCases.filter(uc => uc.status === 'approved');
-  } catch (error) {
-    console.error('Error getting approved use cases:', error);
-    return [];
-  }
+export const getApprovedUseCases = async () => {
+  const usecases = await getAllUseCases();
+  return usecases.filter(uc => uc.status === 'approved');
 };
 
-// Delete a use case
-export const deleteUseCase = (id) => {
-  try {
-    const useCases = getAllUseCases();
-    const filteredUseCases = useCases.filter(uc => uc.id !== id);
-    fs.writeFileSync(USECASES_FILE, JSON.stringify(filteredUseCases, null, 2));
-    return true;
-  } catch (error) {
-    console.error('Error deleting use case:', error);
-    throw error;
-  }
+// Get rejected use cases
+export const getRejectedUseCases = async () => {
+  const usecases = await getAllUseCases();
+  return usecases.filter(uc => uc.status === 'rejected');
 };
 
-// Express middleware for handling use case operations
-export const handleUseCaseOperation = async (req, res) => {
-  try {
-    switch (req.method) {
-      case 'GET':
-        const useCases = getAllUseCases();
-        res.json(useCases);
-        break;
-      
-      case 'POST':
-        const newUseCase = addUseCase(req.body);
-        res.status(201).json(newUseCase);
-        break;
-      
-      case 'PUT':
-        const { id, status } = req.body;
-        const updatedUseCase = updateUseCaseStatus(id, status);
-        res.json(updatedUseCase);
-        break;
-      
-      case 'DELETE':
-        const { id: deleteId } = req.params;
-        deleteUseCase(deleteId);
-        res.status(204).end();
-        break;
-      
-      default:
-        res.status(405).json({ error: 'Method not allowed' });
-    }
-  } catch (error) {
-    console.error('API Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
+// Get use case by ID
+export const getUseCaseById = async (id) => {
+  const usecases = await getAllUseCases();
+  return usecases.find(uc => uc.id === id);
 };

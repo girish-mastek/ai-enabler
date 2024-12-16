@@ -16,16 +16,21 @@ import {
   Tab,
   Alert,
   Snackbar,
-  Tooltip
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const AdminPage = ({ usecases, onApprove, onReject }) => {
+const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [alert, setAlert] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
 
   const pendingUsecases = usecases.filter(usecase => usecase.status === 'pending');
   const approvedUsecases = usecases.filter(usecase => usecase.status === 'approved');
@@ -45,6 +50,21 @@ const AdminPage = ({ usecases, onApprove, onReject }) => {
       severity: 'info',
       message: 'Use case rejected'
     });
+  };
+
+  const handleDeleteClick = (id) => {
+    setDeleteConfirm({ open: true, id });
+  };
+
+  const handleDeleteConfirm = () => {
+    if (deleteConfirm.id) {
+      onDelete(deleteConfirm.id);
+      setDeleteConfirm({ open: false, id: null });
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirm({ open: false, id: null });
   };
 
   const truncateText = (text, maxLength = 100) => {
@@ -158,6 +178,7 @@ const AdminPage = ({ usecases, onApprove, onReject }) => {
                   <Button
                     startIcon={<DeleteIcon />}
                     color="error"
+                    onClick={() => handleDeleteClick(usecase.id)}
                   >
                     Delete
                   </Button>
@@ -230,6 +251,22 @@ const AdminPage = ({ usecases, onApprove, onReject }) => {
           )}
         </>
       )}
+
+      <Dialog
+        open={deleteConfirm.open}
+        onClose={handleDeleteCancel}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this use case? This action cannot be undone.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={!!alert}
