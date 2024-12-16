@@ -63,22 +63,28 @@ function NavigationBar({ searchQuery, setSearchQuery, handleOpenDialog }) {
 
   return (
     <Toolbar sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
-      <Typography 
-        variant="h6" 
-        component={Link} 
-        to="/" 
-        sx={{ 
-          flexGrow: 0, 
-          textDecoration: 'none', 
-          color: 'inherit',
+      <Box
+        component={Link}
+        to="/"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          textDecoration: 'none',
+          mr: 3,
           '&:hover': {
-            color: 'rgba(255, 255, 255, 0.8)',
-          },
-          mr: 3
+            opacity: 0.8
+          }
         }}
       >
-        Mastek Gen AI Knowledge Portal
-      </Typography>
+        <img
+          src="/logo-2022.png"
+          alt="Mastek Logo"
+          style={{
+            height: '40px',
+            width: 'auto'
+          }}
+        />
+      </Box>
       <TextField
         size="small"
         placeholder="Search usecases..."

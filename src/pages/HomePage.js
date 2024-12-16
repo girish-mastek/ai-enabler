@@ -24,13 +24,13 @@ const HomePage = () => {
     },
     {
       icon: <BusinessIcon sx={{ fontSize: 40 }} />,
-      title: 'Industry Insights',
-      description: 'Learn how different sectors are leveraging AI to transform their business operations.',
+      title: 'Best Practices and Guidelines',
+      description: 'This document outlines key best practices and guidelines designed to promote consistency, efficiency, and excellence in our processes and decision-making.',
     },
     {
       icon: <TrendingUpIcon sx={{ fontSize: 40 }} />,
-      title: 'Business Impact',
-      description: 'Understand the real-world impact and benefits of AI implementation in business scenarios.',
+      title: 'Gen AI Toolset',
+      description: 'List and features of Gen AI tools that can help to improve the day to day tasks and efficiency',
     },
   ];
 
