@@ -9,7 +9,8 @@ import {
   Button,
   Chip,
   Box,
-  Stack
+  Stack,
+  Divider
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import PendingIcon from '@mui/icons-material/Pending';
@@ -73,8 +74,8 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
             }}
           >
             <CardContent sx={{ p: 2.5, pb: 1, flexGrow: 1 }}>
-              <Stack spacing={2}>
-                {/* Use Case and Status */}
+              <Stack spacing={1.5}>
+                {/* Use Case Title and Status */}
                 <Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
                     <Typography 
@@ -106,7 +107,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                     sx={{ 
                       fontSize: '0.875rem',
                       lineHeight: 1.6,
-                      mb: 2,
+                      mb: 1,
                       minHeight: '4.2em',
                       display: '-webkit-box',
                       WebkitLineClamp: 3,
@@ -118,81 +119,109 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                   </Typography>
                 </Box>
 
-                {/* Tags */}
-                <Stack spacing={1.5}>
-                  {/* service_line & SDLC Phase */}
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {usecase.service_line && (
-                      <Chip 
-                        label={usecase.service_line} 
-                        size="small" 
-                        sx={{ 
-                          height: '24px',
-                          fontSize: '0.75rem',
-                          fontWeight: 500,
-                          bgcolor: 'primary.50',
-                          color: 'primary.dark',
-                          border: '1px solid',
-                          borderColor: 'primary.100',
-                          '& .MuiChip-label': { px: 1 }
-                        }}
-                      />
-                    )}
-                    {usecase.sdlc_phase && (
-                      <Chip 
-                        label={usecase.sdlc_phase} 
-                        size="small" 
-                        sx={{ 
-                          height: '24px',
-                          fontSize: '0.75rem',
-                          fontWeight: 500,
-                          bgcolor: 'secondary.50',
-                          color: 'secondary.dark',
-                          border: '1px solid',
-                          borderColor: 'secondary.100',
-                          '& .MuiChip-label': { px: 1 }
-                        }}
-                      />
-                    )}
+                {/* Service Line Section */}
+                {usecase.service_line && (
+                  <Box>
+                    <Typography 
+                      component="div"
+                      sx={{ 
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        color: 'text.secondary',
+                        mb: 0.75,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px'
+                      }}
+                    >
+                      Service Line
+                    </Typography>
+                    <Chip 
+                      label={usecase.service_line} 
+                      size="small" 
+                      sx={{ 
+                        height: '24px',
+                        fontSize: '0.75rem',
+                        fontWeight: 500,
+                        bgcolor: '#F3E5F5', // Purple 50
+                        color: '#7B1FA2', // Purple 700
+                        border: '1px solid',
+                        borderColor: '#E1BEE7', // Purple 100
+                        '& .MuiChip-label': { px: 1 }
+                      }}
+                    />
                   </Box>
+                )}
 
-                  {/* Tools */}
-                  {usecase.tools_used && usecase.tools_used.length > 0 && (
-                    <Box>
-                      <Typography 
-                        component="div"
-                        sx={{ 
-                          fontSize: '0.75rem',
-                          fontWeight: 500,
-                          color: 'text.secondary',
-                          mb: 1,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.5px'
-                        }}
-                      >
-                        Tools Used
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
-                        {usecase.tools_used.map((tool, index) => (
-                          <Chip
-                            key={index}
-                            label={tool}
-                            size="small"
-                            sx={{ 
-                              height: '22px',
-                              fontSize: '0.75rem',
-                              fontWeight: 500,
-                              bgcolor: 'grey.50',
-                              border: '1px solid',
-                              borderColor: 'grey.200',
-                              '& .MuiChip-label': { px: 1 }
-                            }}
-                          />
-                        ))}
-                      </Box>
+                {/* SDLC Phase Section */}
+                {usecase.sdlc_phase && (
+                  <Box>
+                    <Typography 
+                      component="div"
+                      sx={{ 
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        color: 'text.secondary',
+                        mb: 0.75,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px'
+                      }}
+                    >
+                      SDLC Phase
+                    </Typography>
+                    <Chip 
+                      label={usecase.sdlc_phase} 
+                      size="small" 
+                      sx={{ 
+                        height: '24px',
+                        fontSize: '0.75rem',
+                        fontWeight: 500,
+                        bgcolor: '#E0F2F1', // Teal 50
+                        color: '#00796B', // Teal 700
+                        border: '1px solid',
+                        borderColor: '#B2DFDB', // Teal 100
+                        '& .MuiChip-label': { px: 1 }
+                      }}
+                    />
+                  </Box>
+                )}
+
+                {/* Tools Section */}
+                {usecase.tools_used && usecase.tools_used.length > 0 && (
+                  <Box>
+                    <Typography 
+                      component="div"
+                      sx={{ 
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        color: 'text.secondary',
+                        mb: 0.75,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px'
+                      }}
+                    >
+                      Tools Used
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+                      {usecase.tools_used.map((tool, index) => (
+                        <Chip
+                          key={index}
+                          label={tool}
+                          size="small"
+                          sx={{ 
+                            height: '22px',
+                            fontSize: '0.75rem',
+                            fontWeight: 500,
+                            bgcolor: '#ECEFF1', // Blue Grey 50
+                            color: '#455A64', // Blue Grey 700
+                            border: '1px solid',
+                            borderColor: '#CFD8DC', // Blue Grey 100
+                            '& .MuiChip-label': { px: 1 }
+                          }}
+                        />
+                      ))}
                     </Box>
-                  )}
-                </Stack>
+                  </Box>
+                )}
               </Stack>
             </CardContent>
 
