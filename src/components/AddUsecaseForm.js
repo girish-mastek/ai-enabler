@@ -48,7 +48,11 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
     prompts_used: '',
     service_line: '',
     sdlc_phase: '',
-    tools_used: []
+    tools_used: [],
+    project: '',
+    estimated_efforts: '',
+    actual_hours: '',
+    comments: ''
   });
 
   const handleChange = (e) => {
@@ -81,7 +85,11 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
       prompts_used: '',
       service_line: '',
       sdlc_phase: '',
-      tools_used: []
+      tools_used: [],
+      project: '',
+      estimated_efforts: '',
+      actual_hours: '',
+      comments: ''
     });
   };
 
@@ -91,7 +99,11 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
       prompts_used: '',
       service_line: '',
       sdlc_phase: '',
-      tools_used: []
+      tools_used: [],
+      project: '',
+      estimated_efforts: '',
+      actual_hours: '',
+      comments: ''
     });
     onClose();
   };
@@ -122,6 +134,15 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
               value={formData.usecase}
               onChange={handleChange}
               autoFocus
+            />
+
+            <TextField
+              required
+              fullWidth
+              label="Project"
+              name="project"
+              value={formData.project}
+              onChange={handleChange}
             />
 
             <TextField
@@ -190,6 +211,37 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
                 ))}
               </Select>
             </FormControl>
+
+            <TextField
+              required
+              fullWidth
+              label="Estimated Efforts"
+              name="estimated_efforts"
+              value={formData.estimated_efforts}
+              onChange={handleChange}
+              placeholder="e.g., 40 hours"
+            />
+
+            <TextField
+              required
+              fullWidth
+              label="Actual Hours"
+              name="actual_hours"
+              value={formData.actual_hours}
+              onChange={handleChange}
+              placeholder="e.g., 35 hours"
+            />
+
+            <TextField
+              fullWidth
+              label="Comments"
+              name="comments"
+              value={formData.comments}
+              onChange={handleChange}
+              multiline
+              rows={2}
+              placeholder="Add any additional comments or notes"
+            />
           </Stack>
         </Box>
       </DialogContent>

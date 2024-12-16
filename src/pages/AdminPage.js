@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Container,
@@ -28,11 +28,6 @@ const AdminPage = ({ usecases, onApprove, onReject }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [alert, setAlert] = useState(null);
 
-  // Debug log to check incoming data
-  useEffect(() => {
-    console.log('Usecases in AdminPage:', usecases);
-  }, [usecases]);
-
   const pendingUsecases = usecases.filter(usecase => usecase.status === 'pending');
   const approvedUsecases = usecases.filter(usecase => usecase.status === 'approved');
   const rejectedUsecases = usecases.filter(usecase => usecase.status === 'rejected');
@@ -57,126 +52,124 @@ const AdminPage = ({ usecases, onApprove, onReject }) => {
     if (text && text.length > maxLength) {
       return text.substring(0, maxLength) + '...';
     }
-    return text || ''; // Return empty string if text is undefined
+    return text || '';
   };
 
-  const UseCaseTable = ({ usecases, showModeration = false }) => {
-    // Debug log to check data at table level
-    console.log('Usecases in table:', usecases);
-
-    return (
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Use Case</TableCell>
-              <TableCell>Prompts Used</TableCell>
-              <TableCell>Service Line</TableCell>
-              <TableCell>SDLC Phase</TableCell>
-              <TableCell>Tools</TableCell>
-              <TableCell>Submitted At</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {usecases.map((usecase) => {
-              // Debug log for each usecase
-              console.log('Processing usecase:', usecase);
-              
-              return (
-                <TableRow key={usecase.id}>
-                  <TableCell>{usecase.id}</TableCell>
-                  <TableCell>
-                    <Tooltip title={usecase.usecase || ''}>
-                      <Typography variant="body2">
-                        {truncateText(usecase.usecase)}
-                      </Typography>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>
-                    <Tooltip title={usecase.prompts_used || ''}>
-                      <Typography variant="body2">
-                        {truncateText(usecase.prompts_used)}
-                      </Typography>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>
-                    {usecase.service_line && (
-                      <Chip 
-                        label={usecase.service_line} 
-                        size="small" 
-                        color="primary" 
-                      />
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {usecase.sdlc_phase && (
-                      <Chip 
-                        label={usecase.sdlc_phase} 
-                        size="small" 
-                        color="secondary" 
-                      />
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Stack direction="row" spacing={1} flexWrap="wrap">
-                      {usecase.tools_used?.map((tool, index) => (
-                        <Chip
-                          key={index}
-                          label={tool}
-                          size="small"
-                          variant="outlined"
-                          sx={{ mb: 0.5 }}
-                        />
-                      ))}
-                    </Stack>
-                  </TableCell>
-                  <TableCell>
-                    {usecase.submittedAt && new Date(usecase.submittedAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Stack direction="row" spacing={1} justifyContent="flex-end">
-                      {showModeration && (
-                        <>
-                          <Button
-                            startIcon={<CheckCircleIcon />}
-                            color="success"
-                            onClick={() => handleApprove(usecase.id)}
-                          >
-                            Approve
-                          </Button>
-                          <Button
-                            startIcon={<CancelIcon />}
-                            color="error"
-                            onClick={() => handleReject(usecase.id)}
-                          >
-                            Reject
-                          </Button>
-                        </>
-                      )}
+  const UseCaseTable = ({ usecases, showModeration = false }) => (
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>Use Case</TableCell>
+            <TableCell>Project</TableCell>
+            <TableCell>Service Line</TableCell>
+            <TableCell>SDLC Phase</TableCell>
+            <TableCell>Estimated Efforts</TableCell>
+            <TableCell>Actual Hours</TableCell>
+            <TableCell>Tools</TableCell>
+            <TableCell>Comments</TableCell>
+            <TableCell>Submitted At</TableCell>
+            <TableCell align="right">Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {usecases.map((usecase) => (
+            <TableRow key={usecase.id}>
+              <TableCell>{usecase.id}</TableCell>
+              <TableCell>
+                <Tooltip title={usecase.usecase || ''}>
+                  <Typography variant="body2">
+                    {truncateText(usecase.usecase, 30)}
+                  </Typography>
+                </Tooltip>
+              </TableCell>
+              <TableCell>
+                <Tooltip title={usecase.project || ''}>
+                  <Typography variant="body2">
+                    {truncateText(usecase.project, 30)}
+                  </Typography>
+                </Tooltip>
+              </TableCell>
+              <TableCell>
+                <Chip 
+                  label={usecase.service_line} 
+                  size="small" 
+                  color="primary" 
+                />
+              </TableCell>
+              <TableCell>
+                <Chip 
+                  label={usecase.sdlc_phase} 
+                  size="small" 
+                  color="secondary" 
+                />
+              </TableCell>
+              <TableCell>{usecase.estimated_efforts}</TableCell>
+              <TableCell>{usecase.actual_hours}</TableCell>
+              <TableCell>
+                <Stack direction="row" spacing={1} flexWrap="wrap">
+                  {usecase.tools_used?.map((tool, index) => (
+                    <Chip
+                      key={index}
+                      label={tool}
+                      size="small"
+                      variant="outlined"
+                      sx={{ mb: 0.5 }}
+                    />
+                  ))}
+                </Stack>
+              </TableCell>
+              <TableCell>
+                <Tooltip title={usecase.comments || ''}>
+                  <Typography variant="body2">
+                    {truncateText(usecase.comments, 30)}
+                  </Typography>
+                </Tooltip>
+              </TableCell>
+              <TableCell>
+                {new Date(usecase.submittedAt).toLocaleDateString()}
+              </TableCell>
+              <TableCell align="right">
+                <Stack direction="row" spacing={1} justifyContent="flex-end">
+                  {showModeration && (
+                    <>
                       <Button
-                        startIcon={<EditIcon />}
-                        color="primary"
+                        startIcon={<CheckCircleIcon />}
+                        color="success"
+                        onClick={() => handleApprove(usecase.id)}
                       >
-                        Edit
+                        Approve
                       </Button>
                       <Button
-                        startIcon={<DeleteIcon />}
+                        startIcon={<CancelIcon />}
                         color="error"
+                        onClick={() => handleReject(usecase.id)}
                       >
-                        Delete
+                        Reject
                       </Button>
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  };
+                    </>
+                  )}
+                  <Button
+                    startIcon={<EditIcon />}
+                    color="primary"
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    startIcon={<DeleteIcon />}
+                    color="error"
+                  >
+                    Delete
+                  </Button>
+                </Stack>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 
   return (
     <Container>

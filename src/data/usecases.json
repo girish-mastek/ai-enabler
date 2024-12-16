@@ -9,6 +9,10 @@
       "ChatGPT",
       "Langchain"
     ],
+    "project": "Document Management System",
+    "estimated_efforts": "40 hours",
+    "actual_hours": "35 hours",
+    "comments": "Successfully implemented with 98% accuracy in summarization",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -23,6 +27,10 @@
       "ChatGPT",
       "Microsoft Copilot"
     ],
+    "project": "Customer Service Enhancement",
+    "estimated_efforts": "60 hours",
+    "actual_hours": "65 hours",
+    "comments": "Integrated with existing CRM system, handling 70% of basic queries",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -37,6 +45,10 @@
       "Github Copilot",
       "Langchain"
     ],
+    "project": "Financial Security Enhancement",
+    "estimated_efforts": "80 hours",
+    "actual_hours": "85 hours",
+    "comments": "Reduced false positives by 40% compared to previous system",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -51,6 +63,10 @@
       "ChatGPT",
       "Streamlit"
     ],
+    "project": "E-commerce Personalization",
+    "estimated_efforts": "50 hours",
+    "actual_hours": "45 hours",
+    "comments": "Increased conversion rate by 25% in initial testing",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -65,6 +81,10 @@
       "Microsoft Copilot",
       "Langchain"
     ],
+    "project": "Equipment Maintenance Optimization",
+    "estimated_efforts": "70 hours",
+    "actual_hours": "75 hours",
+    "comments": "Reduced unexpected downtime by 60% in pilot phase",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -79,6 +99,10 @@
       "ChatGPT",
       "Github Copilot"
     ],
+    "project": "Marketing Automation",
+    "estimated_efforts": "45 hours",
+    "actual_hours": "40 hours",
+    "comments": "Improved content creation efficiency by 3x",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
     "moderatedAt": "2024-01-01T00:00:00.000Z"
@@ -89,6 +113,14 @@
     "prompts_used": "Automate code review process using AI to identify potential bugs, security vulnerabilities, and suggest code improvements. Integrates with version control systems to provide real-time feedback during pull requests.",
     "service_line": "Data",
     "sdlc_phase": "Development",
+    "tools_used": [
+      "Github Copilot",
+      "ChatGPT"
+    ],
+    "project": "Development Workflow Automation",
+    "estimated_efforts": "90 hours",
+    "actual_hours": "95 hours",
+    "comments": "Currently in beta testing with development team",
     "status": "pending",
     "submittedAt": "2024-01-15T12:00:00.000Z"
   }

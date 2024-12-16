@@ -9,12 +9,16 @@ import {
   Button,
   Grid,
   Paper,
-  Stack
+  Stack,
+  Divider
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import PendingIcon from '@mui/icons-material/Pending';
+import BusinessIcon from '@mui/icons-material/Business';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CommentIcon from '@mui/icons-material/Comment';
 
 const UsecaseDetail = ({ usecases }) => {
   const { id } = useParams();
@@ -88,11 +92,80 @@ const UsecaseDetail = ({ usecases }) => {
             </Box>
           </Box>
 
-          <Typography variant="body1" paragraph>
-            {usecase.prompts_used}
-          </Typography>
-
           <Grid container spacing={3}>
+            {/* Project Information */}
+            <Grid item xs={12}>
+              <Paper sx={{ p: 2, height: '100%' }}>
+                <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+                  <BusinessIcon color="primary" />
+                  <Typography variant="h6">
+                    Project Details
+                  </Typography>
+                </Stack>
+                <Typography variant="body1" paragraph>
+                  {usecase.project}
+                </Typography>
+              </Paper>
+            </Grid>
+
+            {/* Prompts Used */}
+            <Grid item xs={12}>
+              <Paper sx={{ p: 2, height: '100%' }}>
+                <Typography variant="h6" gutterBottom>
+                  Prompts Used
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  {usecase.prompts_used}
+                </Typography>
+              </Paper>
+            </Grid>
+
+            {/* Efforts and Hours */}
+            <Grid item xs={12} md={6}>
+              <Paper sx={{ p: 2, height: '100%' }}>
+                <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+                  <AccessTimeIcon color="primary" />
+                  <Typography variant="h6">
+                    Time & Effort
+                  </Typography>
+                </Stack>
+                <Stack spacing={2}>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Estimated Efforts
+                    </Typography>
+                    <Typography variant="body1">
+                      {usecase.estimated_efforts}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Actual Hours
+                    </Typography>
+                    <Typography variant="body1">
+                      {usecase.actual_hours}
+                    </Typography>
+                  </Box>
+                </Stack>
+              </Paper>
+            </Grid>
+
+            {/* Comments */}
+            <Grid item xs={12} md={6}>
+              <Paper sx={{ p: 2, height: '100%' }}>
+                <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+                  <CommentIcon color="primary" />
+                  <Typography variant="h6">
+                    Comments
+                  </Typography>
+                </Stack>
+                <Typography variant="body1">
+                  {usecase.comments}
+                </Typography>
+              </Paper>
+            </Grid>
+
+            {/* Tools Used */}
             {usecase.tools_used && (
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, height: '100%' }}>
@@ -114,23 +187,27 @@ const UsecaseDetail = ({ usecases }) => {
             )}
           </Grid>
 
-          {usecase.submittedAt && (
-            <Typography 
-              variant="body2" 
-              color="text.secondary"
-              sx={{ mt: 3 }}
-            >
-              Submitted on: {new Date(usecase.submittedAt).toLocaleDateString()}
-            </Typography>
-          )}
-          {usecase.moderatedAt && (
-            <Typography 
-              variant="body2" 
-              color="text.secondary"
-            >
-              Moderated on: {new Date(usecase.moderatedAt).toLocaleDateString()}
-            </Typography>
-          )}
+          <Divider sx={{ my: 3 }} />
+
+          {/* Timestamps */}
+          <Stack spacing={1}>
+            {usecase.submittedAt && (
+              <Typography 
+                variant="body2" 
+                color="text.secondary"
+              >
+                Submitted on: {new Date(usecase.submittedAt).toLocaleDateString()}
+              </Typography>
+            )}
+            {usecase.moderatedAt && (
+              <Typography 
+                variant="body2" 
+                color="text.secondary"
+              >
+                Moderated on: {new Date(usecase.moderatedAt).toLocaleDateString()}
+              </Typography>
+            )}
+          </Stack>
         </CardContent>
       </Card>
     </Box>
