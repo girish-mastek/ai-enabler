@@ -1,5 +1,22 @@
 [
   {
+    "usecase": "restjng",
+    "prompts_used": "fsdkfjkd",
+    "service_line": "DA&AI",
+    "sdlc_phase": "Design/Documentation",
+    "tools_used": [
+      "Gemini",
+      "Github Copilot"
+    ],
+    "project": "skdfkj",
+    "estimated_efforts": "11",
+    "actual_hours": "22",
+    "comments": "msfsakf",
+    "id": 1734380152068,
+    "status": "pending",
+    "submittedAt": "2024-12-16T20:15:52.068Z"
+  },
+  {
     "id": 1,
     "usecase": "Automated Document Summarization",
     "prompts_used": "Summarize lengthy documents into concise summaries.",

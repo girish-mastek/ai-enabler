@@ -13,33 +13,37 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  FormGroup,
+  FormControlLabel,
+  Checkbox
 } from '@mui/material';
 
 const SERVICE_LINE = [
+  'DE&E',
+  'DA&AI',
+  'SFBU',
   'Oracle',
-  'Data',
-  'Engineering',
-  'Salesforce',
+  'CEMS',
 ];
 
 const SDLC_PHASES = [
-  'Planning',
-  'Development',
+  'Discovery',
+  'Design/Documentation',
+  'Deployment',
+  'Implementation/Development',
   'Testing',
-  'Production',
-  'Maintenance'
+  'Upgrade'
 ];
 
 const TOOLS = [
-  'ChatGPT',
-  'Langchain',
+  'Gemini',
   'Microsoft Copilot',
   'Github Copilot',
-  'Streamlit',
-  'Hugging Face',
-  'TensorFlow',
-  'PyTorch'
+  'Amazon Q',
+  'GPT-4',
+  'Others',
+  'AI Amigo'
 ];
 
 const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
@@ -63,13 +67,12 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
     }));
   };
 
-  const handleMultiSelect = (event, field) => {
-    const {
-      target: { value },
-    } = event;
+  const handleToolsChange = (tool) => {
     setFormData(prev => ({
       ...prev,
-      [field]: typeof value === 'string' ? value.split(',') : value,
+      tools_used: prev.tools_used.includes(tool)
+        ? prev.tools_used.filter(t => t !== tool)
+        : [...prev.tools_used, tool]
     }));
   };
 
@@ -120,7 +123,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
     >
       <DialogTitle id="add-usecase-dialog-title">
         <Typography variant="h5" component="div">
-          Add New Use Case
+          Add Usecase
         </Typography>
       </DialogTitle>
       <DialogContent>
@@ -189,27 +192,21 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
             </FormControl>
 
             <FormControl fullWidth required>
-              <InputLabel>Tools Used</InputLabel>
-              <Select
-                multiple
-                name="tools_used"
-                value={formData.tools_used}
-                onChange={(e) => handleMultiSelect(e, 'tools_used')}
-                label="Tools Used"
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-              >
+              <Typography variant="body1" sx={{ mb: 1 }}>Tools Used</Typography>
+              <FormGroup>
                 {TOOLS.map((tool) => (
-                  <MenuItem key={tool} value={tool}>
-                    {tool}
-                  </MenuItem>
+                  <FormControlLabel
+                    key={tool}
+                    control={
+                      <Checkbox
+                        checked={formData.tools_used.includes(tool)}
+                        onChange={() => handleToolsChange(tool)}
+                      />
+                    }
+                    label={tool}
+                  />
                 ))}
-              </Select>
+              </FormGroup>
             </FormControl>
 
             <TextField
@@ -252,7 +249,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
           onClick={handleSubmit}
           color="primary"
         >
-          Add Use Case
+          Add Usecase
         </Button>
       </DialogActions>
     </Dialog>
