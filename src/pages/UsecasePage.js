@@ -1,26 +1,181 @@
-import React from 'react';
-import { Box, Typography, Container } from '@mui/material';
+import React, { useState, useMemo } from 'react';
+import { Box, Typography, Grid } from '@mui/material';
 import UsecaseList from '../components/UsecaseList';
+import FilterSidebar from '../components/FilterSidebar';
 import usecases from '../data/usecases.json';
 
 const UsecasePage = () => {
   // Only show approved use cases
   const approvedUsecases = usecases.filter(usecase => usecase.status === 'approved');
 
+  // Initialize filter state
+  const [selectedFilters, setSelectedFilters] = useState({
+    industry: {},
+    sdlc_phase: {},
+    tools_used: {}
+  });
+
+  // Compute available filters and their counts
+  const availableFilters = useMemo(() => {
+    const filters = {
+      industry: {},
+      sdlc_phase: {},
+      tools_used: {}
+    };
+
+    approvedUsecases.forEach(usecase => {
+      // Count industries
+      if (usecase.industry) {
+        filters.industry[usecase.industry] = (filters.industry[usecase.industry] || 0) + 1;
+      }
+
+      // Count SDLC phases
+      if (usecase.sdlc_phase) {
+        filters.sdlc_phase[usecase.sdlc_phase] = (filters.sdlc_phase[usecase.sdlc_phase] || 0) + 1;
+      }
+
+      // Count tools
+      usecase.tools_used?.forEach(tool => {
+        filters.tools_used[tool] = (filters.tools_used[tool] || 0) + 1;
+      });
+    });
+
+    return filters;
+  }, [approvedUsecases]);
+
+  // Filter use cases based on selected filters
+  const filteredUsecases = useMemo(() => {
+    return approvedUsecases.filter(usecase => {
+      // Check if any filters are selected
+      const hasSelectedFilters = Object.values(selectedFilters).some(
+        category => Object.values(category).some(isSelected => isSelected)
+      );
+
+      // If no filters are selected, show all use cases
+      if (!hasSelectedFilters) return true;
+
+      // Check industry filter
+      const industryMatch = Object.keys(selectedFilters.industry).length === 0 ||
+        (usecase.industry && selectedFilters.industry[usecase.industry]);
+
+      // Check SDLC phase filter
+      const sdlcMatch = Object.keys(selectedFilters.sdlc_phase).length === 0 ||
+        (usecase.sdlc_phase && selectedFilters.sdlc_phase[usecase.sdlc_phase]);
+
+      // Check tools filter
+      const toolsMatch = Object.keys(selectedFilters.tools_used).length === 0 ||
+        usecase.tools_used?.some(tool => selectedFilters.tools_used[tool]);
+
+      return industryMatch && sdlcMatch && toolsMatch;
+    });
+  }, [approvedUsecases, selectedFilters]);
+
+  const handleFilterChange = (newFilters) => {
+    setSelectedFilters(newFilters);
+  };
+
   return (
-    <Container>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          AI Use Cases
-        </Typography>
-        <Typography variant="body1" color="text.secondary" paragraph>
-          Explore our collection of AI use cases across different industries. 
-          Each case demonstrates practical applications and business impact of AI technologies.
-        </Typography>
+    <Box 
+      sx={{ 
+        width: '100%', 
+        minHeight: '100vh', 
+        bgcolor: 'grey.50',
+        overflowX: 'hidden'
+      }}
+    >
+      {/* Header */}
+      <Box 
+        sx={{ 
+          width: '100%',
+          bgcolor: 'white', 
+          borderBottom: 1, 
+          borderColor: 'grey.200',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+        }}
+      >
+        <Box 
+          sx={{ 
+            maxWidth: '1920px', 
+            mx: 'auto',
+            px: { xs: 2, sm: 3, md: 4 },
+            py: 3,
+          }}
+        >
+          <Typography 
+            variant="h4" 
+            gutterBottom
+            sx={{ 
+              fontWeight: 600,
+              color: 'text.primary'
+            }}
+          >
+            AI Use Cases
+          </Typography>
+          <Typography 
+            variant="body1" 
+            color="text.secondary"
+            sx={{ maxWidth: 800 }}
+          >
+            Explore our collection of AI use cases across different industries. 
+            Each case demonstrates practical applications and business impact of AI technologies.
+          </Typography>
+        </Box>
       </Box>
       
-      <UsecaseList usecases={approvedUsecases} />
-    </Container>
+      {/* Main Content */}
+      <Box 
+        sx={{ 
+          maxWidth: '1920px', 
+          mx: 'auto',
+          px: { xs: 2, sm: 3, md: 4 }, 
+          py: 4,
+          boxSizing: 'border-box'
+        }}
+      >
+        <Grid 
+          container 
+          spacing={4}
+          sx={{ 
+            minHeight: 'calc(100vh - 200px)',
+            width: '100%',
+            m: 0
+          }}
+        >
+          {/* Sidebar */}
+          <Grid item xs={12} md={3} lg={2.5} xl={2} sx={{ pl: 0 }}>
+            <Box 
+              sx={{ 
+                position: 'sticky', 
+                top: 24,
+                maxHeight: 'calc(100vh - 48px)',
+                overflowY: 'auto',
+                '&::-webkit-scrollbar': {
+                  width: '4px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: 'transparent',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: 'rgba(0,0,0,0.1)',
+                  borderRadius: '2px',
+                }
+              }}
+            >
+              <FilterSidebar
+                filters={availableFilters}
+                selectedFilters={selectedFilters}
+                onFilterChange={handleFilterChange}
+              />
+            </Box>
+          </Grid>
+
+          {/* Use Cases List */}
+          <Grid item xs={12} md={9} lg={9.5} xl={10} sx={{ pl: { xs: 0, md: 4 } }}>
+            <UsecaseList usecases={filteredUsecases} />
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
   );
 };
 

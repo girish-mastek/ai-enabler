@@ -8,62 +8,202 @@ import {
   Typography,
   Button,
   Chip,
-  Box
+  Box,
+  Stack
 } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const UsecaseList = ({ usecases }) => {
   const navigate = useNavigate();
 
+  if (usecases.length === 0) {
+    return (
+      <Box 
+        sx={{ 
+          p: 4, 
+          textAlign: 'center',
+          bgcolor: 'white',
+          borderRadius: 1,
+          border: '1px solid',
+          borderColor: 'grey.200'
+        }}
+      >
+        <Typography variant="h6" color="text.secondary">
+          No use cases found matching your filters.
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={2.5}>
       {usecases.map((usecase) => (
-        <Grid item xs={12} sm={6} md={4} key={usecase.id}>
+        <Grid 
+          item 
+          xs={12} 
+          sm={6} 
+          lg={4} 
+          xl={3} 
+          key={usecase.id}
+          sx={{ display: 'flex' }}
+        >
           <Card 
             sx={{ 
-              height: '100%', 
               display: 'flex', 
               flexDirection: 'column',
+              width: '100%',
+              bgcolor: 'white',
+              borderRadius: 1,
+              border: '1px solid',
+              borderColor: 'grey.200',
+              transition: 'all 0.2s ease-in-out',
               '&:hover': {
-                boxShadow: 6
+                borderColor: 'primary.main',
+                transform: 'translateY(-2px)',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                '& .learn-more-btn': {
+                  color: 'white',
+                  bgcolor: 'primary.main',
+                  borderColor: 'primary.main'
+                }
               }
             }}
           >
-            <CardContent sx={{ flexGrow: 1 }}>
-              <Typography gutterBottom variant="h6" component="h2">
-                {usecase.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" paragraph>
-                {usecase.description}
-              </Typography>
-              <Box sx={{ mb: 1 }}>
-                {usecase.industry && (
-                  <Chip 
-                    label={usecase.industry} 
-                    size="small" 
-                    sx={{ mr: 1, mb: 1 }} 
-                    color="primary"
-                  />
-                )}
-                {usecase.sdlc_phase && (
-                  <Chip 
-                    label={usecase.sdlc_phase} 
-                    size="small" 
-                    sx={{ mr: 1, mb: 1 }} 
-                    color="secondary"
-                  />
-                )}
-              </Box>
-              {usecase.tools_used && usecase.tools_used.length > 0 && (
-                <Typography variant="body2" color="text.secondary">
-                  Tools: {usecase.tools_used.join(', ')}
-                </Typography>
-              )}
+            <CardContent sx={{ p: 2.5, pb: 1, flexGrow: 1 }}>
+              <Stack spacing={2}>
+                {/* Title and Description */}
+                <Box>
+                  <Typography 
+                    variant="h6" 
+                    component="h2"
+                    sx={{ 
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      lineHeight: 1.4,
+                      mb: 1.5,
+                      color: 'text.primary'
+                    }}
+                  >
+                    {usecase.title}
+                  </Typography>
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary"
+                    sx={{ 
+                      fontSize: '0.875rem',
+                      lineHeight: 1.6,
+                      mb: 2,
+                      minHeight: '4.2em',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    {usecase.description}
+                  </Typography>
+                </Box>
+
+                {/* Tags */}
+                <Stack spacing={1.5}>
+                  {/* Industry & SDLC Phase */}
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                    {usecase.industry && (
+                      <Chip 
+                        label={usecase.industry} 
+                        size="small" 
+                        sx={{ 
+                          height: '24px',
+                          fontSize: '0.75rem',
+                          fontWeight: 500,
+                          bgcolor: 'primary.50',
+                          color: 'primary.dark',
+                          border: '1px solid',
+                          borderColor: 'primary.100',
+                          '& .MuiChip-label': { px: 1 }
+                        }}
+                      />
+                    )}
+                    {usecase.sdlc_phase && (
+                      <Chip 
+                        label={usecase.sdlc_phase} 
+                        size="small" 
+                        sx={{ 
+                          height: '24px',
+                          fontSize: '0.75rem',
+                          fontWeight: 500,
+                          bgcolor: 'secondary.50',
+                          color: 'secondary.dark',
+                          border: '1px solid',
+                          borderColor: 'secondary.100',
+                          '& .MuiChip-label': { px: 1 }
+                        }}
+                      />
+                    )}
+                  </Box>
+
+                  {/* Tools */}
+                  {usecase.tools_used && usecase.tools_used.length > 0 && (
+                    <Box>
+                      <Typography 
+                        component="div"
+                        sx={{ 
+                          fontSize: '0.75rem',
+                          fontWeight: 500,
+                          color: 'text.secondary',
+                          mb: 1,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}
+                      >
+                        Tools Used
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+                        {usecase.tools_used.map((tool, index) => (
+                          <Chip
+                            key={index}
+                            label={tool}
+                            size="small"
+                            sx={{ 
+                              height: '22px',
+                              fontSize: '0.75rem',
+                              fontWeight: 500,
+                              bgcolor: 'grey.50',
+                              border: '1px solid',
+                              borderColor: 'grey.200',
+                              '& .MuiChip-label': { px: 1 }
+                            }}
+                          />
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+                </Stack>
+              </Stack>
             </CardContent>
-            <CardActions>
+
+            <CardActions sx={{ p: 2, pt: 1.5 }}>
               <Button 
-                size="small" 
-                color="primary"
+                className="learn-more-btn"
+                fullWidth
+                variant="outlined"
+                endIcon={<ArrowForwardIcon />}
                 onClick={() => navigate(`/usecases/${usecase.id}`)}
+                sx={{ 
+                  py: 0.75,
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  fontSize: '0.875rem',
+                  borderRadius: 1,
+                  transition: 'all 0.2s ease-in-out',
+                  borderColor: 'grey.300',
+                  color: 'text.primary',
+                  '&:hover': {
+                    color: 'white',
+                    bgcolor: 'primary.main',
+                    borderColor: 'primary.main'
+                  }
+                }}
               >
                 Learn More
               </Button>

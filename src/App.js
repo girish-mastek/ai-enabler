@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { 
-  Container, 
+  Box,
   AppBar, 
   Toolbar, 
   Typography, 
   Button,
-  Box,
   ThemeProvider,
   createTheme
 } from '@mui/material';
@@ -24,113 +23,124 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#1976d2',
+      50: '#e3f2fd',
+      100: '#bbdefb',
     },
     secondary: {
       main: '#dc004e',
+      50: '#fce4ec',
+      100: '#f8bbd0',
     },
   },
-  typography: {
-    h1: {
-      fontWeight: 500,
-    },
-    h2: {
-      fontWeight: 500,
-    },
-    h3: {
-      fontWeight: 500,
-    },
-    h4: {
-      fontWeight: 500,
-    },
-  },
+  components: {
+    MuiBox: {
+      styleOverrides: {
+        root: {
+          boxSizing: 'border-box'
+        }
+      }
+    }
+  }
 });
 
 function App() {
-  const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  const handleOpenDialog = () => {
+    console.log('Opening dialog...');
+    setIsAddDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    console.log('Closing dialog...');
+    setIsAddDialogOpen(false);
+  };
+
+  const handleAddUseCase = (usecase) => {
+    console.log('Adding new usecase:', usecase);
+    // In a real application, this would be an API call
+    handleCloseDialog();
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <Box sx={{ flexGrow: 1, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-          <AppBar position="static" elevation={2}>
-            <Toolbar>
-              <Typography 
-                variant="h6" 
-                component={Link} 
-                to="/" 
-                sx={{ 
-                  flexGrow: 1, 
-                  textDecoration: 'none', 
-                  color: 'inherit',
-                  '&:hover': {
-                    color: 'rgba(255, 255, 255, 0.8)',
-                  },
-                }}
-              >
-                Gen AI Usecases Portal
-              </Typography>
-              <Button 
-                color="inherit" 
-                startIcon={<AddIcon />}
-                onClick={() => setIsAddDialogOpen(true)}
-                sx={{ mr: 2 }}
-              >
-                Add Use Case
-              </Button>
-              <Button color="inherit" component={Link} to="/">Home</Button>
-              <Button color="inherit" component={Link} to="/usecases">Usecases</Button>
-              <Button color="inherit" component={Link} to="/admin">Admin</Button>
-            </Toolbar>
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            minHeight: '100vh',
+            width: '100%',
+            overflowX: 'hidden'
+          }}
+        >
+          <AppBar 
+            position="static" 
+            elevation={0} 
+            sx={{ 
+              borderBottom: 1, 
+              borderColor: 'grey.200',
+              width: '100%'
+            }}
+          >
+            <Box sx={{ width: '100%', maxWidth: '1920px', mx: 'auto' }}>
+              <Toolbar sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+                <Typography 
+                  variant="h6" 
+                  component={Link} 
+                  to="/" 
+                  sx={{ 
+                    flexGrow: 1, 
+                    textDecoration: 'none', 
+                    color: 'inherit',
+                    '&:hover': {
+                      color: 'rgba(255, 255, 255, 0.8)',
+                    },
+                  }}
+                >
+                  Gen AI Usecases Portal
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<AddIcon />}
+                  onClick={handleOpenDialog}
+                  sx={{ 
+                    mr: 2,
+                    '&:hover': {
+                      bgcolor: 'secondary.dark',
+                    }
+                  }}
+                >
+                  Add Use Case
+                </Button>
+                <Button color="inherit" component={Link} to="/">Home</Button>
+                <Button color="inherit" component={Link} to="/usecases">Usecases</Button>
+                <Button color="inherit" component={Link} to="/admin">Admin</Button>
+              </Toolbar>
+            </Box>
           </AppBar>
           
-          <Container sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
+          <Box 
+            component="main" 
+            sx={{ 
+              flexGrow: 1,
+              width: '100%',
+              overflowX: 'hidden'
+            }}
+          >
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/usecases" element={<UsecasePage />} />
               <Route path="/usecases/:id" element={<UsecaseDetail />} />
               <Route path="/admin" element={<AdminPage />} />
             </Routes>
-          </Container>
-
-          <Box 
-            component="footer" 
-            sx={{ 
-              py: 3, 
-              px: 2, 
-              mt: 'auto',
-              backgroundColor: (theme) =>
-                theme.palette.mode === 'light'
-                  ? theme.palette.grey[200]
-                  : theme.palette.grey[800],
-            }}
-          >
-            <Container maxWidth="sm">
-              <Typography variant="body2" color="text.secondary" align="center">
-                © {new Date().getFullYear()} Gen AI Usecases Portal. All rights reserved.
-              </Typography>
-            </Container>
           </Box>
 
           <AddUsecaseForm
             open={isAddDialogOpen}
-            onClose={() => setIsAddDialogOpen(false)}
-            onSubmit={async (usecase) => {
-              // In a real application, this would be an API call
-              const response = await fetch('/api/usecases', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  ...usecase,
-                  status: 'pending', // All new use cases start as pending
-                  submittedAt: new Date().toISOString(),
-                }),
-              });
-              if (response.ok) {
-                setIsAddDialogOpen(false);
-              }
-            }}
+            onClose={handleCloseDialog}
+            onSubmit={handleAddUseCase}
           />
         </Box>
       </Router>
