@@ -92,45 +92,6 @@ const UsecasePage = ({ searchQuery, usecases }) => {
         overflowX: 'hidden'
       }}
     >
-      {/* Header */}
-      <Box 
-        sx={{ 
-          width: '100%',
-          bgcolor: 'white', 
-          borderBottom: 1, 
-          borderColor: 'grey.200',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-        }}
-      >
-        <Box 
-          sx={{ 
-            maxWidth: '1920px', 
-            mx: 'auto',
-            px: { xs: 2, sm: 3, md: 4 },
-            py: 3,
-          }}
-        >
-          <Typography 
-            variant="h4" 
-            gutterBottom
-            sx={{ 
-              fontWeight: 600,
-              color: 'text.primary'
-            }}
-          >
-            AI Use Cases
-          </Typography>
-          <Typography 
-            variant="body1" 
-            color="text.secondary"
-            sx={{ maxWidth: 800 }}
-          >
-            Explore our collection of AI use cases across different industries. 
-            Each case demonstrates practical applications of AI technologies.
-          </Typography>
-        </Box>
-      </Box>
-      
       {/* Main Content */}
       <Box 
         sx={{ 
