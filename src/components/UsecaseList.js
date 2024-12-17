@@ -77,79 +77,79 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
               }
             }}
           >
-            <CardContent sx={{ p: 2.5, pb: 1, flexGrow: 1 }}>
-              <Stack spacing={1.5}>
-                {/* Use Case Title and Status */}
-                <Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                    <Typography 
-                      variant="h6" 
-                      component="h2"
-                      title={usecase.usecase || ''}
-                      sx={{ 
-                        fontWeight: 600,
-                        fontSize: '1rem',
-                        lineHeight: 1.4,
-                        color: 'text.primary',
-                        flexGrow: 1
-                      }}
-                    >
-                      {truncateTitle(usecase.usecase)}
-                    </Typography>
-                    {usecase.status === 'pending' && (
-                      <Chip
-                        icon={<PendingIcon />}
-                        label="Pending"
-                        size="small"
-                        color="warning"
-                        sx={{ ml: 1 }}
-                      />
-                    )}
-                  </Box>
+            <CardContent sx={{ p: 2.5, pb: 1, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+              {/* Use Case Title and Status */}
+              <Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
                   <Typography 
-                    variant="body2" 
-                    color="text.secondary"
+                    variant="h6" 
+                    component="h2"
+                    title={usecase.usecase || ''}
                     sx={{ 
-                      fontSize: '0.875rem',
-                      lineHeight: 1.6,
-                      mb: 1,
-                      minHeight: '4.2em',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden'
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      lineHeight: 1.4,
+                      color: 'text.primary',
+                      flexGrow: 1
                     }}
                   >
-                    {usecase.prompts_used || usecase.usecase}
+                    {truncateTitle(usecase.usecase)}
                   </Typography>
+                  {usecase.status === 'pending' && (
+                    <Chip
+                      icon={<PendingIcon />}
+                      label="Pending"
+                      size="small"
+                      color="warning"
+                      sx={{ ml: 1 }}
+                    />
+                  )}
                 </Box>
+                <Typography 
+                  variant="body2" 
+                  color="text.secondary"
+                  sx={{ 
+                    fontSize: '0.875rem',
+                    lineHeight: 1.6,
+                    mb: 1,
+                    minHeight: '4.2em',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                  }}
+                >
+                  {usecase.prompts_used || usecase.usecase}
+                </Typography>
+              </Box>
 
-                {/* Tools Section */}
-                {usecase.tools_used && usecase.tools_used.length > 0 && (
-                  <Box>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
-                      {usecase.tools_used.map((tool, index) => (
-                        <Chip
-                          key={index}
-                          label={tool}
-                          size="small"
-                          sx={{ 
-                            height: '22px',
-                            fontSize: '0.75rem',
-                            fontWeight: 500,
-                            bgcolor: '#ECEFF1', // Blue Grey 50
-                            color: '#455A64', // Blue Grey 700
-                            border: '1px solid',
-                            borderColor: '#CFD8DC', // Blue Grey 100
-                            '& .MuiChip-label': { px: 1 }
-                          }}
-                        />
-                      ))}
-                    </Box>
+              {/* Tools Section */}
+              {usecase.tools_used && usecase.tools_used.length > 0 && (
+                <Box sx={{ mb: 1.5 }}>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+                    {usecase.tools_used.map((tool, index) => (
+                      <Chip
+                        key={index}
+                        label={tool}
+                        size="small"
+                        sx={{ 
+                          height: '22px',
+                          fontSize: '0.75rem',
+                          fontWeight: 500,
+                          bgcolor: '#ECEFF1', // Blue Grey 50
+                          color: '#455A64', // Blue Grey 700
+                          border: '1px solid',
+                          borderColor: '#CFD8DC', // Blue Grey 100
+                          '& .MuiChip-label': { px: 1 }
+                        }}
+                      />
+                    ))}
                   </Box>
-                )}
+                </Box>
+              )}
 
-                {/* Service Line Section */}
+              {/* Service Line Section - pushed to bottom when tools_used is empty */}
+              <Box sx={{ mt: 'auto' }}>
                 {usecase.service_line && (
                   <Box>
                     <Chip 
@@ -182,7 +182,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                     />
                   </Box>
                 )}
-              </Stack>
+              </Box>
             </CardContent>
 
             <CardActions sx={{ p: 2, pt: 1.5, flexDirection: 'column', gap: 1 }}>
