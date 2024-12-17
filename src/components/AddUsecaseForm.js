@@ -6,13 +6,6 @@ import {
   Typography,
   Stack,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   FormGroup,
   FormControlLabel,
   Checkbox,
@@ -20,7 +13,11 @@ import {
   Paper,
   Divider,
   ToggleButton,
-  ToggleButtonGroup
+  ToggleButtonGroup,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -41,14 +38,14 @@ const SDLC_PHASES = [
   'Upgrade'
 ];
 
-const TOOLS = [
+const DEFAULT_TOOLS = [
   'Gemini',
   'Microsoft Copilot',
   'Github Copilot',
   'Amazon Q',
   'GPT-4',
-  'Others',
-  'AI Amigo'
+  'AI Amigo',
+  'Others'
 ];
 
 const StyledSection = styled(Paper)(({ theme }) => ({
@@ -72,12 +69,60 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   },
 }));
 
+const StyledFormGroup = styled(FormGroup)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  gap: theme.spacing(1),
+  '& .MuiFormControlLabel-root': {
+    margin: 0,
+    marginRight: theme.spacing(1),
+    '& .MuiCheckbox-root': {
+      padding: theme.spacing(0.5),
+    },
+    '& .MuiTypography-root': {
+      fontSize: '0.875rem',
+      color: theme.palette.text.secondary,
+    },
+    '&:hover': {
+      '& .MuiTypography-root': {
+        color: theme.palette.text.primary,
+      },
+    },
+    '&.Mui-checked': {
+      '& .MuiTypography-root': {
+        color: theme.palette.text.primary,
+        fontWeight: 500,
+      },
+    },
+  },
+}));
+
+const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
+  '&:not(.Mui-checked)': {
+    color: theme.palette.text.disabled,
+  },
+  '&.Mui-checked': {
+    '& + .MuiFormControlLabel-label': {
+      color: theme.palette.text.primary,
+      fontWeight: 500,
+    },
+  },
+}));
+
 const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
+  const [customTools, setCustomTools] = useState(() => {
+    const savedTools = localStorage.getItem('customTools');
+    return savedTools ? JSON.parse(savedTools) : [];
+  });
+  const [newTool, setNewTool] = useState('');
+  const [showNewToolInput, setShowNewToolInput] = useState(false);
+
   const [formData, setFormData] = useState({
     usecase: '',
     prompts_used: '',
-    service_line: '',
-    sdlc_phase: '',
+    service_line: [],
+    sdlc_phase: [],
     tools_used: [],
     project: '',
     estimated_efforts: '',
@@ -88,13 +133,15 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
+  const TOOLS = [...DEFAULT_TOOLS.filter(tool => tool !== 'Others'), ...customTools, 'Others'];
+
   useEffect(() => {
     if (usecase && isEdit) {
       setFormData({
         usecase: usecase.usecase || '',
         prompts_used: usecase.prompts_used || '',
-        service_line: usecase.service_line || '',
-        sdlc_phase: usecase.sdlc_phase || '',
+        service_line: Array.isArray(usecase.service_line) ? usecase.service_line : [usecase.service_line],
+        sdlc_phase: Array.isArray(usecase.sdlc_phase) ? usecase.sdlc_phase : [usecase.sdlc_phase],
         tools_used: usecase.tools_used || [],
         project: usecase.project || '',
         estimated_efforts: usecase.estimated_efforts || '',
@@ -102,12 +149,11 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
         comments: usecase.comments || ''
       });
     } else {
-      // Reset form when opening in add mode
       setFormData({
         usecase: '',
         prompts_used: '',
-        service_line: '',
-        sdlc_phase: '',
+        service_line: [],
+        sdlc_phase: [],
         tools_used: [],
         project: '',
         estimated_efforts: '',
@@ -140,11 +186,11 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
         return '';
 
       case 'service_line':
-        if (!value) return 'Service line is required';
+        if (!value || value.length === 0) return 'At least one service line must be selected';
         return '';
 
       case 'sdlc_phase':
-        if (!value) return 'SDLC phase is required';
+        if (!value || value.length === 0) return 'At least one SDLC phase must be selected';
         return '';
 
       case 'tools_used':
@@ -184,18 +230,50 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
   };
 
   const handleBlur = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
     setTouched(prev => ({
       ...prev,
       [name]: true
     }));
     setErrors(prev => ({
       ...prev,
-      [name]: validateField(name, value)
+      [name]: validateField(name, formData[name])
+    }));
+  };
+
+  const handleCheckboxChange = (field) => (event) => {
+    const value = event.target.name;
+    setFormData(prev => ({
+      ...prev,
+      [field]: event.target.checked
+        ? [...prev[field], value]
+        : prev[field].filter(item => item !== value)
+    }));
+
+    setTouched(prev => ({
+      ...prev,
+      [field]: true
+    }));
+
+    setErrors(prev => ({
+      ...prev,
+      [field]: validateField(field, 
+        event.target.checked 
+          ? [...formData[field], value]
+          : formData[field].filter(item => item !== value)
+      )
     }));
   };
 
   const handleToolsChange = (event, newTools) => {
+    if (newTools.includes('Others') && !formData.tools_used.includes('Others')) {
+      setShowNewToolInput(true);
+    }
+    else if (!newTools.includes('Others') && formData.tools_used.includes('Others')) {
+      setShowNewToolInput(false);
+      setNewTool('');
+    }
+
     setFormData(prev => ({
       ...prev,
       tools_used: newTools
@@ -205,6 +283,22 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
       ...prev,
       tools_used: validateField('tools_used', newTools)
     }));
+  };
+
+  const handleAddNewTool = () => {
+    if (newTool.trim()) {
+      const updatedCustomTools = [...customTools, newTool.trim()];
+      setCustomTools(updatedCustomTools);
+      localStorage.setItem('customTools', JSON.stringify(updatedCustomTools));
+      
+      setFormData(prev => ({
+        ...prev,
+        tools_used: [...prev.tools_used.filter(tool => tool !== 'Others'), newTool.trim()]
+      }));
+      
+      setNewTool('');
+      setShowNewToolInput(false);
+    }
   };
 
   const validateForm = () => {
@@ -241,8 +335,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     setFormData({
       usecase: '',
       prompts_used: '',
-      service_line: '',
-      sdlc_phase: '',
+      service_line: [],
+      sdlc_phase: [],
       tools_used: [],
       project: '',
       estimated_efforts: '',
@@ -251,6 +345,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     });
     setErrors({});
     setTouched({});
+    setShowNewToolInput(false);
+    setNewTool('');
     onClose();
   };
 
@@ -274,6 +370,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
       </DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          {/* Basic Information Section */}
           <StyledSection>
             <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
               Basic Information
@@ -308,6 +405,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
             </Stack>
           </StyledSection>
 
+          {/* Details Section */}
           <StyledSection>
             <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
               Details
@@ -329,55 +427,66 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
               />
 
               <FormControl 
-                fullWidth 
                 required
                 error={touched.service_line && Boolean(errors.service_line)}
+                component="fieldset"
               >
-                <InputLabel>Service Line</InputLabel>
-                <Select
-                  name="service_line"
-                  value={formData.service_line}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  label="Service Line"
-                >
-                  {SERVICE_LINE.map((service_line) => (
-                    <MenuItem key={service_line} value={service_line}>
-                      {service_line}
-                    </MenuItem>
+                <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', fontSize: '0.875rem' }}>
+                  Service Line
+                </Typography>
+                <StyledFormGroup>
+                  {SERVICE_LINE.map((service) => (
+                    <FormControlLabel
+                      key={service}
+                      control={
+                        <StyledCheckbox
+                          checked={formData.service_line.includes(service)}
+                          onChange={handleCheckboxChange('service_line')}
+                          name={service}
+                          size="small"
+                        />
+                      }
+                      label={service}
+                    />
                   ))}
-                </Select>
+                </StyledFormGroup>
                 {touched.service_line && errors.service_line && (
-                  <FormHelperText>{errors.service_line}</FormHelperText>
+                  <FormHelperText error>{errors.service_line}</FormHelperText>
                 )}
               </FormControl>
 
               <FormControl 
-                fullWidth 
                 required
                 error={touched.sdlc_phase && Boolean(errors.sdlc_phase)}
+                component="fieldset"
               >
-                <InputLabel>SDLC Phase</InputLabel>
-                <Select
-                  name="sdlc_phase"
-                  value={formData.sdlc_phase}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  label="SDLC Phase"
-                >
+                <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', fontSize: '0.875rem' }}>
+                  SDLC Phase
+                </Typography>
+                <StyledFormGroup>
                   {SDLC_PHASES.map((phase) => (
-                    <MenuItem key={phase} value={phase}>
-                      {phase}
-                    </MenuItem>
+                    <FormControlLabel
+                      key={phase}
+                      control={
+                        <StyledCheckbox
+                          checked={formData.sdlc_phase.includes(phase)}
+                          onChange={handleCheckboxChange('sdlc_phase')}
+                          name={phase}
+                          size="small"
+                        />
+                      }
+                      label={phase}
+                    />
                   ))}
-                </Select>
+                </StyledFormGroup>
                 {touched.sdlc_phase && errors.sdlc_phase && (
-                  <FormHelperText>{errors.sdlc_phase}</FormHelperText>
+                  <FormHelperText error>{errors.sdlc_phase}</FormHelperText>
                 )}
               </FormControl>
             </Stack>
           </StyledSection>
 
+          {/* Tools Section */}
           <StyledSection>
             <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
               Tools Used
@@ -404,8 +513,29 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                 <FormHelperText error sx={{ mt: 1 }}>{errors.tools_used}</FormHelperText>
               )}
             </FormControl>
+
+            {showNewToolInput && (
+              <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="New Tool Name"
+                  value={newTool}
+                  onChange={(e) => setNewTool(e.target.value)}
+                  placeholder="Enter new tool name"
+                />
+                <Button
+                  variant="contained"
+                  onClick={handleAddNewTool}
+                  disabled={!newTool.trim()}
+                >
+                  Save
+                </Button>
+              </Box>
+            )}
           </StyledSection>
 
+          {/* Effort Tracking Section */}
           <StyledSection>
             <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
               Effort Tracking
@@ -443,6 +573,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
             </Stack>
           </StyledSection>
 
+          {/* Additional Comments Section */}
           <StyledSection>
             <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
               Additional Comments
