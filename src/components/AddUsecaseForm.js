@@ -121,8 +121,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
   const [formData, setFormData] = useState({
     usecase: '',
     prompts_used: '',
-    service_line: [],
-    sdlc_phase: [],
+    service_line: '',
+    sdlc_phase: '',
     tools_used: [],
     project: '',
     estimated_efforts: '',
@@ -140,8 +140,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
       setFormData({
         usecase: usecase.usecase || '',
         prompts_used: usecase.prompts_used || '',
-        service_line: Array.isArray(usecase.service_line) ? usecase.service_line : [usecase.service_line],
-        sdlc_phase: Array.isArray(usecase.sdlc_phase) ? usecase.sdlc_phase : [usecase.sdlc_phase],
+        service_line: usecase.service_line || '',
+        sdlc_phase: usecase.sdlc_phase || '',
         tools_used: usecase.tools_used || [],
         project: usecase.project || '',
         estimated_efforts: usecase.estimated_efforts || '',
@@ -152,8 +152,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
       setFormData({
         usecase: '',
         prompts_used: '',
-        service_line: [],
-        sdlc_phase: [],
+        service_line: '',
+        sdlc_phase: '',
         tools_used: [],
         project: '',
         estimated_efforts: '',
@@ -186,11 +186,11 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
         return '';
 
       case 'service_line':
-        if (!value || value.length === 0) return 'At least one service line must be selected';
+        if (!value) return 'Service line must be selected';
         return '';
 
       case 'sdlc_phase':
-        if (!value || value.length === 0) return 'At least one SDLC phase must be selected';
+        if (!value) return 'SDLC phase must be selected';
         return '';
 
       case 'tools_used':
@@ -241,13 +241,17 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     }));
   };
 
-  const handleCheckboxChange = (field) => (event) => {
+  const handleSingleCheckboxChange = (field) => (event) => {
     const value = event.target.name;
+    
+    // If the clicked checkbox is already selected, do nothing
+    if (formData[field] === value) {
+      return;
+    }
+
     setFormData(prev => ({
       ...prev,
-      [field]: event.target.checked
-        ? [...prev[field], value]
-        : prev[field].filter(item => item !== value)
+      [field]: value
     }));
 
     setTouched(prev => ({
@@ -257,11 +261,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
 
     setErrors(prev => ({
       ...prev,
-      [field]: validateField(field, 
-        event.target.checked 
-          ? [...formData[field], value]
-          : formData[field].filter(item => item !== value)
-      )
+      [field]: validateField(field, value)
     }));
   };
 
@@ -335,8 +335,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     setFormData({
       usecase: '',
       prompts_used: '',
-      service_line: [],
-      sdlc_phase: [],
+      service_line: '',
+      sdlc_phase: '',
       tools_used: [],
       project: '',
       estimated_efforts: '',
@@ -440,8 +440,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                       key={service}
                       control={
                         <StyledCheckbox
-                          checked={formData.service_line.includes(service)}
-                          onChange={handleCheckboxChange('service_line')}
+                          checked={formData.service_line === service}
+                          onChange={handleSingleCheckboxChange('service_line')}
                           name={service}
                           size="small"
                         />
@@ -469,8 +469,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                       key={phase}
                       control={
                         <StyledCheckbox
-                          checked={formData.sdlc_phase.includes(phase)}
-                          onChange={handleCheckboxChange('sdlc_phase')}
+                          checked={formData.sdlc_phase === phase}
+                          onChange={handleSingleCheckboxChange('sdlc_phase')}
                           name={phase}
                           size="small"
                         />
