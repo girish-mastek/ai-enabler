@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -72,7 +72,7 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   },
 }));
 
-const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
+const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
   const [formData, setFormData] = useState({
     usecase: '',
     prompts_used: '',
@@ -87,6 +87,37 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
 
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+
+  useEffect(() => {
+    if (usecase && isEdit) {
+      setFormData({
+        usecase: usecase.usecase || '',
+        prompts_used: usecase.prompts_used || '',
+        service_line: usecase.service_line || '',
+        sdlc_phase: usecase.sdlc_phase || '',
+        tools_used: usecase.tools_used || [],
+        project: usecase.project || '',
+        estimated_efforts: usecase.estimated_efforts || '',
+        actual_hours: usecase.actual_hours || '',
+        comments: usecase.comments || ''
+      });
+    } else {
+      // Reset form when opening in add mode
+      setFormData({
+        usecase: '',
+        prompts_used: '',
+        service_line: '',
+        sdlc_phase: '',
+        tools_used: [],
+        project: '',
+        estimated_efforts: '',
+        actual_hours: '',
+        comments: ''
+      });
+    }
+    setErrors({});
+    setTouched({});
+  }, [usecase, isEdit, open]);
 
   const validateField = (name, value) => {
     switch (name) {
@@ -199,24 +230,11 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
       return;
     }
 
-    const newUsecase = {
+    const submitData = {
       ...formData,
-      id: Date.now(),
+      id: usecase?.id || Date.now(),
     };
-    onSubmit(newUsecase);
-    setFormData({
-      usecase: '',
-      prompts_used: '',
-      service_line: '',
-      sdlc_phase: '',
-      tools_used: [],
-      project: '',
-      estimated_efforts: '',
-      actual_hours: '',
-      comments: ''
-    });
-    setErrors({});
-    setTouched({});
+    onSubmit(submitData);
   };
 
   const handleCancel = () => {
@@ -251,7 +269,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
     >
       <DialogTitle>
         <Typography variant="h5" component="div" sx={{ fontWeight: 600, color: 'primary.main' }}>
-          Add New Use Case
+          {isEdit ? 'Update Use Case' : 'Add New Use Case'}
         </Typography>
       </DialogTitle>
       <DialogContent>
@@ -463,7 +481,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit }) => {
             fontWeight: 600
           }}
         >
-          Add Use Case
+          {isEdit ? 'Update Use Case' : 'Add Use Case'}
         </Button>
       </DialogActions>
     </Dialog>

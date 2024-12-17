@@ -31,6 +31,25 @@ export const addUseCase = async (useCase) => {
   }
 };
 
+// Update an existing use case
+export const updateUseCase = async (id, useCase) => {
+  try {
+    const response = await fetch(`${API_URL}/usecases/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(useCase),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error);
+    return data;
+  } catch (error) {
+    console.error('Error updating usecase:', error);
+    throw error;
+  }
+};
+
 // Update use case status (for moderation)
 export const updateUseCaseStatus = async (id, status) => {
   try {

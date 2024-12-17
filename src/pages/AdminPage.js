@@ -29,7 +29,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
+const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [alert, setAlert] = useState(null);
@@ -38,7 +38,6 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
   const pendingUsecases = usecases.filter(usecase => usecase.status === 'pending');
   const approvedUsecases = usecases.filter(usecase => usecase.status === 'approved');
   const rejectedUsecases = usecases.filter(usecase => usecase.status === 'rejected');
-
   const handleApprove = (id) => {
     onApprove(id);
     setAlert({
@@ -72,6 +71,10 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
 
   const handleView = (id) => {
     navigate(`/usecases/${id}`);
+  };
+
+  const handleEdit = (usecase) => {
+    onEdit(usecase);
   };
 
   const truncateText = (text, maxLength = 100) => {
@@ -112,7 +115,7 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
                   </Typography>
                 </Tooltip>
               </TableCell>
-              <TableCell>
+             <TableCell>
                 <Chip 
                   label={usecase.service_line} 
                   size="small" 
@@ -172,6 +175,7 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
                   <Button
                     startIcon={<EditIcon />}
                     color="primary"
+                    onClick={() => handleEdit(usecase)}
                   >
                     Edit
                   </Button>

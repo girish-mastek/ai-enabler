@@ -155,7 +155,7 @@ function NavigationBar({ searchQuery, setSearchQuery, handleOpenDialog }) {
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={handleOpenDialog}
+          onClick={() => handleOpenDialog()}
           sx={{ 
             mr: 2,
             bgcolor: 'white',
@@ -225,6 +225,7 @@ function AppContent() {
   const [usecases, setUsecases] = useState([]);
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [editingUsecase, setEditingUsecase] = useState(null);
 
   useEffect(() => {
     loadUsecases();
@@ -245,27 +246,43 @@ function AppContent() {
     }
   };
 
-  const handleOpenDialog = () => {
+  const handleOpenDialog = (usecase = null) => {
+    setEditingUsecase(usecase);
     setIsAddDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
     setIsAddDialogOpen(false);
+    setEditingUsecase(null);
   };
 
   const handleAddUseCase = async (usecase) => {
     try {
-      const newUsecase = await api.addUseCase(usecase);
-      setUsecases(prevUsecases => [newUsecase, ...prevUsecases]);
-      setAlert({
-        severity: 'success',
-        message: 'Use case submitted successfully'
-      });
+      let updatedUsecase;
+      if (editingUsecase) {
+        // Update existing usecase
+        updatedUsecase = await api.updateUseCase(editingUsecase.id, usecase);
+        setUsecases(prevUsecases => prevUsecases.map(uc => 
+          uc.id === editingUsecase.id ? updatedUsecase : uc
+        ));
+        setAlert({
+          severity: 'success',
+          message: 'Use case updated successfully'
+        });
+      } else {
+        // Add new usecase
+        updatedUsecase = await api.addUseCase(usecase);
+        setUsecases(prevUsecases => [updatedUsecase, ...prevUsecases]);
+        setAlert({
+          severity: 'success',
+          message: 'Use case submitted successfully'
+        });
+      }
       handleCloseDialog();
     } catch (error) {
       setAlert({
         severity: 'error',
-        message: 'Failed to add use case'
+        message: editingUsecase ? 'Failed to update use case' : 'Failed to add use case'
       });
     }
   };
@@ -362,7 +379,7 @@ function AppContent() {
           <NavigationBar 
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            handleOpenDialog={handleOpenDialog}
+            handleOpenDialog={() => handleOpenDialog()}
           />
         </Box>
       </AppBar>
@@ -404,6 +421,7 @@ function AppContent() {
                   onApprove={handleApproveUseCase}
                   onReject={handleRejectUseCase}
                   onDelete={handleDeleteUseCase}
+                  onEdit={handleOpenDialog}
                 />
               </ProtectedRoute>
             } 
@@ -424,6 +442,8 @@ function AppContent() {
         open={isAddDialogOpen}
         onClose={handleCloseDialog}
         onSubmit={handleAddUseCase}
+        usecase={editingUsecase}
+        isEdit={!!editingUsecase}
       />
 
       <Snackbar

@@ -55,6 +55,34 @@ app.post('/api/usecases', (req, res) => {
   }
 });
 
+// Update usecase
+app.put('/api/usecases/:id', (req, res) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+  const usecases = readUsecases();
+  
+  const index = usecases.findIndex(uc => uc.id === parseInt(id));
+  if (index === -1) {
+    return res.status(404).json({ error: 'Usecase not found' });
+  }
+
+  // Preserve the original status, submittedAt, and moderatedAt fields
+  const originalUsecase = usecases[index];
+  usecases[index] = {
+    ...updatedData,
+    id: parseInt(id), // Ensure id remains the same
+    status: originalUsecase.status,
+    submittedAt: originalUsecase.submittedAt,
+    moderatedAt: originalUsecase.moderatedAt
+  };
+
+  if (writeUsecases(usecases)) {
+    res.json(usecases[index]);
+  } else {
+    res.status(500).json({ error: 'Failed to update usecase' });
+  }
+});
+
 // Update usecase status
 app.put('/api/usecases/:id/status', (req, res) => {
   const { id } = req.params;
