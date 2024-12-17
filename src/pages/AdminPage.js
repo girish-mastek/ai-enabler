@@ -27,7 +27,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
   const navigate = useNavigate();
@@ -84,52 +83,70 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
     return text || '';
   };
 
+  const tableCellStyles = {
+    padding: '16px',
+  };
+
   const UseCaseTable = ({ usecases, showModeration = false }) => (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Use Case</TableCell>
-            <TableCell>Project</TableCell>
-            <TableCell>Service Line</TableCell>
-            <TableCell>SDLC Phase</TableCell>
-            <TableCell>Tools</TableCell>
-            <TableCell>Submitted At</TableCell>
-            <TableCell align="right">Actions</TableCell>
+            <TableCell sx={tableCellStyles}>Use Case</TableCell>
+            <TableCell sx={tableCellStyles}>Project</TableCell>
+            <TableCell sx={tableCellStyles}>Service Line</TableCell>
+            <TableCell sx={tableCellStyles}>SDLC Phase</TableCell>
+            <TableCell sx={tableCellStyles}>Tools</TableCell>
+            <TableCell sx={tableCellStyles}>Submitted At</TableCell>
+            <TableCell align="center" sx={tableCellStyles}>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {usecases.map((usecase) => (
-            <TableRow key={usecase.id}>
-              <TableCell>
+            <TableRow 
+              key={usecase.id}
+              onClick={(e) => {
+                // Only navigate if the click is not on the actions cell
+                if (!e.target.closest('.actions-cell')) {
+                  handleView(usecase.id);
+                }
+              }}
+              sx={{
+                cursor: 'pointer',
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                },
+              }}
+            >
+              <TableCell sx={tableCellStyles}>
                 <Tooltip title={usecase.usecase || ''}>
                   <Typography variant="body2">
                     {truncateText(usecase.usecase, 30)}
                   </Typography>
                 </Tooltip>
               </TableCell>
-              <TableCell>
+              <TableCell sx={tableCellStyles}>
                 <Tooltip title={usecase.project || ''}>
                   <Typography variant="body2">
                     {truncateText(usecase.project, 30)}
                   </Typography>
                 </Tooltip>
               </TableCell>
-             <TableCell>
+              <TableCell sx={tableCellStyles}>
                 <Chip 
                   label={usecase.service_line} 
                   size="small" 
                   color="primary" 
                 />
               </TableCell>
-              <TableCell>
+              <TableCell sx={tableCellStyles}>
                 <Chip 
                   label={usecase.sdlc_phase} 
                   size="small" 
                   color="secondary" 
                 />
               </TableCell>
-              <TableCell>
+              <TableCell sx={tableCellStyles}>
                 <Stack direction="row" spacing={1} flexWrap="wrap">
                   {usecase.tools_used?.map((tool, index) => (
                     <Chip
@@ -142,31 +159,30 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
                   ))}
                 </Stack>
               </TableCell>
-              <TableCell>
+              <TableCell sx={tableCellStyles}>
                 {new Date(usecase.submittedAt).toLocaleDateString()}
               </TableCell>
-              <TableCell align="right">
-                <Stack direction="row" spacing={1} justifyContent="flex-end">
-                  <Button
-                    startIcon={<VisibilityIcon />}
-                    color="info"
-                    onClick={() => handleView(usecase.id)}
-                  >
-                    View
-                  </Button>
+              <TableCell align="center" className="actions-cell" sx={tableCellStyles}>
+                <Stack direction="row" spacing={1} justifyContent="center">
                   {showModeration && (
                     <>
                       <Button
                         startIcon={<CheckCircleIcon />}
                         color="success"
-                        onClick={() => handleApprove(usecase.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApprove(usecase.id);
+                        }}
                       >
                         Approve
                       </Button>
                       <Button
                         startIcon={<CancelIcon />}
                         color="error"
-                        onClick={() => handleReject(usecase.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleReject(usecase.id);
+                        }}
                       >
                         Reject
                       </Button>
@@ -175,14 +191,20 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
                   <Button
                     startIcon={<EditIcon />}
                     color="primary"
-                    onClick={() => handleEdit(usecase)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(usecase);
+                    }}
                   >
                     Edit
                   </Button>
                   <Button
                     startIcon={<DeleteIcon />}
                     color="error"
-                    onClick={() => handleDeleteClick(usecase.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteClick(usecase.id);
+                    }}
                   >
                     Delete
                   </Button>
