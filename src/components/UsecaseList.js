@@ -120,9 +120,34 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                       overflow: 'hidden'
                     }}
                   >
-                    {usecase.prompts_used || ''}
+                    {usecase.prompts_used || usecase.usecase}
                   </Typography>
                 </Box>
+
+                {/* Tools Section */}
+                {usecase.tools_used && usecase.tools_used.length > 0 && (
+                  <Box>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+                      {usecase.tools_used.map((tool, index) => (
+                        <Chip
+                          key={index}
+                          label={tool}
+                          size="small"
+                          sx={{ 
+                            height: '22px',
+                            fontSize: '0.75rem',
+                            fontWeight: 500,
+                            bgcolor: '#ECEFF1', // Blue Grey 50
+                            color: '#455A64', // Blue Grey 700
+                            border: '1px solid',
+                            borderColor: '#CFD8DC', // Blue Grey 100
+                            '& .MuiChip-label': { px: 1 }
+                          }}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                )}
 
                 {/* Service Line Section */}
                 {usecase.service_line && (
@@ -155,31 +180,6 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                         '& .MuiChip-label': { px: 1 }
                       }}
                     />
-                  </Box>
-                )}
-
-                {/* Tools Section */}
-                {usecase.tools_used && usecase.tools_used.length > 0 && (
-                  <Box>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
-                      {usecase.tools_used.map((tool, index) => (
-                        <Chip
-                          key={index}
-                          label={tool}
-                          size="small"
-                          sx={{ 
-                            height: '22px',
-                            fontSize: '0.75rem',
-                            fontWeight: 500,
-                            bgcolor: '#ECEFF1', // Blue Grey 50
-                            color: '#455A64', // Blue Grey 700
-                            border: '1px solid',
-                            borderColor: '#CFD8DC', // Blue Grey 100
-                            '& .MuiChip-label': { px: 1 }
-                          }}
-                        />
-                      ))}
-                    </Box>
                   </Box>
                 )}
               </Stack>
