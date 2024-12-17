@@ -26,13 +26,13 @@ const MyAccountPage = () => {
             My Account
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            Welcome, {user?.firstname} {user?.lastname}
+            Welcome, {user?.firstname || ''} {user?.lastname || ''}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Employee ID: {user?.employee_id}
+            Employee ID: {user?.employee_id || 'N/A'}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Email: {user?.email}
+            Email: {user?.email || 'N/A'}
           </Typography>
         </Box>
       </Paper>
@@ -47,30 +47,30 @@ const MyAccountPage = () => {
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  {usecase.usecase}
+                  {usecase.usecase || 'Untitled Usecase'}
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="body2" color="text.secondary">
-                      Service Line: {usecase.service_line}
+                      Service Line: {usecase.service_line || 'N/A'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      SDLC Phase: {usecase.sdlc_phase}
+                      SDLC Phase: {usecase.sdlc_phase || 'N/A'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Project: {usecase.project}
+                      Project: {usecase.project || 'N/A'}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Typography variant="body2" color="text.secondary">
-                      Estimated Efforts: {usecase.estimated_efforts}
+                      Estimated Efforts: {usecase.estimated_efforts || 'N/A'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Actual Hours: {usecase.actual_hours}
+                      Actual Hours: {usecase.actual_hours || 'N/A'}
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <Chip 
-                        label={usecase.status}
+                        label={usecase.status || 'pending'}
                         color={usecase.status === 'approved' ? 'success' : 'warning'}
                         size="small"
                       />
@@ -82,7 +82,7 @@ const MyAccountPage = () => {
                     Tools Used:
                   </Typography>
                   <Box sx={{ mt: 1 }}>
-                    {usecase.tools_used.map((tool, index) => (
+                    {Array.isArray(usecase.tools_used) && usecase.tools_used.map((tool, index) => (
                       <Chip
                         key={index}
                         label={tool}
@@ -96,6 +96,15 @@ const MyAccountPage = () => {
             </Card>
           </Grid>
         ))}
+        {userUsecases.length === 0 && (
+          <Grid item xs={12}>
+            <Paper sx={{ p: 3, textAlign: 'center' }}>
+              <Typography variant="body1" color="text.secondary">
+                You haven't submitted any usecases yet.
+              </Typography>
+            </Paper>
+          </Grid>
+        )}
       </Grid>
     </Container>
   );

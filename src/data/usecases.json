@@ -1,18 +1,27 @@
 [
   {
-    "id": 1,
-    "service_line": "Oracle",
+    "usecase": "As part of the Proposal we need to prepare the detail Plan on a Page with detailed approach highlighting the ADOPT approach and key milestone.  For the same ",
+    "prompts_used": "Note1: Refer Colum A as ADOPT(FILE:) Phases and Column B as Milestones. \nNote2: Response should be in paragraphs\nNote3: Use Fond Size 11 \nNote4: Do not use existing customer name\nNote5: Take the customer name from the Excel File attached Sheet1 Cell B1\nNote6: Do not use customer Name, Logo Name, LG, Local Governement, Pulic Sector, HE,Higher education, Council words from the Mastek_Detailed_ADOPT_approach while referencing\nNote6: Do not copy the entire content of Mastek_Detailed_ADOPT_approach, Use the content as mentioned in requirements\nNote7: Heading should show months and weeks as per the Excel sheet loaded. Example DEsign Phase (January 2025 (Week2-4)).\nNote8: Show date as Italic and in Bold\nNote9: While explaining the ADOPT Phase in detailed, inside do not include the key milestones and dates instead of that showcase what are the deliverable cusotmer will get(Refer Mastek_Detailed_ADOPT_approach)",
+    "service_line": [
+      "CEMS"
+    ],
+    "sdlc_phase": [
+      "Design/Documentation"
+    ],
+    "tools_used": [
+      "Gemini",
+      "Amazon Q",
+      "Microsoft Copilot",
+      "Github Copilot"
+    ],
     "project": "Pre-Sales (Plan on a Page Write-up)",
-    "sdlc_phase": "Design/Documentation",
-    "usecase": "As part of the Proposal we need to prepare the detail Plan on a Page with detailed approach highlighting the ADOPT approach and key milestone.  For the same Using Copilot(Work) area we can develop the same. We need to provide the ADOPT phase and timline in excel sheet showing on Top the Customer Name (In B1 Cell) which will be used in the documentation. In Excel we need to highlight the Project activities with Start date and End date. Currently it takes us 2 to 3 to prepare proper draft. but now within 5-10 min the draft will be available and we can reuse the content and update",
-    "prompts_used": "Note1: Refer Colum A as ADOPT(FILE:) Phases and Column B as Milestones. \nNote2: Response should be in paragraphs\nNote3: Use Fond Size 11 \nNote4: Do not use existing customer name\nNote5: Take the customer name from the Excel File attached Sheet1 Cell B1\nNote6: Do not use customer Name, Logo Name, LG, Local Governement, Pulic Sector, HE,Higher education, Council words from the Mastek_Detailed_ADOPT_approach while referencing\nNote6: Do not copy the entire content of Mastek_Detailed_ADOPT_approach, Use the content as mentioned in requirements\nNote7: Heading should show months and weeks as per the Excel sheet loaded. Example DEsign Phase (January 2025 (Week2-4)).\nNote8: Show date as Italic and in Bold\nNote9: While explaining the ADOPT Phase in detailed, inside do not include the key milestones and dates instead of that showcase what are the deliverable cusotmer will get(Refer Mastek_Detailed_ADOPT_approach)\n\nRequirement:\nStart with the Introduction of the Project Plan and the objective of the Project Plan showcasing like \"We have conducted a comprehensive review of the requirements and the timeline provided in the RFP document for the customer.\" something like this please elaborate in detailed.\nPrepare Project Plan response with detailed explanation of the ADOPT what we do in (Planning, Advisory, DEsign, Orchestrate,PRepare,Transition, Hypercare)(Refer from Mastek_Detailed_ADOPT_Approach doc and highlight the Dates from the Excel Sheet loaded.\nIn Design Stage section showcase and highlight CRP1 and CRP2 workshop with dates. \nIn Orchestrate stage section showcase and highligh Key User Training(KUT), System Integration Testing(SIT) with dates. \nIn Prepare Stage section showcase and highlight User Acceptance Testing with Dates. \nInclude the Go Live Date\nExplain the Data Migration iterations considered in plan\ncreate a Table showing Key Milestone ,Duration(InWeeks), Start date and End Date",
     "estimated_efforts": 2,
     "actual_hours": 0.1,
-    "tools_used": "",
     "comments": "In approx 5- 10 min the darft will be ready and Presales can use the draft and update as pre required in word document.",
+    "id": 1,
+    "status": "approved",
     "submittedAt": "12-Dec-24",
-    "moderatedAt": "",
-    "status": "approved"
+    "moderatedAt": ""
   },
   {
     "id": 2,
@@ -2097,7 +2106,8 @@
     "comments": "Prompts",
     "submittedAt": "14-Nov-24",
     "moderatedAt": "",
-    "status": "approved"
+    "status": "approved",
+    "userId": 1
   },
   {
     "id": 141,
