@@ -127,54 +127,11 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                     </Typography>
                   </Box>
 
-                  {/* Submitted By Section */}
-                  <Box>
-                    <Typography 
-                      component="div"
-                      sx={{ 
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        color: 'text.secondary',
-                        mb: 0.75,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px'
-                      }}
-                    >
-                      Submitted By
-                    </Typography>
-                    <Chip 
-                      icon={<PersonIcon sx={{ fontSize: '16px' }} />}
-                      label={`${submitter.firstname} ${submitter.lastname}`}
-                      size="small" 
-                      sx={{ 
-                        height: '24px',
-                        fontSize: '0.75rem',
-                        fontWeight: 500,
-                        bgcolor: '#E8F5E9', // Green 50
-                        color: '#2E7D32', // Green 700
-                        border: '1px solid',
-                        borderColor: '#C8E6C9', // Green 100
-                        '& .MuiChip-label': { px: 1 }
-                      }}
-                    />
-                  </Box>
+                  
 
                   {/* Service Line Section */}
                   {usecase.service_line && (
                     <Box>
-                      <Typography 
-                        component="div"
-                        sx={{ 
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          color: 'text.secondary',
-                          mb: 0.75,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.5px'
-                        }}
-                      >
-                        Service Line
-                      </Typography>
                       <Chip 
                         label={usecase.service_line} 
                         size="small" 
@@ -188,26 +145,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                           borderColor: '#E1BEE7', // Purple 100
                           '& .MuiChip-label': { px: 1 }
                         }}
-                      />
-                    </Box>
-                  )}
-
-                  {/* SDLC Phase Section */}
-                  {usecase.sdlc_phase && (
-                    <Box>
-                      <Typography 
-                        component="div"
-                        sx={{ 
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          color: 'text.secondary',
-                          mb: 0.75,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.5px'
-                        }}
-                      >
-                        SDLC Phase
-                      </Typography>
+                      />&nbsp;
                       <Chip 
                         label={usecase.sdlc_phase} 
                         size="small" 
@@ -228,19 +166,6 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                   {/* Tools Section */}
                   {usecase.tools_used && usecase.tools_used.length > 0 && (
                     <Box>
-                      <Typography 
-                        component="div"
-                        sx={{ 
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          color: 'text.secondary',
-                          mb: 0.75,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.5px'
-                        }}
-                      >
-                        Tools Used
-                      </Typography>
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
                         {usecase.tools_used.map((tool, index) => (
                           <Chip
