@@ -1,32 +1,32 @@
 [
   {
     "id": 1,
-    "firstname": "John",
-    "lastname": "Doe",
-    "email": "john.doe@example.com",
+    "firstname": "Girish",
+    "lastname": "Hosamani",
+    "email": "girish.hosamani@mastek.com",
     "employee_id": "E12345",
-    "username": "johndoe",
+    "username": "girish",
     "password": "password123",
     "role": "superuser"
   },
   {
     "id": 2,
-    "firstname": "Jane",
-    "lastname": "Smith",
-    "email": "jane.smith@example.com",
+    "firstname": "Sushant",
+    "lastname": "Sethi",
+    "email": "sushant.sethi@mastek.com",
     "employee_id": "E12346",
-    "username": "janesmith",
-    "password": "password456",
+    "username": "sushant",
+    "password": "password123",
     "role": "moderator"
   },
   {
     "id": 3,
-    "firstname": "Alice",
-    "lastname": "Johnson",
-    "email": "alice.johnson@example.com",
+    "firstname": "Sunil",
+    "lastname": "Kala",
+    "email": "sunil.kale@mastek.com",
     "employee_id": "E12347",
-    "username": "alicejohnson",
-    "password": "password789",
+    "username": "sunil",
+    "password": "password123",
     "role": "employee"
   }
 ]

@@ -18,11 +18,17 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CommentIcon from '@mui/icons-material/Comment';
 import BuildIcon from '@mui/icons-material/Build';
 import ChatIcon from '@mui/icons-material/Chat';
+import PersonIcon from '@mui/icons-material/Person';
+import users from '../data/user.json';
 
 const UsecaseDetail = ({ usecases }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const usecase = usecases.find(u => u.id === parseInt(id));
+
+  const findUser = (userId) => {
+    return users.find(user => user.id === userId) || { firstname: 'Unknown', lastname: 'User' };
+  };
 
   useEffect(() => {
     if (!usecase || usecase.status !== 'approved') {
@@ -33,6 +39,8 @@ const UsecaseDetail = ({ usecases }) => {
   if (!usecase || usecase.status !== 'approved') {
     return null;
   }
+
+  const submitter = findUser(usecase.userId);
 
   return (
     <Box sx={{ bgcolor: 'grey.50', minHeight: '100vh', py: 2 }}>
@@ -91,6 +99,16 @@ const UsecaseDetail = ({ usecases }) => {
                     bgcolor: '#E0F2F1',
                     color: '#00796B',
                     border: '1px solid #B2DFDB',
+                    '& .MuiChip-label': { px: 2 }
+                  }}
+                />
+                <Chip 
+                  icon={<PersonIcon />}
+                  label={`Submitted by ${submitter.firstname} ${submitter.lastname}`}
+                  sx={{ 
+                    bgcolor: '#E8F5E9',
+                    color: '#2E7D32',
+                    border: '1px solid #C8E6C9',
                     '& .MuiChip-label': { px: 2 }
                   }}
                 />

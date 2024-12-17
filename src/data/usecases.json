@@ -14,7 +14,8 @@
     "comments": "msfsakf",
     "id": 1734380152068,
     "status": "pending",
-    "submittedAt": "2024-12-16T20:15:52.068Z"
+    "submittedAt": "2024-12-16T20:15:52.068Z",
+    "userId": 1
   },
   {
     "id": 1,
@@ -32,7 +33,8 @@
     "comments": "Successfully implemented with 98% accuracy in summarization",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
-    "moderatedAt": "2024-01-01T00:00:00.000Z"
+    "moderatedAt": "2024-01-01T00:00:00.000Z",
+    "userId": 2
   },
   {
     "id": 2,
@@ -50,7 +52,8 @@
     "comments": "Integrated with existing CRM system, handling 70% of basic queries",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
-    "moderatedAt": "2024-12-16T20:01:07.162Z"
+    "moderatedAt": "2024-12-16T20:01:07.162Z",
+    "userId": 3
   },
   {
     "id": 3,
@@ -68,7 +71,8 @@
     "comments": "Reduced false positives by 40% compared to previous system",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
-    "moderatedAt": "2024-01-01T00:00:00.000Z"
+    "moderatedAt": "2024-01-01T00:00:00.000Z",
+    "userId": 1
   },
   {
     "id": 4,
@@ -86,7 +90,8 @@
     "comments": "Increased conversion rate by 25% in initial testing",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
-    "moderatedAt": "2024-01-01T00:00:00.000Z"
+    "moderatedAt": "2024-01-01T00:00:00.000Z",
+    "userId": 2
   },
   {
     "id": 5,
@@ -104,7 +109,8 @@
     "comments": "Reduced unexpected downtime by 60% in pilot phase",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
-    "moderatedAt": "2024-01-01T00:00:00.000Z"
+    "moderatedAt": "2024-01-01T00:00:00.000Z",
+    "userId": 3
   },
   {
     "id": 6,
@@ -122,6 +128,7 @@
     "comments": "Improved content creation efficiency by 3x",
     "status": "approved",
     "submittedAt": "2024-01-01T00:00:00.000Z",
-    "moderatedAt": "2024-01-01T00:00:00.000Z"
+    "moderatedAt": "2024-01-01T00:00:00.000Z",
+    "userId": 1
   }
 ]
