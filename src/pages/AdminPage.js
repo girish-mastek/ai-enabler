@@ -77,10 +77,11 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
   };
 
   const truncateText = (text, maxLength = 100) => {
-    if (text && text.length > maxLength) {
+    if (!text) return '';
+    if (text.length > maxLength) {
       return text.substring(0, maxLength) + '...';
     }
-    return text || '';
+    return text;
   };
 
   const tableCellStyles = {
@@ -134,21 +135,21 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
               </TableCell>
               <TableCell sx={tableCellStyles}>
                 <Chip 
-                  label={usecase.service_line} 
+                  label={usecase.service_line || 'N/A'} 
                   size="small" 
                   color="primary" 
                 />
               </TableCell>
               <TableCell sx={tableCellStyles}>
                 <Chip 
-                  label={usecase.sdlc_phase} 
+                  label={usecase.sdlc_phase || 'N/A'} 
                   size="small" 
                   color="secondary" 
                 />
               </TableCell>
               <TableCell sx={tableCellStyles}>
                 <Stack direction="row" spacing={1} flexWrap="wrap">
-                  {usecase.tools_used?.map((tool, index) => (
+                  {Array.isArray(usecase.tools_used) && usecase.tools_used.map((tool, index) => (
                     <Chip
                       key={index}
                       label={tool}
@@ -160,7 +161,7 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
                 </Stack>
               </TableCell>
               <TableCell sx={tableCellStyles}>
-                {new Date(usecase.submittedAt).toLocaleDateString()}
+                {usecase.submittedAt ? new Date(usecase.submittedAt).toLocaleDateString() : 'N/A'}
               </TableCell>
               <TableCell align="center" className="actions-cell" sx={tableCellStyles}>
                 <Stack direction="row" spacing={1} justifyContent="center">

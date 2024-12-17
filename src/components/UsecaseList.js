@@ -20,6 +20,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
   const navigate = useNavigate();
 
   const truncateTitle = (title) => {
+    if (!title) return '';
     return title.length > 50 ? `${title.substring(0, 50)}...` : title;
   };
 
@@ -84,7 +85,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                     <Typography 
                       variant="h6" 
                       component="h2"
-                      title={usecase.usecase}
+                      title={usecase.usecase || ''}
                       sx={{ 
                         fontWeight: 600,
                         fontSize: '1rem',
@@ -119,7 +120,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                       overflow: 'hidden'
                     }}
                   >
-                    {usecase.prompts_used}
+                    {usecase.prompts_used || ''}
                   </Typography>
                 </Box>
 
