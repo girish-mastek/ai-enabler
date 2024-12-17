@@ -10,6 +10,14 @@ const UsecasePage = ({ searchQuery, usecases }) => {
     tools_used: {}
   });
 
+  // Helper function to handle tools_used field which could be string or array
+  const getToolsArray = (tools) => {
+    if (!tools) return [];
+    if (Array.isArray(tools)) return tools;
+    if (typeof tools === 'string' && tools.trim() !== '') return [tools];
+    return [];
+  };
+
   // Compute available filters and their counts
   const availableFilters = useMemo(() => {
     const filters = {
@@ -31,8 +39,11 @@ const UsecasePage = ({ searchQuery, usecases }) => {
       }
 
       // Count tools
-      usecase.tools_used?.forEach(tool => {
-        filters.tools_used[tool] = (filters.tools_used[tool] || 0) + 1;
+      const toolsArray = getToolsArray(usecase.tools_used);
+      toolsArray.forEach(tool => {
+        if (tool) {
+          filters.tools_used[tool] = (filters.tools_used[tool] || 0) + 1;
+        }
       });
     });
 
@@ -52,12 +63,13 @@ const UsecasePage = ({ searchQuery, usecases }) => {
 
       // Apply search filter
       const searchLower = searchQuery?.toLowerCase() || '';
+      const toolsArray = getToolsArray(usecase.tools_used);
       const searchMatch = !searchQuery || (
         usecase.usecase.toLowerCase().includes(searchLower) ||
-        usecase.prompts_used.toLowerCase().includes(searchLower) ||
-        usecase.service_line?.toLowerCase().includes(searchLower) ||
-        usecase.sdlc_phase?.toLowerCase().includes(searchLower) ||
-        usecase.tools_used?.some(tool => tool.toLowerCase().includes(searchLower))
+        (usecase.prompts_used && usecase.prompts_used.toLowerCase().includes(searchLower)) ||
+        (usecase.service_line && usecase.service_line.toLowerCase().includes(searchLower)) ||
+        (usecase.sdlc_phase && usecase.sdlc_phase.toLowerCase().includes(searchLower)) ||
+        toolsArray.some(tool => tool.toLowerCase().includes(searchLower))
       );
 
       // If no filters are selected, only apply search
@@ -73,7 +85,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
 
       // Check tools filter
       const toolsMatch = Object.keys(selectedFilters.tools_used).length === 0 ||
-        usecase.tools_used?.some(tool => selectedFilters.tools_used[tool]);
+        toolsArray.some(tool => selectedFilters.tools_used[tool]);
 
       return searchMatch && industryMatch && sdlcMatch && toolsMatch;
     });
