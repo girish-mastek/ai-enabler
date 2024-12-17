@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   Box,
@@ -17,18 +17,19 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
-  const from = location.state?.from?.pathname || '/admin';
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     const success = login(username, password);
     if (success) {
-      navigate(from, { replace: true });
+      if (user?.role === 'superuser' || user?.role === 'moderator') {
+        navigate('/admin');
+      } else {
+        navigate('/my-account');
+      }
     } else {
       setError('Invalid username or password');
     }
@@ -70,7 +71,7 @@ const LoginPage = () => {
           </Box>
 
           <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-            Admin Login
+            Login
           </Typography>
 
           {error && (

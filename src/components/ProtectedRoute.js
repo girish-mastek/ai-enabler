@@ -11,6 +11,12 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // Allow access to My Account page for all authenticated users
+  if (location.pathname === '/my-account') {
+    return children;
+  }
+
+  // For other protected routes (like admin), check authorization
   if (!isAuthorized()) {
     // Redirect to home page if not authorized
     return <Navigate to="/" replace />;
