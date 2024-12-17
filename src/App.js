@@ -35,7 +35,7 @@ import * as api from './services/api';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#177386',
       50: '#e3f2fd',
       100: '#bbdefb',
     },
@@ -44,6 +44,12 @@ const theme = createTheme({
       50: '#fce4ec',
       100: '#f8bbd0',
     },
+    mastek: {
+      main: '#177386'
+    },
+    masteklight: {
+      main: '#fff'
+    }
   },
   components: {
     MuiBox: {
@@ -142,13 +148,15 @@ function NavigationBar({ searchQuery, setSearchQuery, handleOpenDialog }) {
       />
       <Button
         variant="contained"
-        color="secondary"
         startIcon={<AddIcon />}
         onClick={handleOpenDialog}
         sx={{ 
           mr: 2,
+          bgcolor: 'white',
+          color: '#177386',
           '&:hover': {
-            bgcolor: 'secondary.dark',
+            bgcolor: '#e6f3f7',
+            color: '#177386'
           }
         }}
       >

@@ -72,7 +72,7 @@ const HomePage = () => {
               sx={{
                 fontWeight: 800,
                 fontSize: { xs: '2.5rem', md: '3.5rem' },
-                background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
+                background: '#177386',
                 backgroundClip: 'text',
                 textFillColor: 'transparent',
                 mb: 2
@@ -192,7 +192,7 @@ const HomePage = () => {
       {/* Call to Action */}
       <Box 
         sx={{ 
-          background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
+          background: '#177386',
           py: { xs: 5, md: 6 },
           position: 'relative',
           overflow: 'hidden',

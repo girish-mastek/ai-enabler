@@ -28,11 +28,16 @@ function AdminPanel() {
         <Typography variant="h4" sx={{ fontWeight: 700 }}>Admin Panel</Typography>
         <Button 
           variant="contained" 
-          color="primary"
           sx={{ 
             textTransform: 'none',
             px: 3,
-            py: 1
+            py: 1,
+            bgcolor: 'white',
+            color: '#177386',
+            '&:hover': {
+              bgcolor: '#177386',
+              color: 'white'
+            }
           }}
         >
           Add New Usecase
