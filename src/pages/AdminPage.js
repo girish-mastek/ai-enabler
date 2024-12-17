@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -26,8 +27,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [alert, setAlert] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
@@ -67,6 +70,10 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
     setDeleteConfirm({ open: false, id: null });
   };
 
+  const handleView = (id) => {
+    navigate(`/usecases/${id}`);
+  };
+
   const truncateText = (text, maxLength = 100) => {
     if (text && text.length > maxLength) {
       return text.substring(0, maxLength) + '...';
@@ -83,10 +90,7 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
             <TableCell>Project</TableCell>
             <TableCell>Service Line</TableCell>
             <TableCell>SDLC Phase</TableCell>
-            <TableCell>Estimated Efforts</TableCell>
-            <TableCell>Actual Hours</TableCell>
             <TableCell>Tools</TableCell>
-            <TableCell>Comments</TableCell>
             <TableCell>Submitted At</TableCell>
             <TableCell align="right">Actions</TableCell>
           </TableRow>
@@ -122,8 +126,6 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
                   color="secondary" 
                 />
               </TableCell>
-              <TableCell>{usecase.estimated_efforts}</TableCell>
-              <TableCell>{usecase.actual_hours}</TableCell>
               <TableCell>
                 <Stack direction="row" spacing={1} flexWrap="wrap">
                   {usecase.tools_used?.map((tool, index) => (
@@ -138,17 +140,17 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete }) => {
                 </Stack>
               </TableCell>
               <TableCell>
-                <Tooltip title={usecase.comments || ''}>
-                  <Typography variant="body2">
-                    {truncateText(usecase.comments, 30)}
-                  </Typography>
-                </Tooltip>
-              </TableCell>
-              <TableCell>
                 {new Date(usecase.submittedAt).toLocaleDateString()}
               </TableCell>
               <TableCell align="right">
                 <Stack direction="row" spacing={1} justifyContent="flex-end">
+                  <Button
+                    startIcon={<VisibilityIcon />}
+                    color="info"
+                    onClick={() => handleView(usecase.id)}
+                  >
+                    View
+                  </Button>
                   {showModeration && (
                     <>
                       <Button

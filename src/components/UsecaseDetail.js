@@ -19,11 +19,13 @@ import CommentIcon from '@mui/icons-material/Comment';
 import BuildIcon from '@mui/icons-material/Build';
 import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
+import { useAuth } from '../context/AuthContext';
 import users from '../data/user.json';
 
 const UsecaseDetail = ({ usecases }) => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isAuthorized } = useAuth();
   const usecase = usecases.find(u => u.id === parseInt(id));
 
   const findUser = (userId) => {
@@ -31,23 +33,60 @@ const UsecaseDetail = ({ usecases }) => {
   };
 
   useEffect(() => {
-    if (!usecase || usecase.status !== 'approved') {
+    if (!usecase) {
+      navigate('/usecases');
+      return;
+    }
+    
+    // Only check approval status for non-admin users
+    if (!isAuthorized() && usecase.status !== 'approved') {
       navigate('/usecases');
     }
-  }, [usecase, navigate]);
+  }, [usecase, navigate, isAuthorized]);
 
-  if (!usecase || usecase.status !== 'approved') {
+  if (!usecase) {
     return null;
   }
 
   const submitter = findUser(usecase.userId);
+
+  const getStatusChipColor = (status) => {
+    switch (status) {
+      case 'approved':
+        return {
+          bg: '#E8F5E9',
+          color: '#2E7D32',
+          border: '#C8E6C9'
+        };
+      case 'pending':
+        return {
+          bg: '#FFF3E0',
+          color: '#E65100',
+          border: '#FFE0B2'
+        };
+      case 'rejected':
+        return {
+          bg: '#FFEBEE',
+          color: '#C62828',
+          border: '#FFCDD2'
+        };
+      default:
+        return {
+          bg: '#E8F5E9',
+          color: '#2E7D32',
+          border: '#C8E6C9'
+        };
+    }
+  };
+
+  const statusColors = getStatusChipColor(usecase.status);
 
   return (
     <Box sx={{ bgcolor: 'grey.50', minHeight: '100vh', py: 2 }}>
       <Container maxWidth="xl">
         <Button
           startIcon={<ArrowBackIcon />}
-          onClick={() => navigate('/usecases')}
+          onClick={() => navigate(-1)}
           sx={{ 
             mb: 2,
             color: 'text.primary',
@@ -56,7 +95,7 @@ const UsecaseDetail = ({ usecases }) => {
             }
           }}
         >
-          Back to Use Cases
+          Back
         </Button>
 
         <Grid container spacing={2}>
@@ -109,6 +148,15 @@ const UsecaseDetail = ({ usecases }) => {
                     bgcolor: '#E8F5E9',
                     color: '#2E7D32',
                     border: '1px solid #C8E6C9',
+                    '& .MuiChip-label': { px: 2 }
+                  }}
+                />
+                <Chip 
+                  label={usecase.status.charAt(0).toUpperCase() + usecase.status.slice(1)}
+                  sx={{ 
+                    bgcolor: statusColors.bg,
+                    color: statusColors.color,
+                    border: `1px solid ${statusColors.border}`,
                     '& .MuiChip-label': { px: 2 }
                   }}
                 />
