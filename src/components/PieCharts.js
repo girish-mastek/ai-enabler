@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Paper, Typography, Grid, Container } from '@mui/material';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
@@ -8,6 +9,8 @@ import BuildIcon from '@mui/icons-material/Build';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieCharts = ({ usecases }) => {
+  const navigate = useNavigate();
+
   // Helper function to get tools array
   const getToolsArray = (tools) => {
     if (!tools) return [];
@@ -83,8 +86,15 @@ const PieCharts = ({ usecases }) => {
     }]
   };
 
-  const chartOptions = {
+  const sdlcChartOptions = {
     responsive: true,
+    onClick: (event, elements) => {
+      if (elements.length > 0) {
+        const index = elements[0].index;
+        const phase = sdlcChartData.labels[index];
+        navigate(`/usecases?sdlc_phase=${encodeURIComponent(phase)}`);
+      }
+    },
     plugins: {
       legend: {
         position: 'bottom',
@@ -104,7 +114,42 @@ const PieCharts = ({ usecases }) => {
             const value = context.raw || 0;
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
             const percentage = ((value / total) * 100).toFixed(1);
-            return `${label}: ${value} (${percentage}%)`;
+            return `${label}: ${value} (${percentage}%) - Click to filter`;
+          }
+        }
+      }
+    }
+  };
+
+  const toolsChartOptions = {
+    responsive: true,
+    onClick: (event, elements) => {
+      if (elements.length > 0) {
+        const index = elements[0].index;
+        const tool = toolsChartData.labels[index];
+        navigate(`/usecases?tools_used=${encodeURIComponent(tool)}`);
+      }
+    },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 20,
+          usePointStyle: true,
+          pointStyle: 'circle',
+          font: {
+            size: 12
+          }
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const label = context.label || '';
+            const value = context.raw || 0;
+            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+            const percentage = ((value / total) * 100).toFixed(1);
+            return `${label}: ${value} (${percentage}%) - Click to filter`;
           }
         }
       }
@@ -112,7 +157,7 @@ const PieCharts = ({ usecases }) => {
   };
 
   return (
-    <Box sx={{ mb: { xs: 6, md: 8 } }}>  {/* Added margin bottom */}
+    <Box sx={{ mb: { xs: 6, md: 8 } }}>
       <Container maxWidth="xl">
         <Grid container spacing={4} sx={{ maxWidth: 1200, mx: 'auto' }}>
           {/* SDLC Phase Chart */}
@@ -126,6 +171,7 @@ const PieCharts = ({ usecases }) => {
                 border: '1px solid',
                 borderColor: 'divider',
                 background: 'linear-gradient(145deg, #ffffff 0%, #f5f7fa 100%)',
+                cursor: 'pointer'
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -135,7 +181,7 @@ const PieCharts = ({ usecases }) => {
                 </Typography>
               </Box>
               <Box sx={{ height: 300, position: 'relative' }}>
-                <Pie data={sdlcChartData} options={chartOptions} />
+                <Pie data={sdlcChartData} options={sdlcChartOptions} />
               </Box>
             </Paper>
           </Grid>
@@ -151,6 +197,7 @@ const PieCharts = ({ usecases }) => {
                 border: '1px solid',
                 borderColor: 'divider',
                 background: 'linear-gradient(145deg, #ffffff 0%, #f5f7fa 100%)',
+                cursor: 'pointer'
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -160,7 +207,7 @@ const PieCharts = ({ usecases }) => {
                 </Typography>
               </Box>
               <Box sx={{ height: 300, position: 'relative' }}>
-                <Pie data={toolsChartData} options={chartOptions} />
+                <Pie data={toolsChartData} options={toolsChartOptions} />
               </Box>
             </Paper>
           </Grid>
