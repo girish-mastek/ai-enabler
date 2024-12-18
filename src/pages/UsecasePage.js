@@ -1,15 +1,49 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Box, Typography, Grid, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
 import UsecaseList from '../components/UsecaseList';
 import FilterSidebar from '../components/FilterSidebar';
 
 const UsecasePage = ({ searchQuery, usecases }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedFilters, setSelectedFilters] = useState({
     service_line: {},
     sdlc_phase: {},
     tools_used: {}
   });
-  const [sortBy, setSortBy] = useState('newest');
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'newest');
+
+  // Initialize filters from URL params on mount
+  useEffect(() => {
+    const filtersFromUrl = {
+      service_line: {},
+      sdlc_phase: {},
+      tools_used: {}
+    };
+
+    // Parse service_line filters
+    const serviceLines = searchParams.get('service_line')?.split(' ') || [];
+    serviceLines.forEach(line => {
+      if (line) filtersFromUrl.service_line[line] = true;
+    });
+
+    // Parse sdlc_phase filters
+    const phases = searchParams.get('sdlc_phase')?.split(' ') || [];
+    phases.forEach(phase => {
+      if (phase) filtersFromUrl.sdlc_phase[phase] = true;
+    });
+
+    // Parse tools_used filters
+    const tools = searchParams.get('tools_used')?.split(' ') || [];
+    tools.forEach(tool => {
+      if (tool) filtersFromUrl.tools_used[tool] = true;
+    });
+
+    // Only update if there are filters in the URL
+    if (serviceLines.length > 0 || phases.length > 0 || tools.length > 0) {
+      setSelectedFilters(filtersFromUrl);
+    }
+  }, []);
 
   // Helper function to handle tools_used field which could be string or array
   const getToolsArray = (tools) => {
@@ -126,6 +160,29 @@ const UsecasePage = ({ searchQuery, usecases }) => {
     });
   }, [usecases, selectedFilters, searchQuery, sortBy]);
 
+  // Update URL params when filters change
+  const updateUrlParams = (filters, sort) => {
+    const params = new URLSearchParams();
+
+    // Add sort parameter
+    if (sort && sort !== 'newest') {
+      params.append('sort', sort);
+    }
+
+    // Add filter parameters
+    Object.entries(filters).forEach(([category, values]) => {
+      const selectedValues = Object.entries(values)
+        .filter(([_, isSelected]) => isSelected)
+        .map(([value]) => value);
+      
+      if (selectedValues.length > 0) {
+        params.append(category, selectedValues.join(' '));
+      }
+    });
+
+    setSearchParams(params);
+  };
+
   const handleFilterChange = (newFilters) => {
     // Remove any false values from the filters
     const cleanedFilters = Object.keys(newFilters).reduce((acc, category) => {
@@ -143,10 +200,13 @@ const UsecasePage = ({ searchQuery, usecases }) => {
     });
 
     setSelectedFilters(cleanedFilters);
+    updateUrlParams(cleanedFilters, sortBy);
   };
 
   const handleSortChange = (event) => {
-    setSortBy(event.target.value);
+    const newSortBy = event.target.value;
+    setSortBy(newSortBy);
+    updateUrlParams(selectedFilters, newSortBy);
   };
 
   return (
