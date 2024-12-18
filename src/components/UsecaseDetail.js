@@ -23,6 +23,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import FolderIcon from '@mui/icons-material/Folder';
 import { useAuth } from '../context/AuthContext';
 import users from '../data/user.json';
 
@@ -132,7 +133,7 @@ const UsecaseDetail = ({ usecases }) => {
                 {usecase.usecase}
               </Typography>
               
-              <Stack spacing={1} sx={{ mb: 2 }}>
+              <Stack spacing={1}>
                 <Stack direction="row" spacing={1}>
                   <Chip 
                     label={usecase.service_line} 
@@ -175,7 +176,7 @@ const UsecaseDetail = ({ usecases }) => {
                   />
                   <Chip 
                     icon={<CalendarTodayIcon />}
-                    label={`Submitted at ${usecase.submittedAt}`}
+                    label={`Submitted on ${usecase.submittedAt}`}
                     sx={{ 
                       bgcolor: '#E3F2FD',
                       color: '#1565C0',
@@ -185,24 +186,10 @@ const UsecaseDetail = ({ usecases }) => {
                   />
                 </Stack>
               </Stack>
-
-              <Typography 
-                variant="subtitle1" 
-                sx={{ 
-                  fontWeight: 600,
-                  color: 'text.secondary',
-                  mb: 0.5
-                }}
-              >
-                Project Name
-              </Typography>
-              <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
-                {usecase.project}
-              </Typography>
             </Paper>
           </Grid>
 
-          {/* Prompts Used */}
+          {/* Project Section */}
           <Grid item xs={12}>
             <Paper 
               elevation={0}
@@ -215,11 +202,48 @@ const UsecaseDetail = ({ usecases }) => {
               }}
             >
               <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
-                <ChatIcon sx={{ color: 'primary.main', fontSize: 28 }} />
-                <Typography variant="h5" sx={{ fontWeight: 600, flexGrow: 1 }}>
-                  Prompts Used
+                <FolderIcon sx={{ color: 'primary.main', fontSize: 28 }} />
+                <Typography 
+                  variant="h6"
+                  sx={{ 
+                    fontWeight: 600,
+                    color: 'primary.main'
+                  }}
+                >
+                  Project Details
                 </Typography>
-                {usecase.prompts_used && (
+              </Stack>
+              <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+                {usecase.project}
+              </Typography>
+            </Paper>
+          </Grid>
+
+          {/* Prompts Used - Only show if not empty */}
+          {usecase.prompts_used && usecase.prompts_used.trim() !== '' && (
+            <Grid item xs={12}>
+              <Paper 
+                elevation={0}
+                sx={{ 
+                  p: 3,
+                  borderRadius: 2,
+                  bgcolor: 'white',
+                  border: '1px solid',
+                  borderColor: 'grey.200'
+                }}
+              >
+                <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
+                  <ChatIcon sx={{ color: 'primary.main', fontSize: 28 }} />
+                  <Typography 
+                    variant="h6"
+                    sx={{ 
+                      fontWeight: 600,
+                      color: 'primary.main',
+                      flexGrow: 1
+                    }}
+                  >
+                    Prompts Used
+                  </Typography>
                   <Tooltip title="Copy prompt">
                     <IconButton 
                       onClick={handleCopyPrompt}
@@ -229,13 +253,13 @@ const UsecaseDetail = ({ usecases }) => {
                       <ContentCopyIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
-                )}
-              </Stack>
-              <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
-                {usecase.prompts_used}
-              </Typography>
-            </Paper>
-          </Grid>
+                </Stack>
+                <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+                  {usecase.prompts_used}
+                </Typography>
+              </Paper>
+            </Grid>
+          )}
 
           {/* Tools Used and Effort Tracking Combined */}
           <Grid item xs={12} md={6}>
@@ -253,8 +277,14 @@ const UsecaseDetail = ({ usecases }) => {
               {usecase.tools_used && (
                 <>
                   <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1 }}>
-                    <BuildIcon sx={{ color: 'primary.main', fontSize: 24 }} />
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    <BuildIcon sx={{ color: 'primary.main', fontSize: 28 }} />
+                    <Typography 
+                      variant="h6"
+                      sx={{ 
+                        fontWeight: 600,
+                        color: 'primary.main'
+                      }}
+                    >
                       Tools Used
                     </Typography>
                   </Stack>
@@ -277,8 +307,14 @@ const UsecaseDetail = ({ usecases }) => {
               )}
               
               <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1 }}>
-                <AccessTimeIcon sx={{ color: 'primary.main', fontSize: 24 }} />
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                <AccessTimeIcon sx={{ color: 'primary.main', fontSize: 28 }} />
+                <Typography 
+                  variant="h6"
+                  sx={{ 
+                    fontWeight: 600,
+                    color: 'primary.main'
+                  }}
+                >
                   Effort Tracking
                 </Typography>
               </Stack>
@@ -303,29 +339,38 @@ const UsecaseDetail = ({ usecases }) => {
             </Paper>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Paper 
-              elevation={0}
-              sx={{ 
-                p: 2,
-                borderRadius: 2,
-                bgcolor: 'white',
-                border: '1px solid',
-                borderColor: 'grey.200',
-                minHeight: '160px'
-              }}
-            >
-              <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1 }}>
-                <CommentIcon sx={{ color: 'primary.main', fontSize: 24 }} />
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Comments
+          {/* Comments - Only show if not empty */}
+          {usecase.comments && usecase.comments.trim() !== '' && (
+            <Grid item xs={12} md={6}>
+              <Paper 
+                elevation={0}
+                sx={{ 
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: 'white',
+                  border: '1px solid',
+                  borderColor: 'grey.200',
+                  minHeight: '160px'
+                }}
+              >
+                <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1 }}>
+                  <CommentIcon sx={{ color: 'primary.main', fontSize: 28 }} />
+                  <Typography 
+                    variant="h6"
+                    sx={{ 
+                      fontWeight: 600,
+                      color: 'primary.main'
+                    }}
+                  >
+                    Comments
+                  </Typography>
+                </Stack>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {usecase.comments}
                 </Typography>
-              </Stack>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {usecase.comments}
-              </Typography>
-            </Paper>
-          </Grid>
+              </Paper>
+            </Grid>
+          )}
         </Grid>
       </Container>
     </Box>
