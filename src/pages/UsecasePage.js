@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Box, Typography, Grid, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
+import { Box, Typography, Grid, FormControl, Select, MenuItem, InputLabel, Stack, Chip } from '@mui/material';
 import UsecaseList from '../components/UsecaseList';
 import FilterSidebar from '../components/FilterSidebar';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const UsecasePage = ({ searchQuery, usecases }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -44,6 +45,22 @@ const UsecasePage = ({ searchQuery, usecases }) => {
       setSelectedFilters(filtersFromUrl);
     }
   }, []);
+
+  // Get selected filters for display
+  const getSelectedFilters = () => {
+    const selected = [];
+    Object.entries(selectedFilters).forEach(([category, values]) => {
+      Object.entries(values).forEach(([value, isSelected]) => {
+        if (isSelected) {
+          selected.push({
+            category,
+            value
+          });
+        }
+      });
+    });
+    return selected;
+  };
 
   // Helper function to handle tools_used field which could be string or array
   const getToolsArray = (tools) => {
@@ -265,8 +282,13 @@ const UsecasePage = ({ searchQuery, usecases }) => {
 
           {/* Use Cases List */}
           <Grid item xs={12} md={9} lg={9.5} xl={10} sx={{ px: { xs: 2, sm: 2 } }}>
-            {/* Sort Controls */}
-            <Box sx={{ mb: 3 }}>
+            {/* Sort Controls and Selected Filters */}
+            <Stack 
+              direction={{ xs: 'column', sm: 'row' }} 
+              spacing={2} 
+              alignItems={{ xs: 'flex-start', sm: 'center' }}
+              sx={{ mb: 3 }}
+            >
               <FormControl 
                 size="small"
                 sx={{ 
@@ -295,7 +317,40 @@ const UsecasePage = ({ searchQuery, usecases }) => {
                   <MenuItem value="z-a">Alphabetically (Z to A)</MenuItem>
                 </Select>
               </FormControl>
-            </Box>
+
+              {/* Selected Filters */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center' }}>
+                {getSelectedFilters().map(({ category, value }) => (
+                  <Chip
+                    key={`${category}-${value}`}
+                    label={value}
+                    onDelete={() => {
+                      const newFilters = {
+                        ...selectedFilters,
+                        [category]: {
+                          ...selectedFilters[category],
+                          [value]: false
+                        }
+                      };
+                      handleFilterChange(newFilters);
+                    }}
+                    deleteIcon={<CancelIcon />}
+                    size="small"
+                    sx={{
+                      bgcolor: 'primary.50',
+                      color: 'primary.main',
+                      fontWeight: 500,
+                      '& .MuiChip-deleteIcon': {
+                        color: 'primary.main',
+                        '&:hover': {
+                          color: 'primary.dark',
+                        },
+                      },
+                    }}
+                  />
+                ))}
+              </Box>
+            </Stack>
             
             <UsecaseList usecases={filteredAndSortedUsecases} />
           </Grid>
