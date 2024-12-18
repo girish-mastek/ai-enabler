@@ -8,11 +8,13 @@ import {
   AccordionDetails,
   Divider,
   Stack,
-  Chip
+  Chip,
+  Button
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import CancelIcon from '@mui/icons-material/Cancel';
+import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 
 const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
   const handleFilterChange = (category, value) => {
@@ -26,9 +28,22 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
     onFilterChange(newFilters);
   };
 
+  const handleClearFilters = () => {
+    const clearedFilters = {
+      service_line: {},
+      sdlc_phase: {},
+      tools_used: {}
+    };
+    onFilterChange(clearedFilters);
+  };
+
   const getSelectedCount = (category) => {
     return Object.values(selectedFilters[category]).filter(Boolean).length;
   };
+
+  const hasSelectedFilters = Object.values(selectedFilters).some(
+    category => Object.values(category).some(isSelected => isSelected)
+  );
 
   // Format category name for display
   const formatCategoryName = (category) => {
@@ -103,9 +118,27 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'grey.100' }}>
         <Stack direction="row" alignItems="center" spacing={1}>
           <FilterListIcon color="primary" sx={{ fontSize: '1.25rem' }} />
-          <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '0.9375rem' }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '0.9375rem', flexGrow: 1 }}>
             Filters
           </Typography>
+          {hasSelectedFilters && (
+            <Button
+              startIcon={<FilterAltOffIcon />}
+              onClick={handleClearFilters}
+              size="small"
+              sx={{
+                fontSize: '0.75rem',
+                textTransform: 'none',
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'error.main',
+                  bgcolor: 'error.lighter',
+                }
+              }}
+            >
+              Clear All
+            </Button>
+          )}
         </Stack>
       </Box>
 
