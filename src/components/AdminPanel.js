@@ -52,7 +52,7 @@ function AdminPanel() {
         <Table>
           <TableHead>
             <TableRow sx={{ bgcolor: 'grey.50' }}>
-              <TableCell sx={{ fontWeight: 600 }}>Use Case</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>Usecase</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Submitted By</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Service Line</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Delivery Phase</TableCell>

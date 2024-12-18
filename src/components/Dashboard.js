@@ -18,7 +18,7 @@ function Dashboard() {
             Welcome to Gen AI Usecase Portal
           </Typography>
           <Typography variant="subtitle1">
-            Explore and contribute to our organization's collection of Generative AI use cases.
+            Explore and contribute to our organization's collection of Generative AI usecases.
             Discover how AI is transforming our business processes and creating new opportunities.
           </Typography>
         </Paper>
@@ -28,7 +28,7 @@ function Dashboard() {
         <Grid item xs={12}>
           <Paper elevation={1} sx={{ p: 3 }}>
             <Typography variant="h5" gutterBottom color="primary">
-              Latest Use Cases
+              Latest Usecases
             </Typography>
             <UsecaseList />
           </Paper>

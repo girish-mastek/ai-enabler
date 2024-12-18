@@ -94,9 +94,9 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
   const validateField = (name, value) => {
     switch (name) {
       case 'usecase':
-        if (!value.trim()) return 'Use case is required';
-        if (value.length < 5) return 'Use case must be at least 5 characters';
-        if (value.length > 200) return 'Use case must be less than 200 characters';
+        if (!value.trim()) return 'Usecase is required';
+        if (value.length < 5) return 'Usecase must be at least 5 characters';
+        if (value.length > 200) return 'Usecase must be less than 200 characters';
         return '';
       
       case 'project':
@@ -342,7 +342,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     >
       <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography variant="h6" component="div" sx={{ fontWeight: 600, color: 'primary.main' }}>
-          {isEdit ? 'Update Use Case' : 'Add New Use Case'}
+          {isEdit ? 'Update Usecase' : 'Add Usecase'}
         </Typography>
         <IconButton
           aria-label="close"
@@ -366,7 +366,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                 <TextField
                   required
                   fullWidth
-                  label="Use Case Title"
+                  label="Usecase Title"
                   name="usecase"
                   value={formData.usecase}
                   onChange={handleChange}
@@ -605,7 +605,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                 rows={2}
                 variant="outlined"
                 size="small"
-                placeholder="Add any additional comments or notes about this use case"
+                placeholder="Add any additional comments or notes about this usecase"
                 inputProps={{ maxLength: 500 }}
               />
               {focusedField === 'comments' && (
@@ -639,7 +639,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
             fontWeight: 600
           }}
         >
-          {isEdit ? 'Update Use Case' : 'Add Use Case'}
+          {isEdit ? 'Update Usecase' : 'Add Usecase'}
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,6 +1,6 @@
 const API_URL = 'http://localhost:3001/api';
 
-// Read all use cases
+// Read all usecases
 export const getAllUseCases = async () => {
   try {
     const response = await fetch(`${API_URL}/usecases`);
@@ -12,7 +12,7 @@ export const getAllUseCases = async () => {
   }
 };
 
-// Add a new use case
+// Add a new usecase
 export const addUseCase = async (useCase) => {
   try {
     const response = await fetch(`${API_URL}/usecases`, {
@@ -31,7 +31,7 @@ export const addUseCase = async (useCase) => {
   }
 };
 
-// Update an existing use case
+// Update an existing usecase
 export const updateUseCase = async (id, useCase) => {
   try {
     const response = await fetch(`${API_URL}/usecases/${id}`, {
@@ -50,7 +50,7 @@ export const updateUseCase = async (id, useCase) => {
   }
 };
 
-// Update use case status (for moderation)
+// Update usecase status (for moderation)
 export const updateUseCaseStatus = async (id, status) => {
   try {
     const response = await fetch(`${API_URL}/usecases/${id}/status`, {
@@ -69,7 +69,7 @@ export const updateUseCaseStatus = async (id, status) => {
   }
 };
 
-// Delete a use case
+// Delete a usecase
 export const deleteUseCase = async (id) => {
   try {
     const response = await fetch(`${API_URL}/usecases/${id}`, {
@@ -86,25 +86,25 @@ export const deleteUseCase = async (id) => {
   }
 };
 
-// Get pending use cases (for moderation)
+// Get pending usecases (for moderation)
 export const getPendingUseCases = async () => {
   const usecases = await getAllUseCases();
   return usecases.filter(uc => uc.status === 'pending');
 };
 
-// Get approved use cases (for public display)
+// Get approved usecases (for public display)
 export const getApprovedUseCases = async () => {
   const usecases = await getAllUseCases();
   return usecases.filter(uc => uc.status === 'approved');
 };
 
-// Get rejected use cases
+// Get rejected usecases
 export const getRejectedUseCases = async () => {
   const usecases = await getAllUseCases();
   return usecases.filter(uc => uc.status === 'rejected');
 };
 
-// Get use case by ID
+// Get usecase by ID
 export const getUseCaseById = async (id) => {
   const usecases = await getAllUseCases();
   return usecases.find(uc => uc.id === id);

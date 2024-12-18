@@ -116,7 +116,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
     return filters;
   }, [usecases]);
 
-  // Filter and sort use cases
+  // Filter and sort usecases
   const filteredAndSortedUsecases = useMemo(() => {
     // First filter the usecases
     const filtered = usecases.filter(usecase => {
@@ -280,7 +280,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
             </Box>
           </Grid>
 
-          {/* Use Cases List */}
+          {/* Usecases List */}
           <Grid item xs={12} md={9} lg={9.5} xl={10} sx={{ px: { xs: 2, sm: 2 } }}>
             {/* Sort Controls and Selected Filters */}
             <Stack 

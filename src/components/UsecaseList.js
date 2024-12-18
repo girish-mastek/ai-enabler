@@ -40,7 +40,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
         }}
       >
         <Typography variant="h6" color="text.secondary">
-          No use cases found matching your filters.
+          No usecases found matching your filters.
         </Typography>
       </Box>
     );
@@ -102,7 +102,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
               }}
             >
               <CardContent sx={{ p: 2.5, pb: 1, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                {/* Use Case Title and Status */}
+                {/* Usecase Title and Status */}
                 <Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
                     <Typography 

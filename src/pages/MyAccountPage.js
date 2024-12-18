@@ -64,7 +64,7 @@ const MyAccountPage = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={tableCellStyles}>Use Case</TableCell>
+            <TableCell sx={tableCellStyles}>Usecase</TableCell>
             <TableCell sx={tableCellStyles}>Project</TableCell>
             <TableCell sx={tableCellStyles}>Service Line</TableCell>
             <TableCell sx={tableCellStyles}>Delivery Phase</TableCell>
@@ -240,7 +240,7 @@ const MyAccountPage = () => {
         {activeTab === 0 && (
           <>
             {pendingUsecases.length === 0 ? (
-              <Alert severity="info">No pending use cases</Alert>
+              <Alert severity="info">No pending usecases</Alert>
             ) : (
               <UseCaseTable usecases={pendingUsecases} />
             )}
@@ -250,7 +250,7 @@ const MyAccountPage = () => {
         {activeTab === 1 && (
           <>
             {approvedUsecases.length === 0 ? (
-              <Alert severity="info">No approved use cases</Alert>
+              <Alert severity="info">No approved usecases</Alert>
             ) : (
               <UseCaseTable usecases={approvedUsecases} />
             )}
@@ -260,7 +260,7 @@ const MyAccountPage = () => {
         {activeTab === 2 && (
           <>
             {rejectedUsecases.length === 0 ? (
-              <Alert severity="info">No rejected use cases</Alert>
+              <Alert severity="info">No rejected usecases</Alert>
             ) : (
               <UseCaseTable usecases={rejectedUsecases} />
             )}

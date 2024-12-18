@@ -166,7 +166,7 @@ function NavigationBar({ searchQuery, setSearchQuery, handleOpenDialog }) {
             }
           }}
         >
-          Add Use Case
+          Add Usecase
         </Button>
       )}
       <Button 
@@ -239,7 +239,7 @@ function AppContent() {
     } catch (error) {
       setAlert({
         severity: 'error',
-        message: 'Failed to load use cases'
+        message: 'Failed to load usecases'
       });
     } finally {
       setLoading(false);
@@ -267,7 +267,7 @@ function AppContent() {
         ));
         setAlert({
           severity: 'success',
-          message: 'Use case updated successfully'
+          message: 'Usecase updated successfully'
         });
       } else {
         // Add new usecase
@@ -275,14 +275,14 @@ function AppContent() {
         setUsecases(prevUsecases => [updatedUsecase, ...prevUsecases]);
         setAlert({
           severity: 'success',
-          message: 'Use case submitted successfully'
+          message: 'Usecase submitted successfully'
         });
       }
       handleCloseDialog();
     } catch (error) {
       setAlert({
         severity: 'error',
-        message: editingUsecase ? 'Failed to update use case' : 'Failed to add use case'
+        message: editingUsecase ? 'Failed to update usecase' : 'Failed to add usecase'
       });
     }
   };
@@ -295,12 +295,12 @@ function AppContent() {
       ));
       setAlert({
         severity: 'success',
-        message: 'Use case approved successfully'
+        message: 'Usecase approved successfully'
       });
     } catch (error) {
       setAlert({
         severity: 'error',
-        message: 'Failed to approve use case'
+        message: 'Failed to approve usecase'
       });
     }
   };
@@ -313,12 +313,12 @@ function AppContent() {
       ));
       setAlert({
         severity: 'info',
-        message: 'Use case rejected'
+        message: 'Usecase rejected'
       });
     } catch (error) {
       setAlert({
         severity: 'error',
-        message: 'Failed to reject use case'
+        message: 'Failed to reject usecase'
       });
     }
   };
@@ -329,12 +329,12 @@ function AppContent() {
       setUsecases(prevUsecases => prevUsecases.filter(usecase => usecase.id !== id));
       setAlert({
         severity: 'success',
-        message: 'Use case deleted successfully'
+        message: 'Usecase deleted successfully'
       });
     } catch (error) {
       setAlert({
         severity: 'error',
-        message: 'Failed to delete use case'
+        message: 'Failed to delete usecase'
       });
     }
   };

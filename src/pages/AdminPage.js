@@ -41,7 +41,7 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
     onApprove(id);
     setAlert({
       severity: 'success',
-      message: 'Use case approved successfully'
+      message: 'Usecase approved successfully'
     });
   };
 
@@ -49,7 +49,7 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
     onReject(id);
     setAlert({
       severity: 'info',
-      message: 'Use case rejected'
+      message: 'Usecase rejected'
     });
   };
 
@@ -93,7 +93,7 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={tableCellStyles}>Use Case</TableCell>
+            <TableCell sx={tableCellStyles}>Usecase</TableCell>
             <TableCell sx={tableCellStyles}>Project</TableCell>
             <TableCell sx={tableCellStyles}>Service Line</TableCell>
             <TableCell sx={tableCellStyles}>Delivery Phase</TableCell>
@@ -232,7 +232,7 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
           Admin Dashboard
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
-          Manage AI use cases and moderate submissions from users.
+          Manage AI usecases and moderate submissions from users.
         </Typography>
       </Box>
 
@@ -250,10 +250,10 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
       {activeTab === 0 && (
         <>
           <Typography variant="h6" gutterBottom>
-            Pending Use Cases
+            Pending Usecases
           </Typography>
           {pendingUsecases.length === 0 ? (
-            <Alert severity="info">No pending use cases to review</Alert>
+            <Alert severity="info">No pending usecases to review</Alert>
           ) : (
             <UseCaseTable usecases={pendingUsecases} showModeration={true} />
           )}
@@ -263,10 +263,10 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
       {activeTab === 1 && (
         <>
           <Typography variant="h6" gutterBottom>
-            Approved Use Cases
+            Approved Usecases
           </Typography>
           {approvedUsecases.length === 0 ? (
-            <Alert severity="info">No approved use cases</Alert>
+            <Alert severity="info">No approved usecases</Alert>
           ) : (
             <UseCaseTable usecases={approvedUsecases} />
           )}
@@ -276,10 +276,10 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
       {activeTab === 2 && (
         <>
           <Typography variant="h6" gutterBottom>
-            Rejected Use Cases
+            Rejected Usecases
           </Typography>
           {rejectedUsecases.length === 0 ? (
-            <Alert severity="info">No rejected use cases</Alert>
+            <Alert severity="info">No rejected usecases</Alert>
           ) : (
             <UseCaseTable usecases={rejectedUsecases} />
           )}
@@ -292,7 +292,7 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
       >
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
-          Are you sure you want to delete this use case? This action cannot be undone.
+          Are you sure you want to delete this usecase? This action cannot be undone.
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteCancel}>Cancel</Button>

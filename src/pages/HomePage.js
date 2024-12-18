@@ -29,7 +29,7 @@ const HomePage = () => {
   const features = [
     {
       icon: <ExploreIcon sx={{ fontSize: 48 }} />,
-      title: 'Explore Use Cases',
+      title: 'Explore Usecases',
       description: 'Discover various AI implementations across different industries and their practical applications.',
       link: '/usecases'
     },
@@ -168,7 +168,7 @@ const HomePage = () => {
                 }
               }}
             >
-              Explore Use Cases
+              Explore Usecases
             </Button>
           </Box>
         </Container>
@@ -454,7 +454,7 @@ const HomePage = () => {
                 textShadow: '0 2px 4px rgba(0,0,0,0.1)'
               }}
             >
-              Ready to explore AI use cases?
+              Ready to explore AI usecases?
             </Typography>
             <Typography 
               variant="h6" 
@@ -490,7 +490,7 @@ const HomePage = () => {
                 }
               }}
             >
-              View All Use Cases
+              View All Usecases
             </Button>
           </Box>
         </Container>
