@@ -25,8 +25,6 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
 
   const handlePageChange = (event, value) => {
     setPage(value);
-    // Scroll to top when page changes
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const truncateTitle = (title) => {

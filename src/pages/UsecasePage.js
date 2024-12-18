@@ -102,14 +102,29 @@ const UsecasePage = ({ searchQuery, usecases }) => {
 
       // Check tools filter
       const toolsMatch = Object.keys(selectedFilters.tools_used).length === 0 ||
-        toolsArray.some(tool => selectedFilters.tools_used[tool]);
+        toolsArray.some(tool => tool && selectedFilters.tools_used[tool]);
 
       return searchMatch && serviceLineMatch && sdlcMatch && toolsMatch;
     });
   }, [usecases, selectedFilters, searchQuery]);
 
   const handleFilterChange = (newFilters) => {
-    setSelectedFilters(newFilters);
+    // Remove any false values from the filters
+    const cleanedFilters = Object.keys(newFilters).reduce((acc, category) => {
+      acc[category] = Object.entries(newFilters[category])
+        .filter(([_, value]) => value)
+        .reduce((obj, [key, value]) => {
+          obj[key] = value;
+          return obj;
+        }, {});
+      return acc;
+    }, {
+      service_line: {},
+      sdlc_phase: {},
+      tools_used: {}
+    });
+
+    setSelectedFilters(cleanedFilters);
   };
 
   return (
@@ -147,7 +162,6 @@ const UsecasePage = ({ searchQuery, usecases }) => {
                 position: 'sticky', 
                 top: 24,
                 maxHeight: 'calc(100vh - 48px)',
-                overflowY: 'auto',
                 '&::-webkit-scrollbar': {
                   width: '4px',
                 },
