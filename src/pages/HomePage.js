@@ -31,16 +31,19 @@ const HomePage = () => {
       icon: <ExploreIcon sx={{ fontSize: 48 }} />,
       title: 'Explore Use Cases',
       description: 'Discover various AI implementations across different industries and their practical applications.',
+      link: '/usecases'
     },
     {
       icon: <BusinessIcon sx={{ fontSize: 48 }} />,
       title: 'Best Practices and Guidelines',
       description: 'This document outlines key best practices and guidelines designed to promote consistency, efficiency, and excellence in our processes and decision-making.',
+      link: 'https://mastekgroup.sharepoint.com/:w:/r/GenAI/_layouts/15/Doc.aspx?sourcedoc=%7BFB9CF2D5-FCE7-4CA8-B6CC-3672A13556EB%7D&file=Mastek%20AI%20in%20SDLC%20Best%20Practices.docx&action=default&mobileredirect=true'
     },
     {
       icon: <TrendingUpIcon sx={{ fontSize: 48 }} />,
       title: 'Gen AI Toolset',
       description: 'List and features of Gen AI tools that can help to improve the day to day tasks and efficiency',
+      link: 'https://mastekgroup.sharepoint.com/:w:/r/GenAI/_layouts/15/Doc.aspx?sourcedoc=%7B0F8C156C-37C3-44D7-8B45-819DB671CE57%7D&file=Mastek%20AI%20in%20SDLC%20Toolset.docx&action=default&mobileredirect=true'
     },
   ];
 
@@ -79,6 +82,14 @@ const HomePage = () => {
         count
       };
     });
+
+  const handleFeatureClick = (link) => {
+    if (link.startsWith('http')) {
+      window.open(link, '_blank');
+    } else {
+      navigate(link);
+    }
+  };
 
   return (
     <Box sx={{ bgcolor: 'grey.50' }}>
@@ -170,7 +181,7 @@ const HomePage = () => {
             {features.map((feature, index) => (
               <Grid item xs={12} md={4} key={index}>
                 <Card
-                  onClick={() => navigate('/usecases')}
+                  onClick={() => handleFeatureClick(feature.link)}
                   sx={{
                     height: '100%',
                     display: 'flex',
