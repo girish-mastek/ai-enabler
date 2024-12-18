@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Typography, Grid } from '@mui/material';
+import { Box, Typography, Grid, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
 import UsecaseList from '../components/UsecaseList';
 import FilterSidebar from '../components/FilterSidebar';
 
@@ -9,6 +9,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
     sdlc_phase: {},
     tools_used: {}
   });
+  const [sortBy, setSortBy] = useState('newest');
 
   // Helper function to handle tools_used field which could be string or array
   const getToolsArray = (tools) => {
@@ -64,9 +65,10 @@ const UsecasePage = ({ searchQuery, usecases }) => {
     return filters;
   }, [usecases]);
 
-  // Filter use cases based on selected filters and search query
-  const filteredUsecases = useMemo(() => {
-    return usecases.filter(usecase => {
+  // Filter and sort use cases
+  const filteredAndSortedUsecases = useMemo(() => {
+    // First filter the usecases
+    const filtered = usecases.filter(usecase => {
       // First check if usecase is approved
       if (usecase.status !== 'approved') return false;
 
@@ -106,7 +108,23 @@ const UsecasePage = ({ searchQuery, usecases }) => {
 
       return searchMatch && serviceLineMatch && sdlcMatch && toolsMatch;
     });
-  }, [usecases, selectedFilters, searchQuery]);
+
+    // Then sort the filtered results
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          return new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0);
+        case 'oldest':
+          return new Date(a.submittedAt || 0) - new Date(b.submittedAt || 0);
+        case 'a-z':
+          return (a.usecase || '').localeCompare(b.usecase || '');
+        case 'z-a':
+          return (b.usecase || '').localeCompare(a.usecase || '');
+        default:
+          return 0;
+      }
+    });
+  }, [usecases, selectedFilters, searchQuery, sortBy]);
 
   const handleFilterChange = (newFilters) => {
     // Remove any false values from the filters
@@ -125,6 +143,10 @@ const UsecasePage = ({ searchQuery, usecases }) => {
     });
 
     setSelectedFilters(cleanedFilters);
+  };
+
+  const handleSortChange = (event) => {
+    setSortBy(event.target.value);
   };
 
   return (
@@ -183,7 +205,39 @@ const UsecasePage = ({ searchQuery, usecases }) => {
 
           {/* Use Cases List */}
           <Grid item xs={12} md={9} lg={9.5} xl={10} sx={{ px: { xs: 2, sm: 2 } }}>
-            <UsecaseList usecases={filteredUsecases} />
+            {/* Sort Controls */}
+            <Box sx={{ mb: 3 }}>
+              <FormControl 
+                size="small"
+                sx={{ 
+                  minWidth: 200,
+                  '& .MuiOutlinedInput-root': {
+                    bgcolor: 'white',
+                    '&:hover': {
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                      },
+                    },
+                  },
+                }}
+              >
+                <InputLabel id="sort-select-label">Sort By</InputLabel>
+                <Select
+                  labelId="sort-select-label"
+                  id="sort-select"
+                  value={sortBy}
+                  label="Sort By"
+                  onChange={handleSortChange}
+                >
+                  <MenuItem value="newest">Newest First</MenuItem>
+                  <MenuItem value="oldest">Oldest First</MenuItem>
+                  <MenuItem value="a-z">Alphabetically (A to Z)</MenuItem>
+                  <MenuItem value="z-a">Alphabetically (Z to A)</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            
+            <UsecaseList usecases={filteredAndSortedUsecases} />
           </Grid>
         </Grid>
       </Box>
