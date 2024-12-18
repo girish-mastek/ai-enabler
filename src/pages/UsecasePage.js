@@ -18,6 +18,14 @@ const UsecasePage = ({ searchQuery, usecases }) => {
     return [];
   };
 
+  // Helper function to handle service_line field which could be string or array
+  const getServiceLineArray = (serviceLine) => {
+    if (!serviceLine) return [];
+    if (Array.isArray(serviceLine)) return serviceLine;
+    if (typeof serviceLine === 'string' && serviceLine.trim() !== '') return [serviceLine];
+    return [];
+  };
+
   // Compute available filters and their counts
   const availableFilters = useMemo(() => {
     const filters = {
@@ -28,15 +36,21 @@ const UsecasePage = ({ searchQuery, usecases }) => {
 
     // Only count approved usecases for filters
     usecases.filter(usecase => usecase.status === 'approved').forEach(usecase => {
-      // Count industries
-      if (usecase.service_line) {
-        filters.service_line[usecase.service_line] = (filters.service_line[usecase.service_line] || 0) + 1;
-      }
+      // Count service lines
+      const serviceLines = getServiceLineArray(usecase.service_line);
+      serviceLines.forEach(line => {
+        if (line) {
+          filters.service_line[line] = (filters.service_line[line] || 0) + 1;
+        }
+      });
 
       // Count SDLC phases
-      if (usecase.sdlc_phase) {
-        filters.sdlc_phase[usecase.sdlc_phase] = (filters.sdlc_phase[usecase.sdlc_phase] || 0) + 1;
-      }
+      const phases = Array.isArray(usecase.sdlc_phase) ? usecase.sdlc_phase : [usecase.sdlc_phase];
+      phases.forEach(phase => {
+        if (phase) {
+          filters.sdlc_phase[phase] = (filters.sdlc_phase[phase] || 0) + 1;
+        }
+      });
 
       // Count tools
       const toolsArray = getToolsArray(usecase.tools_used);
@@ -64,30 +78,33 @@ const UsecasePage = ({ searchQuery, usecases }) => {
       // Apply search filter
       const searchLower = searchQuery?.toLowerCase() || '';
       const toolsArray = getToolsArray(usecase.tools_used);
+      const serviceLines = getServiceLineArray(usecase.service_line);
+      const phases = Array.isArray(usecase.sdlc_phase) ? usecase.sdlc_phase : [usecase.sdlc_phase];
+
       const searchMatch = !searchQuery || (
         usecase.usecase.toLowerCase().includes(searchLower) ||
         (usecase.prompts_used && usecase.prompts_used.toLowerCase().includes(searchLower)) ||
-        (usecase.service_line && usecase.service_line.toLowerCase().includes(searchLower)) ||
-        (usecase.sdlc_phase && usecase.sdlc_phase.toLowerCase().includes(searchLower)) ||
-        toolsArray.some(tool => tool.toLowerCase().includes(searchLower))
+        serviceLines.some(line => line && line.toLowerCase().includes(searchLower)) ||
+        phases.some(phase => phase && phase.toLowerCase().includes(searchLower)) ||
+        toolsArray.some(tool => tool && tool.toLowerCase().includes(searchLower))
       );
 
       // If no filters are selected, only apply search
       if (!hasSelectedFilters) return searchMatch;
 
-      // Check industry filter
-      const industryMatch = Object.keys(selectedFilters.service_line).length === 0 ||
-        (usecase.service_line && selectedFilters.service_line[usecase.service_line]);
+      // Check service line filter
+      const serviceLineMatch = Object.keys(selectedFilters.service_line).length === 0 ||
+        serviceLines.some(line => line && selectedFilters.service_line[line]);
 
       // Check SDLC phase filter
       const sdlcMatch = Object.keys(selectedFilters.sdlc_phase).length === 0 ||
-        (usecase.sdlc_phase && selectedFilters.sdlc_phase[usecase.sdlc_phase]);
+        phases.some(phase => phase && selectedFilters.sdlc_phase[phase]);
 
       // Check tools filter
       const toolsMatch = Object.keys(selectedFilters.tools_used).length === 0 ||
         toolsArray.some(tool => selectedFilters.tools_used[tool]);
 
-      return searchMatch && industryMatch && sdlcMatch && toolsMatch;
+      return searchMatch && serviceLineMatch && sdlcMatch && toolsMatch;
     });
   }, [usecases, selectedFilters, searchQuery]);
 
