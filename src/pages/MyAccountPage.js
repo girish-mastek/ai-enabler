@@ -19,8 +19,12 @@ import {
   Alert,
   Button,
   Tooltip,
+  Grid,
+  Avatar,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import BadgeIcon from '@mui/icons-material/Badge';
+import EmailIcon from '@mui/icons-material/Email';
 import { useNavigate } from 'react-router-dom';
 
 const MyAccountPage = () => {
@@ -152,20 +156,61 @@ const MyAccountPage = () => {
 
   return (
     <Container maxWidth={false} sx={{ mt: 4, mb: 4, px: 4 }}>
-      <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h3" sx={{ mb: 2, fontWeight: 500 }}>
-            Welcome, {user?.firstname || ''} {user?.lastname || ''}
-          </Typography>
-          <Stack spacing={1} sx={{ color: 'text.secondary' }}>
-            <Typography variant="body1">
-              Employee ID: {user?.employee_id || 'N/A'}
-            </Typography>
-            <Typography variant="body1">
-              Email: {user?.email || 'N/A'}
-            </Typography>
-          </Stack>
-        </Box>
+      <Paper 
+        elevation={3} 
+        sx={{ 
+          p: 4, 
+          mb: 4,
+          background: 'linear-gradient(145deg, #ffffff 0%, #f5f7fa 100%)',
+          borderRadius: '16px',
+        }}
+      >
+        <Grid container spacing={4} alignItems="center">
+          <Grid item>
+            <Avatar
+              sx={{
+                width: 80,
+                height: 80,
+                bgcolor: '#177386',
+                fontSize: '2rem',
+              }}
+            >
+              {user?.firstname?.[0]}{user?.lastname?.[0]}
+            </Avatar>
+          </Grid>
+          <Grid item xs>
+            <Box sx={{ mb: 3 }}>
+              <Typography 
+                variant="h3" 
+                sx={{ 
+                  mb: 2, 
+                  fontWeight: 600,
+                  color: '#177386'
+                }}
+              >
+                Welcome, {user?.firstname || ''} {user?.lastname || ''}
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm="auto">
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <BadgeIcon sx={{ color: '#177386' }} />
+                    <Typography variant="body1" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                      {user?.employee_id || 'N/A'}
+                    </Typography>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12} sm="auto">
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <EmailIcon sx={{ color: '#177386' }} />
+                    <Typography variant="body1" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                      {user?.email || 'N/A'}
+                    </Typography>
+                  </Stack>
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+        </Grid>
       </Paper>
 
       <Box sx={{ width: '100%' }}>
