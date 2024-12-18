@@ -285,7 +285,7 @@ const UsecaseDetail = ({ usecases }) => {
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    Estimated (Hours)
+                    Estimated(in hours)
                   </Typography>
                   <Typography variant="body2">
                     {usecase.estimated_efforts}
@@ -293,7 +293,7 @@ const UsecaseDetail = ({ usecases }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    Actual (Hours)
+                    Actual(in hours)
                   </Typography>
                   <Typography variant="body2">
                     {usecase.actual_hours}

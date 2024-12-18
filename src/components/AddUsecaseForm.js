@@ -124,13 +124,13 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
         return '';
 
       case 'estimated_efforts':
-        if (!value) return 'Estimated efforts is required';
+        if (!value) return 'Estimated(in hours) is required';
         if (isNaN(value)) return 'Must be a number';
         if (value <= 0) return 'Must be greater than 0';
         return '';
 
       case 'actual_hours':
-        if (!value) return 'Actual hours is required';
+        if (!value) return 'Actual(in hours) is required';
         if (isNaN(value)) return 'Must be a number';
         if (value < 0) return 'Cannot be negative';
         return '';
@@ -556,7 +556,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
               <TextField
                 required
                 fullWidth
-                label="Estimated Efforts (hours)"
+                label="Estimated(in hours)"
                 name="estimated_efforts"
                 value={formData.estimated_efforts}
                 onChange={handleChange}
@@ -572,7 +572,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
               <TextField
                 required
                 fullWidth
-                label="Actual Hours"
+                label="Actual(in hours)"
                 name="actual_hours"
                 value={formData.actual_hours}
                 onChange={handleChange}
