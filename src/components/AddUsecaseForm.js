@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
+import { useAuth } from '../context/AuthContext';
 
 const SERVICE_LINE = [
   'DE&E',
@@ -64,6 +65,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
 }));
 
 const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
+  const { user } = useAuth();
   const [customTools, setCustomTools] = useState(() => {
     const savedTools = localStorage.getItem('customTools');
     return savedTools ? JSON.parse(savedTools) : [];
@@ -267,6 +269,10 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     const submitData = {
       ...formData,
       id: usecase?.id || Date.now(),
+      userId: user.id, // Include the logged in user's ID
+      submittedAt: new Date().toLocaleDateString('en-GB'),
+      moderatedAt: '',
+      status: 'pending'
     };
     onSubmit(submitData);
   };
