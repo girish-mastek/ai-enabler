@@ -2347,7 +2347,8 @@
     "comments": "Prompts",
     "submittedAt": "14-Nov-24",
     "moderatedAt": "",
-    "status": "approved"
+    "status": "pending",
+    "userId": 1
   },
   {
     "id": 157,
