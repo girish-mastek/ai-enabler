@@ -9,8 +9,11 @@ import {
   Typography,
   Container,
   Alert,
+  InputAdornment,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -36,53 +39,87 @@ const LoginPage = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+    <Box
+      sx={{
+        height: '100vh',
+        display: 'flex',
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%)',
+      }}
+    >
+      <Container component="main" maxWidth="sm" sx={{ mt: '15vh' }}>
         <Paper
-          elevation={3}
+          elevation={4}
           sx={{
-            padding: 4,
+            p: { xs: 2.5, md: 3 },
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            width: '100%',
+            background: '#ffffff',
+            borderRadius: '16px',
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '4px',
+              background: '#177386',
+            },
           }}
         >
           <Box
             sx={{
-              width: 40,
-              height: 40,
-              borderRadius: '50%',
-              backgroundColor: 'primary.main',
+              width: 45,
+              height: 45,
+              borderRadius: '12px',
+              backgroundColor: '#177386',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              mb: 2,
+              mb: 1.5,
+              boxShadow: '0 4px 12px rgba(23, 115, 134, 0.2)',
             }}
           >
-            <LockOutlinedIcon sx={{ color: 'white' }} />
+            <LockOutlinedIcon sx={{ color: 'white', fontSize: 24 }} />
           </Box>
 
-          <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-            Login
+          <Typography 
+            component="h1" 
+            variant="h4" 
+            sx={{ 
+              mb: 2, 
+              color: '#177386',
+              fontWeight: 600,
+              textAlign: 'center',
+            }}
+          >
+            Welcome Back
           </Typography>
 
           {error && (
-            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+            <Alert 
+              severity="error" 
+              sx={{ 
+                width: '100%', 
+                mb: 2,
+                borderRadius: '8px',
+              }}
+            >
               {error}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+          <Box 
+            component="form" 
+            onSubmit={handleSubmit} 
+            sx={{ 
+              width: '100%',
+              maxWidth: '400px',
+            }}
+          >
             <TextField
-              margin="normal"
               required
               fullWidth
               id="username"
@@ -92,9 +129,30 @@ const LoginPage = () => {
               autoFocus
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonOutlineIcon sx={{ color: '#177386' }} />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                mb: 2,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                  '&:hover fieldset': {
+                    borderColor: '#177386',
+                  },
+                },
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#177386 !important',
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#177386',
+                },
+              }}
             />
             <TextField
-              margin="normal"
               required
               fullWidth
               name="password"
@@ -104,19 +162,52 @@ const LoginPage = () => {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <VpnKeyOutlinedIcon sx={{ color: '#177386' }} />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                mb: 2.5,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                  '&:hover fieldset': {
+                    borderColor: '#177386',
+                  },
+                },
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#177386 !important',
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: '#177386',
+                },
+              }}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{
+                py: 1.25,
+                backgroundColor: '#177386',
+                borderRadius: '12px',
+                fontSize: '1.1rem',
+                textTransform: 'none',
+                boxShadow: '0 4px 12px rgba(23, 115, 134, 0.2)',
+                '&:hover': {
+                  backgroundColor: '#135e6d',
+                  boxShadow: '0 6px 16px rgba(23, 115, 134, 0.3)',
+                },
+              }}
             >
               Sign In
             </Button>
           </Box>
         </Paper>
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 

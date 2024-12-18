@@ -214,7 +214,15 @@ const MyAccountPage = () => {
       </Paper>
 
       <Box sx={{ width: '100%' }}>
-        <Typography variant="h5" gutterBottom>
+        <Typography 
+          variant="h5" 
+          gutterBottom
+          sx={{ 
+            color: '#177386',
+            fontWeight: 600,
+            mb: 2
+          }}
+        >
           My Usecases
         </Typography>
 
