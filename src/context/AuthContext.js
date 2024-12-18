@@ -1,10 +1,18 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import users from '../data/user.json';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+
+  // Check for stored auth data when component mounts
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const login = (username, password) => {
     const foundUser = users.find(
@@ -14,6 +22,8 @@ export const AuthProvider = ({ children }) => {
     if (foundUser) {
       const { password, ...userWithoutPassword } = foundUser;
       setUser(userWithoutPassword);
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(userWithoutPassword));
       return true;
     }
     return false;
@@ -21,6 +31,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    // Remove user data from localStorage
+    localStorage.removeItem('user');
   };
 
   const isAuthorized = () => {
