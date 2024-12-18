@@ -116,7 +116,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
         return '';
 
       case 'sdlc_phase':
-        if (!value) return 'SDLC phase must be selected';
+        if (!value) return 'Delivery phase must be selected';
         return '';
 
       case 'tools_used':
@@ -441,7 +441,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                 )}
               </Box>
 
-              {/* Service Line and SDLC Phase sections */}
+              {/* Service Line and Delivery Phase sections */}
               <FormControl 
                 required
                 error={touched.service_line && Boolean(errors.service_line)}
@@ -474,7 +474,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                 fullWidth
               >
                 <Typography variant="body2" gutterBottom sx={{ color: 'text.primary', fontWeight: 500 }}>
-                  SDLC Phase
+                Delivery Phase
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                   {SDLC_PHASES.map((phase) => (

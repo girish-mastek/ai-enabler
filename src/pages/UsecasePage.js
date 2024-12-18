@@ -96,7 +96,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
         }
       });
 
-      // Count SDLC phases
+      // Count Delivery phases
       const phases = Array.isArray(usecase.sdlc_phase) ? usecase.sdlc_phase : [usecase.sdlc_phase];
       phases.forEach(phase => {
         if (phase) {
@@ -149,7 +149,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
       const serviceLineMatch = Object.keys(selectedFilters.service_line).length === 0 ||
         serviceLines.some(line => line && selectedFilters.service_line[line]);
 
-      // Check SDLC phase filter
+      // Check Delivery phase filter
       const sdlcMatch = Object.keys(selectedFilters.sdlc_phase).length === 0 ||
         phases.some(phase => phase && selectedFilters.sdlc_phase[phase]);
 

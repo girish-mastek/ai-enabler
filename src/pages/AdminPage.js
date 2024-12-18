@@ -96,7 +96,7 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
             <TableCell sx={tableCellStyles}>Use Case</TableCell>
             <TableCell sx={tableCellStyles}>Project</TableCell>
             <TableCell sx={tableCellStyles}>Service Line</TableCell>
-            <TableCell sx={tableCellStyles}>SDLC Phase</TableCell>
+            <TableCell sx={tableCellStyles}>Delivery Phase</TableCell>
             <TableCell sx={tableCellStyles}>Tools</TableCell>
             <TableCell sx={tableCellStyles}>Submitted At</TableCell>
             <TableCell align="center" sx={tableCellStyles}>Actions</TableCell>

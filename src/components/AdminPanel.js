@@ -55,7 +55,7 @@ function AdminPanel() {
               <TableCell sx={{ fontWeight: 600 }}>Use Case</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Submitted By</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Service Line</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>SDLC Phase</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>Delivery Phase</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
               <TableCell sx={{ fontWeight: 600 }}>Submitted At</TableCell>
             </TableRow>

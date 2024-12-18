@@ -200,16 +200,19 @@
     "status": "approved"
   },
   {
-    "id": 14,
-    "service_line": "DA&AI",
-    "project": "CF DCT - Internal Gen AI",
-    "sdlc_phase": "Deployment",
     "usecase": "Infrastructure as Code - Generate scripted infrastructure for given cloud provider and infrastructure requirements.",
-    "prompts_used": "",
+    "prompts_used": "Infrastructure as Code - Generate scripted infrastructure for given cloud provider and infrastructure requirements.",
+    "service_line": "CEMS",
+    "sdlc_phase": "Deployment",
+    "tools_used": [
+      "Microsoft Copilot",
+      "GPT-4"
+    ],
+    "project": "CF DCT - Internal Gen AI",
     "estimated_efforts": 8,
     "actual_hours": 8,
-    "tools_used": "",
     "comments": "",
+    "id": 14,
     "submittedAt": "04-Dec-24",
     "moderatedAt": "",
     "status": "approved"
@@ -365,16 +368,18 @@
     "status": "approved"
   },
   {
-    "id": 25,
-    "service_line": "DA&AI",
-    "project": "CF DCT - Internal Gen AI",
-    "sdlc_phase": "Discovery",
     "usecase": "Generate a User Story - \nGenerate detailed, role-based user stories from functional requirements, making it easier to map out project needs.",
-    "prompts_used": "",
+    "prompts_used": "Generate a User Story - Generate detailed, role-based user stories from functional requirements, making it easier to map out project needs.",
+    "service_line": "DA&AI",
+    "sdlc_phase": "Discovery",
+    "tools_used": [
+      "GPT-4"
+    ],
+    "project": "CF DCT - Internal Gen AI",
     "estimated_efforts": 8,
     "actual_hours": 8,
-    "tools_used": "",
     "comments": "",
+    "id": 25,
     "submittedAt": "04-Dec-24",
     "moderatedAt": "",
     "status": "approved"

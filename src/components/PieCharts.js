@@ -19,7 +19,7 @@ const PieCharts = ({ usecases }) => {
     return [];
   };
 
-  // Calculate SDLC phase statistics
+  // Calculate Delivery phase statistics
   const sdlcStats = usecases.reduce((acc, usecase) => {
     if (usecase.status === 'approved' && usecase.sdlc_phase) {
       const phases = Array.isArray(usecase.sdlc_phase) 
@@ -143,7 +143,7 @@ const PieCharts = ({ usecases }) => {
     <Box sx={{ mb: { xs: 4, md: 6 } }}>
       <Container maxWidth="lg">
         <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
-          {/* SDLC Phase Chart */}
+          {/* Delivery Phase Chart */}
           <Grid item xs={12} md={6}>
             <Paper
               elevation={0}
@@ -160,7 +160,7 @@ const PieCharts = ({ usecases }) => {
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <AssessmentIcon sx={{ fontSize: 28, color: '#177386', mr: 2 }} />
                 <Typography variant="h5" sx={{ fontWeight: 600, color: '#177386' }}>
-                  SDLC Phase Distribution
+                Delivery Phase Distribution
                 </Typography>
               </Box>
               <Box sx={{ height: 350, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
