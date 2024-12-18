@@ -21,6 +21,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import PersonIcon from '@mui/icons-material/Person';
 import usecases from '../data/usecases.json';
 import users from '../data/user.json';
+import PieCharts from '../components/PieCharts';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -235,15 +236,20 @@ const HomePage = () => {
       <Divider />
 
       {/* Leaderboard Section */}
-      <Box sx={{ bgcolor: 'white', py: { xs: 4, md: 5 }, mb: { xs: 4, md: 5 } }}>
+      <Box sx={{ 
+        bgcolor: 'white', 
+        py: { xs: 4, md: 5 },
+        mb: { xs: 5, md: 6 } // Added margin bottom for white space
+      }}>
         <Container maxWidth="xl">
           <Typography
-            variant="h3"
+            variant="h4" // Changed from h3 to h4 to reduce font size
             sx={{
               textAlign: 'center',
               fontWeight: 700,
               color: '#177386',
-              mb: 4
+              mb: 4,
+              fontSize: { xs: '1.75rem', md: '2rem' } // Further reduced font size
             }}
           >
             Leaderboard
@@ -387,6 +393,15 @@ const HomePage = () => {
               </Paper>
             </Grid>
           </Grid>
+        </Container>
+      </Box>
+
+      <Divider />
+
+      {/* Analytics Section */}
+      <Box sx={{ bgcolor: 'white', pt: { xs: 5, md: 6 } }}> {/* Added top padding */}
+        <Container maxWidth="xl">
+          <PieCharts usecases={usecases} />
         </Container>
       </Box>
 
