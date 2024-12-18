@@ -27,6 +27,14 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
     setPage(value);
   };
 
+  const handleCardClick = (event, usecase) => {
+    // Don't navigate if clicking on approve/reject buttons
+    if (event.target.closest('.action-buttons')) {
+      return;
+    }
+    navigate(`/usecases/${usecase.id}`);
+  };
+
   const truncateTitle = (title) => {
     if (!title) return '';
     return title.length > 50 ? `${title.substring(0, 50)}...` : title;
@@ -70,6 +78,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
             sx={{ display: 'flex' }}
           >
             <Card 
+              onClick={(e) => handleCardClick(e, usecase)}
               sx={{ 
                 display: 'flex', 
                 flexDirection: 'column',
@@ -79,6 +88,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                 border: '1px solid',
                 borderColor: usecase.status === 'pending' ? 'warning.light' : 'grey.200',
                 transition: 'all 0.2s ease-in-out',
+                cursor: 'pointer',
                 '&:hover': {
                   borderColor: 'primary.main',
                   transform: 'translateY(-2px)',
@@ -214,14 +224,17 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                 </Box>
               </CardContent>
 
-              <CardActions sx={{ p: 2, pt: 1.5, flexDirection: 'column', gap: 1 }}>
+              <CardActions className="action-buttons" sx={{ p: 2, pt: 1.5, flexDirection: 'column', gap: 1 }}>
                 {usecase.status === 'pending' && onApprove && onReject && (
                   <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
                     <Button
                       variant="contained"
                       color="success"
                       startIcon={<CheckCircleIcon />}
-                      onClick={() => onApprove(usecase.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onApprove(usecase.id);
+                      }}
                       fullWidth
                       size="small"
                     >
@@ -231,7 +244,10 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                       variant="contained"
                       color="error"
                       startIcon={<CancelIcon />}
-                      onClick={() => onReject(usecase.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onReject(usecase.id);
+                      }}
                       fullWidth
                       size="small"
                     >
@@ -244,7 +260,10 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                   fullWidth
                   variant="outlined"
                   endIcon={<ArrowForwardIcon />}
-                  onClick={() => navigate(`/usecases/${usecase.id}`)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/usecases/${usecase.id}`);
+                  }}
                   sx={{ 
                     py: 0.75,
                     textTransform: 'none',
