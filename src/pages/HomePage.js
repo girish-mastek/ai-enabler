@@ -208,7 +208,7 @@ const HomePage = () => {
                       component="h2"
                       sx={{ 
                         fontWeight: 700,
-                        color: 'text.primary',
+                        color: '#177386',
                         mb: 1.5,
                         textAlign: 'center'
                       }}

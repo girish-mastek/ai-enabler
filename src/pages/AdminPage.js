@@ -221,7 +221,14 @@ const AdminPage = ({ usecases, onApprove, onReject, onDelete, onEdit }) => {
   return (
     <Box sx={{ p: 3, width: '100%' }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom>
+        <Typography 
+          variant="h4" 
+          gutterBottom
+          sx={{ 
+            color: '#177386',
+            fontWeight: 700
+          }}
+        >
           Admin Dashboard
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
