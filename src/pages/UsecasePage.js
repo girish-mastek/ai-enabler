@@ -141,14 +141,13 @@ const UsecasePage = ({ searchQuery, usecases }) => {
         sx={{ 
           maxWidth: '1920px', 
           mx: 'auto',
-          px: { xs: 2, sm: 3, md: 4 }, 
           py: 4,
           boxSizing: 'border-box'
         }}
       >
         <Grid 
           container 
-          spacing={4}
+          spacing={3}
           sx={{ 
             minHeight: 'calc(100vh - 200px)',
             width: '100%',
@@ -156,7 +155,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
           }}
         >
           {/* Sidebar */}
-          <Grid item xs={12} md={3} lg={2.5} xl={2} sx={{ pl: 0 }}>
+          <Grid item xs={12} md={3} lg={2.5} xl={2} sx={{ pl: { xs: 2, sm: 2 } }}>
             <Box 
               sx={{ 
                 position: 'sticky', 
@@ -183,7 +182,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
           </Grid>
 
           {/* Use Cases List */}
-          <Grid item xs={12} md={9} lg={9.5} xl={10} sx={{ pl: { xs: 0, md: 4 } }}>
+          <Grid item xs={12} md={9} lg={9.5} xl={10} sx={{ px: { xs: 2, sm: 2 } }}>
             <UsecaseList usecases={filteredUsecases} />
           </Grid>
         </Grid>

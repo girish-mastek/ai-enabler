@@ -17,23 +17,10 @@ import PendingIcon from '@mui/icons-material/Pending';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const ITEMS_PER_PAGE = 15;
-
 const UsecaseList = ({ usecases, onApprove, onReject }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
-
-  const handleCardClick = (event, usecase) => {
-    // Don't navigate if clicking on approve/reject buttons
-    if (event.target.closest('.action-buttons')) {
-      return;
-    }
-    navigate(`/usecases/${usecase.id}`);
-  };
+  const itemsPerPage = 16;
 
   const truncateTitle = (title) => {
     if (!title) return '';
@@ -59,15 +46,20 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
     );
   }
 
-  // Calculate pagination
-  const totalPages = Math.ceil(usecases.length / ITEMS_PER_PAGE);
-  const startIndex = (page - 1) * ITEMS_PER_PAGE;
-  const paginatedUsecases = usecases.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const displayedUsecases = usecases.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(usecases.length / itemsPerPage);
 
   return (
     <Box>
       <Grid container spacing={2.5}>
-        {paginatedUsecases.map((usecase) => (
+        {displayedUsecases.map((usecase) => (
           <Grid 
             item 
             xs={12} 
@@ -78,7 +70,6 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
             sx={{ display: 'flex' }}
           >
             <Card 
-              onClick={(e) => handleCardClick(e, usecase)}
               sx={{ 
                 display: 'flex', 
                 flexDirection: 'column',
@@ -88,7 +79,6 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                 border: '1px solid',
                 borderColor: usecase.status === 'pending' ? 'warning.light' : 'grey.200',
                 transition: 'all 0.2s ease-in-out',
-                cursor: 'pointer',
                 '&:hover': {
                   borderColor: 'primary.main',
                   transform: 'translateY(-2px)',
@@ -151,7 +141,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                 {usecase.tools_used && usecase.tools_used.length > 0 && (
                   <Box sx={{ mb: 1.5 }}>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
-                      {Array.isArray(usecase.tools_used) ? usecase.tools_used.map((tool, index) => (
+                      {usecase.tools_used.map((tool, index) => (
                         <Chip
                           key={index}
                           label={tool}
@@ -160,62 +150,47 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                             height: '22px',
                             fontSize: '0.75rem',
                             fontWeight: 500,
-                            bgcolor: '#ECEFF1',
-                            color: '#455A64',
+                            bgcolor: '#ECEFF1', // Blue Grey 50
+                            color: '#455A64', // Blue Grey 700
                             border: '1px solid',
-                            borderColor: '#CFD8DC',
+                            borderColor: '#CFD8DC', // Blue Grey 100
                             '& .MuiChip-label': { px: 1 }
                           }}
                         />
-                      )) : (
-                        <Chip
-                          label={usecase.tools_used}
-                          size="small"
-                          sx={{ 
-                            height: '22px',
-                            fontSize: '0.75rem',
-                            fontWeight: 500,
-                            bgcolor: '#ECEFF1',
-                            color: '#455A64',
-                            border: '1px solid',
-                            borderColor: '#CFD8DC',
-                            '& .MuiChip-label': { px: 1 }
-                          }}
-                        />
-                      )}
+                      ))}
                     </Box>
                   </Box>
                 )}
 
-                {/* Service Line Section */}
+                {/* Service Line Section - pushed to bottom when tools_used is empty */}
                 <Box sx={{ mt: 'auto' }}>
                   {usecase.service_line && (
                     <Box>
                       <Chip 
-                        label={Array.isArray(usecase.service_line) ? usecase.service_line[0] : usecase.service_line} 
+                        label={usecase.service_line} 
                         size="small" 
                         sx={{ 
                           height: '24px',
                           fontSize: '0.75rem',
                           fontWeight: 500,
-                          bgcolor: '#F3E5F5',
-                          color: '#7B1FA2',
+                          bgcolor: '#F3E5F5', // Purple 50
+                          color: '#7B1FA2', // Purple 700
                           border: '1px solid',
-                          borderColor: '#E1BEE7',
+                          borderColor: '#E1BEE7', // Purple 100
                           '& .MuiChip-label': { px: 1 }
                         }}
                       />&nbsp;
                       <Chip 
-                        label={Array.isArray(usecase.sdlc_phase) ? usecase.sdlc_phase[0] : usecase.sdlc_phase} 
+                        label={usecase.sdlc_phase} 
                         size="small" 
                         sx={{ 
                           height: '24px',
                           fontSize: '0.75rem',
                           fontWeight: 500,
-                          bgcolor: '#E0F2F1',
-                          color: '#00796B',
+                          bgcolor: '#E0F2F1', // Teal 50
+                          color: '#00796B', // Teal 700
                           border: '1px solid',
-                          borderColor: '#B2DFDB',
+                          borderColor: '#B2DFDB', // Teal 100
                           '& .MuiChip-label': { px: 1 }
                         }}
                       />
@@ -224,17 +199,14 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                 </Box>
               </CardContent>
 
-              <CardActions className="action-buttons" sx={{ p: 2, pt: 1.5, flexDirection: 'column', gap: 1 }}>
+              <CardActions sx={{ p: 2, pt: 1.5, flexDirection: 'column', gap: 1 }}>
                 {usecase.status === 'pending' && onApprove && onReject && (
                   <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
                     <Button
                       variant="contained"
                       color="success"
                       startIcon={<CheckCircleIcon />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onApprove(usecase.id);
-                      }}
+                      onClick={() => onApprove(usecase.id)}
                       fullWidth
                       size="small"
                     >
@@ -244,10 +216,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                       variant="contained"
                       color="error"
                       startIcon={<CancelIcon />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onReject(usecase.id);
-                      }}
+                      onClick={() => onReject(usecase.id)}
                       fullWidth
                       size="small"
                     >
@@ -260,10 +229,7 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
                   fullWidth
                   variant="outlined"
                   endIcon={<ArrowForwardIcon />}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/usecases/${usecase.id}`);
-                  }}
+                  onClick={() => navigate(`/usecases/${usecase.id}`)}
                   sx={{ 
                     py: 0.75,
                     textTransform: 'none',
@@ -288,7 +254,6 @@ const UsecaseList = ({ usecases, onApprove, onReject }) => {
         ))}
       </Grid>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
           <Pagination 
