@@ -3,9 +3,6 @@ import {
   Box,
   Paper,
   Typography,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -56,6 +53,41 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
     });
     return selected;
   };
+
+  const FilterChip = ({ label, count, selected, onClick }) => (
+    <Chip
+      label={
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <span>{label}</span>
+          <Typography
+            component="span"
+            sx={{
+              fontSize: '0.75rem',
+              color: selected ? 'inherit' : 'text.secondary'
+            }}
+          >
+            ({count})
+          </Typography>
+        </Box>
+      }
+      onClick={onClick}
+      sx={{
+        m: 0.5,
+        borderRadius: '16px',
+        height: '32px',
+        bgcolor: selected ? 'primary.main' : 'grey.100',
+        color: selected ? 'white' : 'text.primary',
+        border: '1px solid',
+        borderColor: selected ? 'primary.main' : 'grey.300',
+        '&:hover': {
+          bgcolor: selected ? 'primary.dark' : 'grey.200',
+        },
+        transition: 'all 0.2s ease-in-out',
+        fontWeight: selected ? 500 : 400,
+        fontSize: '0.8125rem'
+      }}
+    />
+  );
 
   return (
     <Paper
@@ -119,15 +151,15 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
       <Stack>
         <Accordion defaultExpanded disableGutters elevation={0}>
           <AccordionSummary 
-              expandIcon={<ExpandMoreIcon sx={{ fontSize: '1.25rem' }} />}
-              sx={{ 
-                minHeight: 48,
-                py: 0,
-                px: 2,
-                bgcolor: 'grey.50',
-                '&:hover': { bgcolor: 'grey.100' }
-              }}
-            >
+            expandIcon={<ExpandMoreIcon sx={{ fontSize: '1.25rem' }} />}
+            sx={{ 
+              minHeight: 48,
+              py: 0,
+              px: 2,
+              bgcolor: 'grey.50',
+              '&:hover': { bgcolor: 'grey.100' }
+            }}
+          >
             <Typography sx={{ fontSize: '0.875rem', fontWeight: 500 }}>
               Service Line
               {getSelectedCount('service_line') > 0 && (
@@ -144,39 +176,18 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
               )}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails sx={{ p: 1.5 }}>
-            <FormGroup>
+          <AccordionDetails sx={{ p: 1 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', margin: -0.5 }}>
               {Object.entries(filters.service_line).map(([value, count]) => (
-                <FormControlLabel
+                <FilterChip
                   key={value}
-                  control={
-                    <Checkbox
-                      size="small"
-                      checked={selectedFilters.service_line[value] || false}
-                      onChange={() => handleFilterChange('service_line', value)}
-                    />
-                  }
-                  label={
-                    <Typography variant="body2" sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      width: '100%',
-                      fontSize: '0.8125rem'
-                    }}>
-                      {value}
-                      <Typography 
-                        component="span" 
-                        color="text.secondary"
-                        sx={{ fontSize: '0.8125rem' }}
-                      >
-                        ({count})
-                      </Typography>
-                    </Typography>
-                  }
-                  sx={{ py: 0.25 }}
+                  label={value}
+                  count={count}
+                  selected={selectedFilters.service_line[value] || false}
+                  onClick={() => handleFilterChange('service_line', value)}
                 />
               ))}
-            </FormGroup>
+            </Box>
           </AccordionDetails>
         </Accordion>
 
@@ -209,39 +220,18 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
               )}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails sx={{ p: 1.5 }}>
-            <FormGroup>
+          <AccordionDetails sx={{ p: 1 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', margin: -0.5 }}>
               {Object.entries(filters.sdlc_phase).map(([value, count]) => (
-                <FormControlLabel
+                <FilterChip
                   key={value}
-                  control={
-                    <Checkbox
-                      size="small"
-                      checked={selectedFilters.sdlc_phase[value] || false}
-                      onChange={() => handleFilterChange('sdlc_phase', value)}
-                    />
-                  }
-                  label={
-                    <Typography variant="body2" sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      width: '100%',
-                      fontSize: '0.8125rem'
-                    }}>
-                      {value}
-                      <Typography 
-                        component="span" 
-                        color="text.secondary"
-                        sx={{ fontSize: '0.8125rem' }}
-                      >
-                        ({count})
-                      </Typography>
-                    </Typography>
-                  }
-                  sx={{ py: 0.25 }}
+                  label={value}
+                  count={count}
+                  selected={selectedFilters.sdlc_phase[value] || false}
+                  onClick={() => handleFilterChange('sdlc_phase', value)}
                 />
               ))}
-            </FormGroup>
+            </Box>
           </AccordionDetails>
         </Accordion>
 
@@ -274,39 +264,18 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
               )}
             </Typography>
           </AccordionSummary>
-          <AccordionDetails sx={{ p: 1.5 }}>
-            <FormGroup>
+          <AccordionDetails sx={{ p: 1 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', margin: -0.5 }}>
               {Object.entries(filters.tools_used).map(([value, count]) => (
-                <FormControlLabel
+                <FilterChip
                   key={value}
-                  control={
-                    <Checkbox
-                      size="small"
-                      checked={selectedFilters.tools_used[value] || false}
-                      onChange={() => handleFilterChange('tools_used', value)}
-                    />
-                  }
-                  label={
-                    <Typography variant="body2" sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      width: '100%',
-                      fontSize: '0.8125rem'
-                    }}>
-                      {value}
-                      <Typography 
-                        component="span" 
-                        color="text.secondary"
-                        sx={{ fontSize: '0.8125rem' }}
-                      >
-                        ({count})
-                      </Typography>
-                    </Typography>
-                  }
-                  sx={{ py: 0.25 }}
+                  label={value}
+                  count={count}
+                  selected={selectedFilters.tools_used[value] || false}
+                  onClick={() => handleFilterChange('tools_used', value)}
                 />
               ))}
-            </FormGroup>
+            </Box>
           </AccordionDetails>
         </Accordion>
       </Stack>
