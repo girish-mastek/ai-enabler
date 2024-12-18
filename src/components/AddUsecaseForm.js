@@ -6,20 +6,18 @@ import {
   Typography,
   Stack,
   FormControl,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
   FormHelperText,
   Paper,
   Divider,
-  ToggleButton,
-  ToggleButtonGroup,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
+  Chip,
+  IconButton
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import CloseIcon from '@mui/icons-material/Close';
 
 const SERVICE_LINE = [
   'DE&E',
@@ -49,65 +47,20 @@ const DEFAULT_TOOLS = [
 ];
 
 const StyledSection = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  marginBottom: theme.spacing(3),
+  padding: theme.spacing(2),
+  marginBottom: theme.spacing(2),
   backgroundColor: theme.palette.background.default,
   borderRadius: theme.shape.borderRadius,
   boxShadow: 'none',
   border: `1px solid ${theme.palette.divider}`
 }));
 
-const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
-  margin: theme.spacing(0.5),
-  border: `1px solid ${theme.palette.primary.main}`,
-  '&.Mui-selected': {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-  },
-}));
-
-const StyledFormGroup = styled(FormGroup)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  gap: theme.spacing(1),
-  '& .MuiFormControlLabel-root': {
-    margin: 0,
-    marginRight: theme.spacing(1),
-    '& .MuiCheckbox-root': {
-      padding: theme.spacing(0.5),
-    },
-    '& .MuiTypography-root': {
-      fontSize: '0.875rem',
-      color: theme.palette.text.secondary,
-    },
-    '&:hover': {
-      '& .MuiTypography-root': {
-        color: theme.palette.text.primary,
-      },
-    },
-    '&.Mui-checked': {
-      '& .MuiTypography-root': {
-        color: theme.palette.text.primary,
-        fontWeight: 500,
-      },
-    },
-  },
-}));
-
-const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
-  '&:not(.Mui-checked)': {
-    color: theme.palette.text.disabled,
-  },
-  '&.Mui-checked': {
-    '& + .MuiFormControlLabel-label': {
-      color: theme.palette.text.primary,
-      fontWeight: 500,
-    },
-  },
+const StyledChip = styled(Chip)(({ theme }) => ({
+  height: '32px',
+  fontSize: '0.9rem',
+  '& .MuiChip-label': {
+    padding: '0 16px',
+  }
 }));
 
 const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
@@ -117,6 +70,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
   });
   const [newTool, setNewTool] = useState('');
   const [showNewToolInput, setShowNewToolInput] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
 
   const [formData, setFormData] = useState({
     usecase: '',
@@ -134,36 +88,6 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
   const [touched, setTouched] = useState({});
 
   const TOOLS = [...DEFAULT_TOOLS.filter(tool => tool !== 'Others'), ...customTools, 'Others'];
-
-  useEffect(() => {
-    if (usecase && isEdit) {
-      setFormData({
-        usecase: usecase.usecase || '',
-        prompts_used: usecase.prompts_used || '',
-        service_line: usecase.service_line || '',
-        sdlc_phase: usecase.sdlc_phase || '',
-        tools_used: usecase.tools_used || [],
-        project: usecase.project || '',
-        estimated_efforts: usecase.estimated_efforts || '',
-        actual_hours: usecase.actual_hours || '',
-        comments: usecase.comments || ''
-      });
-    } else {
-      setFormData({
-        usecase: '',
-        prompts_used: '',
-        service_line: '',
-        sdlc_phase: '',
-        tools_used: [],
-        project: '',
-        estimated_efforts: '',
-        actual_hours: '',
-        comments: ''
-      });
-    }
-    setErrors({});
-    setTouched({});
-  }, [usecase, isEdit, open]);
 
   const validateField = (name, value) => {
     switch (name) {
@@ -214,6 +138,16 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    Object.keys(formData).forEach(key => {
+      const error = validateField(key, formData[key]);
+      if (error) newErrors[key] = error;
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -229,8 +163,13 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     }
   };
 
+  const handleFocus = (fieldName) => {
+    setFocusedField(fieldName);
+  };
+
   const handleBlur = (e) => {
     const { name } = e.target;
+    setFocusedField(null);
     setTouched(prev => ({
       ...prev,
       [name]: true
@@ -241,31 +180,52 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     }));
   };
 
-  const handleSingleCheckboxChange = (field) => (event) => {
-    const value = event.target.name;
-    
-    // If the clicked checkbox is already selected, do nothing
-    if (formData[field] === value) {
-      return;
-    }
-
+  const handleServiceLineSelect = (value) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      service_line: value
     }));
-
     setTouched(prev => ({
       ...prev,
-      [field]: true
+      service_line: true
     }));
-
     setErrors(prev => ({
       ...prev,
-      [field]: validateField(field, value)
+      service_line: validateField('service_line', value)
+    }));
+  };
+
+  const handleSDLCPhaseSelect = (value) => {
+    setFormData(prev => ({
+      ...prev,
+      sdlc_phase: value
+    }));
+    setTouched(prev => ({
+      ...prev,
+      sdlc_phase: true
+    }));
+    setErrors(prev => ({
+      ...prev,
+      sdlc_phase: validateField('sdlc_phase', value)
     }));
   };
 
   const handleToolsChange = (event, newTools) => {
+    setFormData(prev => ({
+      ...prev,
+      tools_used: newTools
+    }));
+
+    setTouched(prev => ({
+      ...prev,
+      tools_used: true
+    }));
+
+    setErrors(prev => ({
+      ...prev,
+      tools_used: validateField('tools_used', newTools)
+    }));
+
     if (newTools.includes('Others') && !formData.tools_used.includes('Others')) {
       setShowNewToolInput(true);
     }
@@ -273,16 +233,6 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
       setShowNewToolInput(false);
       setNewTool('');
     }
-
-    setFormData(prev => ({
-      ...prev,
-      tools_used: newTools
-    }));
-
-    setErrors(prev => ({
-      ...prev,
-      tools_used: validateField('tools_used', newTools)
-    }));
   };
 
   const handleAddNewTool = () => {
@@ -299,16 +249,6 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
       setNewTool('');
       setShowNewToolInput(false);
     }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    Object.keys(formData).forEach(key => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
@@ -350,106 +290,172 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     onClose();
   };
 
+  useEffect(() => {
+    if (usecase && isEdit) {
+      setFormData({
+        usecase: usecase.usecase || '',
+        prompts_used: usecase.prompts_used || '',
+        service_line: usecase.service_line || '',
+        sdlc_phase: usecase.sdlc_phase || '',
+        tools_used: usecase.tools_used || [],
+        project: usecase.project || '',
+        estimated_efforts: usecase.estimated_efforts || '',
+        actual_hours: usecase.actual_hours || '',
+        comments: usecase.comments || ''
+      });
+    } else {
+      setFormData({
+        usecase: '',
+        prompts_used: '',
+        service_line: '',
+        sdlc_phase: '',
+        tools_used: [],
+        project: '',
+        estimated_efforts: '',
+        actual_hours: '',
+        comments: ''
+      });
+    }
+    setErrors({});
+    setTouched({});
+  }, [usecase, isEdit, open]);
+
   return (
     <Dialog 
       open={open} 
       onClose={handleCancel}
-      maxWidth="md" 
-      fullWidth
+      maxWidth={false}
       PaperProps={{
         sx: {
           borderRadius: 2,
-          maxHeight: '90vh'
+          maxHeight: '90vh',
+          width: '100%',
+          m: 0
         }
       }}
     >
-      <DialogTitle>
-        <Typography variant="h5" component="div" sx={{ fontWeight: 600, color: 'primary.main' }}>
+      <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Typography variant="h6" component="div" sx={{ fontWeight: 600, color: 'primary.main' }}>
           {isEdit ? 'Update Use Case' : 'Add New Use Case'}
         </Typography>
+        <IconButton
+          aria-label="close"
+          onClick={handleCancel}
+          sx={{
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           {/* Basic Information Section */}
           <StyledSection>
-            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
+            <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
               Basic Information
             </Typography>
-            <Stack spacing={3}>
-              <TextField
-                required
-                fullWidth
-                label="Use Case Title"
-                name="usecase"
-                value={formData.usecase}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.usecase && Boolean(errors.usecase)}
-                helperText={touched.usecase && errors.usecase}
-                autoFocus
-                variant="outlined"
-              />
-
-              <TextField
-                required
-                fullWidth
-                label="Project Name"
-                name="project"
-                value={formData.project}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.project && Boolean(errors.project)}
-                helperText={touched.project && errors.project}
-                variant="outlined"
-              />
-            </Stack>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Box sx={{ flex: 1 }}>
+                <TextField
+                  required
+                  fullWidth
+                  label="Use Case Title"
+                  name="usecase"
+                  value={formData.usecase}
+                  onChange={handleChange}
+                  onFocus={() => handleFocus('usecase')}
+                  onBlur={handleBlur}
+                  error={touched.usecase && Boolean(errors.usecase)}
+                  helperText={touched.usecase && errors.usecase}
+                  autoFocus
+                  variant="outlined"
+                  size="small"
+                  inputProps={{ maxLength: 200 }}
+                />
+                {focusedField === 'usecase' && (
+                  <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>
+                    Characters: {formData.usecase.length}/200
+                  </Typography>
+                )}
+              </Box>
+              <Box sx={{ flex: 1 }}>
+                <TextField
+                  required
+                  fullWidth
+                  label="Project Name"
+                  name="project"
+                  value={formData.project}
+                  onChange={handleChange}
+                  onFocus={() => handleFocus('project')}
+                  onBlur={handleBlur}
+                  error={touched.project && Boolean(errors.project)}
+                  helperText={touched.project && errors.project}
+                  variant="outlined"
+                  size="small"
+                  inputProps={{ maxLength: 100 }}
+                />
+                {focusedField === 'project' && (
+                  <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>
+                    Characters: {formData.project.length}/100
+                  </Typography>
+                )}
+              </Box>
+            </Box>
           </StyledSection>
 
           {/* Details Section */}
           <StyledSection>
-            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
+            <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
               Details
             </Typography>
-            <Stack spacing={3}>
-              <TextField
-                required
-                fullWidth
-                label="Prompts Used"
-                name="prompts_used"
-                value={formData.prompts_used}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.prompts_used && Boolean(errors.prompts_used)}
-                helperText={touched.prompts_used && errors.prompts_used}
-                multiline
-                rows={4}
-                variant="outlined"
-              />
+            <Stack spacing={2}>
+              <Box>
+                <TextField
+                  required
+                  fullWidth
+                  label="Prompts Used"
+                  name="prompts_used"
+                  value={formData.prompts_used}
+                  onChange={handleChange}
+                  onFocus={() => handleFocus('prompts_used')}
+                  onBlur={handleBlur}
+                  error={touched.prompts_used && Boolean(errors.prompts_used)}
+                  helperText={touched.prompts_used && errors.prompts_used}
+                  multiline
+                  rows={3}
+                  variant="outlined"
+                  size="small"
+                  inputProps={{ maxLength: 1000 }}
+                />
+                {focusedField === 'prompts_used' && (
+                  <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>
+                    Characters: {formData.prompts_used.length}/1000
+                  </Typography>
+                )}
+              </Box>
 
+              {/* Service Line and SDLC Phase sections */}
               <FormControl 
                 required
                 error={touched.service_line && Boolean(errors.service_line)}
                 component="fieldset"
+                fullWidth
               >
-                <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', fontSize: '0.875rem' }}>
+                <Typography variant="body2" gutterBottom sx={{ color: 'text.primary', fontWeight: 500 }}>
                   Service Line
                 </Typography>
-                <StyledFormGroup>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                   {SERVICE_LINE.map((service) => (
-                    <FormControlLabel
+                    <StyledChip
                       key={service}
-                      control={
-                        <StyledCheckbox
-                          checked={formData.service_line === service}
-                          onChange={handleSingleCheckboxChange('service_line')}
-                          name={service}
-                          size="small"
-                        />
-                      }
                       label={service}
+                      onClick={() => handleServiceLineSelect(service)}
+                      color={formData.service_line === service ? "primary" : "default"}
+                      variant={formData.service_line === service ? "filled" : "outlined"}
                     />
                   ))}
-                </StyledFormGroup>
+                </Box>
                 {touched.service_line && errors.service_line && (
                   <FormHelperText error>{errors.service_line}</FormHelperText>
                 )}
@@ -459,26 +465,22 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                 required
                 error={touched.sdlc_phase && Boolean(errors.sdlc_phase)}
                 component="fieldset"
+                fullWidth
               >
-                <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', fontSize: '0.875rem' }}>
+                <Typography variant="body2" gutterBottom sx={{ color: 'text.primary', fontWeight: 500 }}>
                   SDLC Phase
                 </Typography>
-                <StyledFormGroup>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                   {SDLC_PHASES.map((phase) => (
-                    <FormControlLabel
+                    <StyledChip
                       key={phase}
-                      control={
-                        <StyledCheckbox
-                          checked={formData.sdlc_phase === phase}
-                          onChange={handleSingleCheckboxChange('sdlc_phase')}
-                          name={phase}
-                          size="small"
-                        />
-                      }
                       label={phase}
+                      onClick={() => handleSDLCPhaseSelect(phase)}
+                      color={formData.sdlc_phase === phase ? "primary" : "default"}
+                      variant={formData.sdlc_phase === phase ? "filled" : "outlined"}
                     />
                   ))}
-                </StyledFormGroup>
+                </Box>
                 {touched.sdlc_phase && errors.sdlc_phase && (
                   <FormHelperText error>{errors.sdlc_phase}</FormHelperText>
                 )}
@@ -488,7 +490,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
 
           {/* Tools Section */}
           <StyledSection>
-            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
+            <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
               Tools Used
             </Typography>
             <FormControl 
@@ -496,19 +498,22 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
               required
               error={touched.tools_used && Boolean(errors.tools_used)}
             >
-              <ToggleButtonGroup
-                value={formData.tools_used}
-                onChange={handleToolsChange}
-                aria-label="tools used"
-                multiple
-                sx={{ flexWrap: 'wrap', justifyContent: 'center' }}
-              >
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 {TOOLS.map((tool) => (
-                  <StyledToggleButton key={tool} value={tool} aria-label={tool}>
-                    {tool}
-                  </StyledToggleButton>
+                  <StyledChip
+                    key={tool}
+                    label={tool}
+                    onClick={() => {
+                      const newTools = formData.tools_used.includes(tool)
+                        ? formData.tools_used.filter(t => t !== tool)
+                        : [...formData.tools_used, tool];
+                      handleToolsChange(null, newTools);
+                    }}
+                    color={formData.tools_used.includes(tool) ? "primary" : "default"}
+                    variant={formData.tools_used.includes(tool) ? "filled" : "outlined"}
+                  />
                 ))}
-              </ToggleButtonGroup>
+              </Box>
               {touched.tools_used && errors.tools_used && (
                 <FormHelperText error sx={{ mt: 1 }}>{errors.tools_used}</FormHelperText>
               )}
@@ -517,17 +522,18 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
             {showNewToolInput && (
               <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
                 <TextField
-                  fullWidth
                   size="small"
                   label="New Tool Name"
                   value={newTool}
                   onChange={(e) => setNewTool(e.target.value)}
                   placeholder="Enter new tool name"
+                  sx={{ width: '300px' }}
                 />
                 <Button
                   variant="contained"
                   onClick={handleAddNewTool}
                   disabled={!newTool.trim()}
+                  size="small"
                 >
                   Save
                 </Button>
@@ -537,10 +543,10 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
 
           {/* Effort Tracking Section */}
           <StyledSection>
-            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
+            <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
               Effort Tracking
             </Typography>
-            <Stack spacing={3}>
+            <Box sx={{ display: 'flex', gap: 2 }}>
               <TextField
                 required
                 fullWidth
@@ -553,6 +559,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                 helperText={touched.estimated_efforts && errors.estimated_efforts}
                 type="number"
                 variant="outlined"
+                size="small"
                 InputProps={{ inputProps: { min: 0 } }}
               />
 
@@ -568,35 +575,48 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                 helperText={touched.actual_hours && errors.actual_hours}
                 type="number"
                 variant="outlined"
+                size="small"
                 InputProps={{ inputProps: { min: 0 } }}
               />
-            </Stack>
+            </Box>
           </StyledSection>
 
           {/* Additional Comments Section */}
           <StyledSection>
-            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', mb: 2 }}>
+            <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
               Additional Comments
             </Typography>
-            <TextField
-              fullWidth
-              label="Comments"
-              name="comments"
-              value={formData.comments}
-              onChange={handleChange}
-              multiline
-              rows={3}
-              variant="outlined"
-              placeholder="Add any additional comments or notes about this use case"
-            />
+            <Box>
+              <TextField
+                fullWidth
+                label="Comments"
+                name="comments"
+                value={formData.comments}
+                onChange={handleChange}
+                onFocus={() => handleFocus('comments')}
+                onBlur={handleBlur}
+                multiline
+                rows={2}
+                variant="outlined"
+                size="small"
+                placeholder="Add any additional comments or notes about this use case"
+                inputProps={{ maxLength: 500 }}
+              />
+              {focusedField === 'comments' && (
+                <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>
+                  Characters: {formData.comments.length}/500
+                </Typography>
+              )}
+            </Box>
           </StyledSection>
         </Box>
       </DialogContent>
       <Divider />
-      <DialogActions sx={{ p: 2.5 }}>
+      <DialogActions sx={{ p: 2 }}>
         <Button 
           onClick={handleCancel}
           variant="outlined"
+          size="small"
           sx={{ 
             minWidth: 100,
             mr: 1
@@ -607,6 +627,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
         <Button 
           onClick={handleSubmit}
           variant="contained"
+          size="small"
           sx={{ 
             minWidth: 100,
             fontWeight: 600
