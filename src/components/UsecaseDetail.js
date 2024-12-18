@@ -10,7 +10,9 @@ import {
   Grid,
   Paper,
   Stack,
-  Container
+  Container,
+  IconButton,
+  Tooltip
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BusinessIcon from '@mui/icons-material/Business';
@@ -19,6 +21,8 @@ import CommentIcon from '@mui/icons-material/Comment';
 import BuildIcon from '@mui/icons-material/Build';
 import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useAuth } from '../context/AuthContext';
 import users from '../data/user.json';
 
@@ -30,6 +34,12 @@ const UsecaseDetail = ({ usecases }) => {
 
   const findUser = (userId) => {
     return users.find(user => user.id === userId) || { firstname: 'Unknown', lastname: 'User' };
+  };
+
+  const handleCopyPrompt = () => {
+    if (usecase.prompts_used) {
+      navigator.clipboard.writeText(usecase.prompts_used);
+    }
   };
 
   useEffect(() => {
@@ -122,47 +132,71 @@ const UsecaseDetail = ({ usecases }) => {
                 {usecase.usecase}
               </Typography>
               
-              <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-                <Chip 
-                  label={usecase.service_line} 
-                  sx={{ 
-                    bgcolor: '#F3E5F5',
-                    color: '#7B1FA2',
-                    border: '1px solid #E1BEE7',
-                    '& .MuiChip-label': { px: 2 }
-                  }}
-                />
-                <Chip 
-                  label={usecase.sdlc_phase} 
-                  sx={{ 
-                    bgcolor: '#E0F2F1',
-                    color: '#00796B',
-                    border: '1px solid #B2DFDB',
-                    '& .MuiChip-label': { px: 2 }
-                  }}
-                />
-                <Chip 
-                  icon={<PersonIcon />}
-                  label={`Submitted by ${submitter.firstname} ${submitter.lastname}`}
-                  sx={{ 
-                    bgcolor: '#E8F5E9',
-                    color: '#2E7D32',
-                    border: '1px solid #C8E6C9',
-                    '& .MuiChip-label': { px: 2 }
-                  }}
-                />
-                <Chip 
-                  label={usecase.status.charAt(0).toUpperCase() + usecase.status.slice(1)}
-                  sx={{ 
-                    bgcolor: statusColors.bg,
-                    color: statusColors.color,
-                    border: `1px solid ${statusColors.border}`,
-                    '& .MuiChip-label': { px: 2 }
-                  }}
-                />
+              <Stack spacing={1} sx={{ mb: 2 }}>
+                <Stack direction="row" spacing={1}>
+                  <Chip 
+                    label={usecase.service_line} 
+                    sx={{ 
+                      bgcolor: '#F3E5F5',
+                      color: '#7B1FA2',
+                      border: '1px solid #E1BEE7',
+                      '& .MuiChip-label': { px: 2 }
+                    }}
+                  />
+                  <Chip 
+                    label={usecase.sdlc_phase} 
+                    sx={{ 
+                      bgcolor: '#E0F2F1',
+                      color: '#00796B',
+                      border: '1px solid #B2DFDB',
+                      '& .MuiChip-label': { px: 2 }
+                    }}
+                  />
+                  <Chip 
+                    label={usecase.status.charAt(0).toUpperCase() + usecase.status.slice(1)}
+                    sx={{ 
+                      bgcolor: statusColors.bg,
+                      color: statusColors.color,
+                      border: `1px solid ${statusColors.border}`,
+                      '& .MuiChip-label': { px: 2 }
+                    }}
+                  />
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                  <Chip 
+                    icon={<PersonIcon />}
+                    label={`Submitted by ${submitter.firstname} ${submitter.lastname}`}
+                    sx={{ 
+                      bgcolor: '#E8F5E9',
+                      color: '#2E7D32',
+                      border: '1px solid #C8E6C9',
+                      '& .MuiChip-label': { px: 2 }
+                    }}
+                  />
+                  <Chip 
+                    icon={<CalendarTodayIcon />}
+                    label={`Submitted at ${usecase.submittedAt}`}
+                    sx={{ 
+                      bgcolor: '#E3F2FD',
+                      color: '#1565C0',
+                      border: '1px solid #BBDEFB',
+                      '& .MuiChip-label': { px: 2 }
+                    }}
+                  />
+                </Stack>
               </Stack>
 
-              <Typography variant="body1" color="text.secondary" sx={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
+              <Typography 
+                variant="subtitle1" 
+                sx={{ 
+                  fontWeight: 600,
+                  color: 'text.secondary',
+                  mb: 0.5
+                }}
+              >
+                Project Name
+              </Typography>
+              <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
                 {usecase.project}
               </Typography>
             </Paper>
@@ -182,9 +216,20 @@ const UsecaseDetail = ({ usecases }) => {
             >
               <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
                 <ChatIcon sx={{ color: 'primary.main', fontSize: 28 }} />
-                <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                <Typography variant="h5" sx={{ fontWeight: 600, flexGrow: 1 }}>
                   Prompts Used
                 </Typography>
+                {usecase.prompts_used && (
+                  <Tooltip title="Copy prompt">
+                    <IconButton 
+                      onClick={handleCopyPrompt}
+                      size="small"
+                      sx={{ color: 'primary.main' }}
+                    >
+                      <ContentCopyIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
               </Stack>
               <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
                 {usecase.prompts_used}
@@ -192,43 +237,69 @@ const UsecaseDetail = ({ usecases }) => {
             </Paper>
           </Grid>
 
-          {/* Time & Effort and Comments */}
+          {/* Tools Used and Effort Tracking Combined */}
           <Grid item xs={12} md={6}>
             <Paper 
               elevation={0}
               sx={{ 
-                p: 3,
-                height: '100%',
+                p: 2,
                 borderRadius: 2,
                 bgcolor: 'white',
                 border: '1px solid',
-                borderColor: 'grey.200'
+                borderColor: 'grey.200',
+                minHeight: '160px'
               }}
             >
-              <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 2 }}>
-                <AccessTimeIcon sx={{ color: 'primary.main', fontSize: 28 }} />
-                <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                  Time & Effort
+              {usecase.tools_used && (
+                <>
+                  <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1 }}>
+                    <BuildIcon sx={{ color: 'primary.main', fontSize: 24 }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      Tools Used
+                    </Typography>
+                  </Stack>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                    {usecase.tools_used.map((tool, index) => (
+                      <Chip 
+                        key={index}
+                        label={tool}
+                        size="small"
+                        sx={{ 
+                          bgcolor: '#ECEFF1',
+                          color: '#455A64',
+                          border: '1px solid #CFD8DC',
+                          '& .MuiChip-label': { px: 2 }
+                        }}
+                      />
+                    ))}
+                  </Box>
+                </>
+              )}
+              
+              <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1 }}>
+                <AccessTimeIcon sx={{ color: 'primary.main', fontSize: 24 }} />
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  Effort Tracking
                 </Typography>
               </Stack>
-              <Stack spacing={2}>
-                <Box>
-                  <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 0.5 }}>
-                    Estimated Efforts
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Estimated (Hours)
                   </Typography>
-                  <Typography variant="body1" sx={{ fontSize: '1.1rem' }}>
+                  <Typography variant="body2">
                     {usecase.estimated_efforts}
                   </Typography>
-                </Box>
-                <Box>
-                  <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 0.5 }}>
-                    Actual Hours
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Actual (Hours)
                   </Typography>
-                  <Typography variant="body1" sx={{ fontSize: '1.1rem' }}>
+                  <Typography variant="body2">
                     {usecase.actual_hours}
                   </Typography>
-                </Box>
-              </Stack>
+                </Grid>
+              </Grid>
             </Paper>
           </Grid>
 
@@ -236,62 +307,25 @@ const UsecaseDetail = ({ usecases }) => {
             <Paper 
               elevation={0}
               sx={{ 
-                p: 3,
-                height: '100%',
+                p: 2,
                 borderRadius: 2,
                 bgcolor: 'white',
                 border: '1px solid',
-                borderColor: 'grey.200'
+                borderColor: 'grey.200',
+                minHeight: '160px'
               }}
             >
-              <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 2 }}>
-                <CommentIcon sx={{ color: 'primary.main', fontSize: 28 }} />
-                <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1 }}>
+                <CommentIcon sx={{ color: 'primary.main', fontSize: 24 }} />
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Comments
                 </Typography>
               </Stack>
-              <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {usecase.comments}
               </Typography>
             </Paper>
           </Grid>
-
-          {/* Tools Used */}
-          {usecase.tools_used && (
-            <Grid item xs={12}>
-              <Paper 
-                elevation={0}
-                sx={{ 
-                  p: 3,
-                  borderRadius: 2,
-                  bgcolor: 'white',
-                  border: '1px solid',
-                  borderColor: 'grey.200'
-                }}
-              >
-                <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 2 }}>
-                  <BuildIcon sx={{ color: 'primary.main', fontSize: 28 }} />
-                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                    Tools Used
-                  </Typography>
-                </Stack>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                  {usecase.tools_used.map((tool, index) => (
-                    <Chip 
-                      key={index}
-                      label={tool}
-                      sx={{ 
-                        bgcolor: '#ECEFF1',
-                        color: '#455A64',
-                        border: '1px solid #CFD8DC',
-                        '& .MuiChip-label': { px: 2 }
-                      }}
-                    />
-                  ))}
-                </Box>
-              </Paper>
-            </Grid>
-          )}
         </Grid>
       </Container>
     </Box>
