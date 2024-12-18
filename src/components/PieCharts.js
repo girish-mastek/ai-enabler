@@ -86,80 +86,63 @@ const PieCharts = ({ usecases }) => {
     }]
   };
 
-  const sdlcChartOptions = {
+  const commonChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        align: 'center',
+        labels: {
+          padding: 20,
+          usePointStyle: true,
+          pointStyle: 'circle',
+          font: {
+            size: 12
+          },
+          boxWidth: 10
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const label = context.label || '';
+            const value = context.raw || 0;
+            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+            const percentage = ((value / total) * 100).toFixed(1);
+            return `${label}: ${value} (${percentage}%) - Click to filter`;
+          }
+        }
+      }
+    }
+  };
+
+  const sdlcChartOptions = {
+    ...commonChartOptions,
     onClick: (event, elements) => {
       if (elements.length > 0) {
         const index = elements[0].index;
         const phase = sdlcChartData.labels[index];
         navigate(`/usecases?sdlc_phase=${encodeURIComponent(phase)}`);
       }
-    },
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          padding: 20,
-          usePointStyle: true,
-          pointStyle: 'circle',
-          font: {
-            size: 12
-          }
-        }
-      },
-      tooltip: {
-        callbacks: {
-          label: function(context) {
-            const label = context.label || '';
-            const value = context.raw || 0;
-            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-            const percentage = ((value / total) * 100).toFixed(1);
-            return `${label}: ${value} (${percentage}%) - Click to filter`;
-          }
-        }
-      }
     }
   };
 
   const toolsChartOptions = {
-    responsive: true,
+    ...commonChartOptions,
     onClick: (event, elements) => {
       if (elements.length > 0) {
         const index = elements[0].index;
         const tool = toolsChartData.labels[index];
         navigate(`/usecases?tools_used=${encodeURIComponent(tool)}`);
       }
-    },
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          padding: 20,
-          usePointStyle: true,
-          pointStyle: 'circle',
-          font: {
-            size: 12
-          }
-        }
-      },
-      tooltip: {
-        callbacks: {
-          label: function(context) {
-            const label = context.label || '';
-            const value = context.raw || 0;
-            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-            const percentage = ((value / total) * 100).toFixed(1);
-            return `${label}: ${value} (${percentage}%) - Click to filter`;
-          }
-        }
-      }
     }
   };
 
   return (
-    <Box sx={{ mb: { xs: 6, md: 8 } }}>
-      <Container maxWidth="xl">
-        <Grid container spacing={4} sx={{ maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ mb: { xs: 4, md: 6 } }}>
+      <Container maxWidth="lg">
+        <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
           {/* SDLC Phase Chart */}
           <Grid item xs={12} md={6}>
             <Paper
@@ -174,14 +157,16 @@ const PieCharts = ({ usecases }) => {
                 cursor: 'pointer'
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <AssessmentIcon sx={{ fontSize: 28, color: '#177386', mr: 2 }} />
                 <Typography variant="h5" sx={{ fontWeight: 600, color: '#177386' }}>
                   SDLC Phase Distribution
                 </Typography>
               </Box>
-              <Box sx={{ height: 300, position: 'relative' }}>
-                <Pie data={sdlcChartData} options={sdlcChartOptions} />
+              <Box sx={{ height: 350, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box sx={{ width: '100%', height: '100%', maxWidth: 400, margin: 'auto' }}>
+                  <Pie data={sdlcChartData} options={sdlcChartOptions} />
+                </Box>
               </Box>
             </Paper>
           </Grid>
@@ -200,14 +185,16 @@ const PieCharts = ({ usecases }) => {
                 cursor: 'pointer'
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <BuildIcon sx={{ fontSize: 28, color: '#177386', mr: 2 }} />
                 <Typography variant="h5" sx={{ fontWeight: 600, color: '#177386' }}>
                   Top 5 Tools Used
                 </Typography>
               </Box>
-              <Box sx={{ height: 300, position: 'relative' }}>
-                <Pie data={toolsChartData} options={toolsChartOptions} />
+              <Box sx={{ height: 350, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box sx={{ width: '100%', height: '100%', maxWidth: 400, margin: 'auto' }}>
+                  <Pie data={toolsChartData} options={toolsChartOptions} />
+                </Box>
               </Box>
             </Paper>
           </Grid>

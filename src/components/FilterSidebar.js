@@ -174,7 +174,7 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
             }}
           >
             <Typography sx={{ fontSize: '0.875rem', fontWeight: 500 }}>
-              SDLC Phase
+              Delivery Phase
               {getSelectedCount('sdlc_phase') > 0 && (
                 <Typography 
                   component="span" 
