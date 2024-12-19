@@ -66,12 +66,11 @@ app.put('/api/usecases/:id', (req, res) => {
     return res.status(404).json({ error: 'Usecase not found' });
   }
 
-  // Preserve the original status, submittedAt, and moderatedAt fields
+  // Preserve only submittedAt and moderatedAt, allow status to be updated
   const originalUsecase = usecases[index];
   usecases[index] = {
     ...updatedData,
     id: parseInt(id), // Ensure id remains the same
-    status: originalUsecase.status,
     submittedAt: originalUsecase.submittedAt,
     moderatedAt: originalUsecase.moderatedAt
   };

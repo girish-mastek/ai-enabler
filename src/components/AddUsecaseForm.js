@@ -268,10 +268,17 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
 
     const submitData = {
       ...formData,
-      id: usecase?.id || Date.now(),
-      userId: user.id,
-      submittedAt: new Date().toLocaleDateString('en-GB'),
-      moderatedAt: '',
+      // For new usecases, generate new id and set userId
+      // For editing, preserve the original id and userId
+      ...(isEdit ? {
+        id: usecase.id,
+        userId: usecase.userId,  // Preserve the original userId when editing
+        submittedAt: usecase.submittedAt
+      } : {
+        id: Date.now(),
+        userId: user.id,
+        submittedAt: new Date().toLocaleDateString('en-GB')
+      }),
       status: 'pending'
     };
     onSubmit(submitData);

@@ -260,14 +260,19 @@ function AppContent() {
     try {
       let updatedUsecase;
       if (editingUsecase) {
-        // Update existing usecase
-        updatedUsecase = await api.updateUseCase(editingUsecase.id, usecase);
+        // When editing, set status to pending
+        const usecaseWithPendingStatus = {
+          ...usecase,
+          status: 'pending',
+          moderatedAt: null // Clear any previous moderation timestamp
+        };
+        updatedUsecase = await api.updateUseCase(editingUsecase.id, usecaseWithPendingStatus);
         setUsecases(prevUsecases => prevUsecases.map(uc => 
           uc.id === editingUsecase.id ? updatedUsecase : uc
         ));
         setAlert({
           severity: 'success',
-          message: 'Usecase updated successfully'
+          message: 'Usecase updated successfully and sent for review'
         });
       } else {
         // Add new usecase

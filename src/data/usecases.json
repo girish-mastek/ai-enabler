@@ -20,19 +20,23 @@
     "status": "approved"
   },
   {
-    "id": 2,
-    "service_line": "SFBU",
-    "project": "CEA CAPA",
-    "sdlc_phase": "Implementation/Development",
     "usecase": "To Generate an Apex Test Class for an Apex Class.",
     "prompts_used": "Generate an Apex Test Class named \"Test Class Name\" with the Test Setup method to create Test Data and with Test methods covering edge cases as well. Please refer methods for Test Data Creation from \"Test DataFactory Class\".",
+    "service_line": "SFBU",
+    "sdlc_phase": "Implementation/Development",
+    "tools_used": [
+      "Amazon Q",
+      "GPT-4"
+    ],
+    "project": "CEA CAPA",
     "estimated_efforts": 4,
     "actual_hours": 2,
-    "tools_used": "",
     "comments": "NOTE: for this particular Prompt please switch off the cuurent file context and use the Attach File icon to attach the Apex Class and Test Data Factory class files.",
+    "id": 2,
+    "userId": 1,
     "submittedAt": "12-Dec-24",
     "moderatedAt": "",
-    "status": "approved"
+    "status": "pending"
   },
   {
     "id": 3,
@@ -218,16 +222,20 @@
     "status": "approved"
   },
   {
-    "id": 15,
-    "service_line": "DA&AI",
-    "project": "CF DCT - Internal Gen AI",
-    "sdlc_phase": "Deployment",
     "usecase": "Continuous Integration and Deployment Pipeline - Generate YAML script for provided scenarios of platform and other CI/ CD parameters.",
-    "prompts_used": "",
+    "prompts_used": "Continuous Integration and Deployment Pipeline - Generate YAML script for provided scenarios of platform and other CI/ CD parameters.",
+    "service_line": "DA&AI",
+    "sdlc_phase": "Deployment",
+    "tools_used": [
+      "Amazon Q",
+      "GPT-4"
+    ],
+    "project": "CF DCT - Internal Gen AI",
     "estimated_efforts": 8,
     "actual_hours": 8,
-    "tools_used": "",
     "comments": "",
+    "id": 15,
+    "userId": 1,
     "submittedAt": "04-Dec-24",
     "moderatedAt": "",
     "status": "approved"
@@ -278,16 +286,18 @@
     "status": "approved"
   },
   {
-    "id": 19,
-    "service_line": "DA&AI",
-    "project": "CF DCT - Internal Gen AI",
-    "sdlc_phase": "Implementation/Development",
     "usecase": "Bug Analysis: Diagnose and resolve errors and warnings to improve software quality, reduce costs, save time, and prevent future issues.",
-    "prompts_used": "",
+    "prompts_used": "Bug Analysis: Diagnose and resolve errors and warnings to improve software quality, reduce costs, save time, and prevent future issues.",
+    "service_line": "DA&AI",
+    "sdlc_phase": "Implementation/Development",
+    "tools_used": [
+      "Amazon Q"
+    ],
+    "project": "CF DCT - Internal Gen AI",
     "estimated_efforts": 8,
     "actual_hours": 8,
-    "tools_used": "",
     "comments": "",
+    "id": 19,
     "submittedAt": "04-Dec-24",
     "moderatedAt": "",
     "status": "approved"
@@ -1060,19 +1070,22 @@
     "status": "approved"
   },
   {
-    "id": 71,
-    "service_line": "Oracle",
-    "project": "ISCA",
-    "sdlc_phase": "Implementation/Development",
     "usecase": "Need to write a SQL query for business requirement",
     "prompts_used": "Need a query to get the supplier's inactive bank account details.",
+    "service_line": "Oracle",
+    "sdlc_phase": "Implementation/Development",
+    "tools_used": [
+      "Github Copilot",
+      "Microsoft Copilot"
+    ],
+    "project": "ISCA",
     "estimated_efforts": 10,
     "actual_hours": 3,
-    "tools_used": "",
     "comments": "",
+    "id": 71,
     "submittedAt": "14-Nov-24",
-    "moderatedAt": "",
-    "status": "approved"
+    "status": "pending",
+    "moderatedAt": ""
   },
   {
     "id": 72,
@@ -2037,20 +2050,23 @@
     "status": "approved"
   },
   {
-    "id": 136,
-    "service_line": "Oracle",
-    "project": "HCM",
-    "sdlc_phase": "Testing",
     "usecase": "SIT Test Cases Documentation",
     "prompts_used": "Using the attached document Spain Absence Policy_Input SDD.xlsx, generate test cases and test scripts for all absence types and policies given in the attached document. Generate test scenario, test case, test steps and provide positive and negative test cases as well. Generate the details in a table format.",
-    "estimated_efforts": 0,
-    "actual_hours": 0,
-    "tools_used": "",
+    "service_line": "Oracle",
+    "sdlc_phase": "Testing",
+    "tools_used": [
+      "GPT-4",
+      "Langchain"
+    ],
+    "project": "HCM",
+    "estimated_efforts": "10",
+    "actual_hours": "5",
     "comments": "Integration Functional specifications",
+    "id": 136,
+    "userId": 1,
     "submittedAt": "14-Nov-24",
     "moderatedAt": "",
-    "status": "approved",
-    "userId": 1
+    "status": "approved"
   },
   {
     "id": 137,
@@ -2098,20 +2114,22 @@
     "status": "approved"
   },
   {
-    "id": 140,
-    "service_line": "Oracle",
-    "project": "HCM",
-    "sdlc_phase": "Implementation/Development",
     "usecase": "Fast Formula (Global Absence Entry Validation)",
     "prompts_used": "Write a global absence accrual matrix fast formula for the below requirements :Create a presentation about create a high level assessment (HLA) presentation to a commercial vertical customer in Finland about Oracle Fusion Absence module. The presentation should have the following:\n1. Table of contents that list down all the Oracle Fusion Absence module topics.\n2. Ensure that all Absence topics are covered in each slide and also provide details of Finnish Absence types with details about the absence rules for the country. \n3. Add 1 slide by inserting a table will have absence type, policy and entitlement days for each leave type in Finland leave Type, leave policy description, leave Entitlement Hours/Days (as per Finnish laws). This table is a must in the presentation\n4. Keep the explanation of all the topics detailed in atleast 3-4 sentences. Provide examples wherever possible. \n5. Cover all the topics and create different slides for each topic. Keep all the detailed text to the left below the title of each slide with 1.5 spacing between each line. use font as Aptos Narrow and font size 12. Any picture to be on the right side of the text. \n\n\nAI generated\n\nCreate a presentation about Create a presentation about create a high level assessment (HLA) presentation to a commercial vertical customer in Finland about Oracle Fusion Absence module. The presentation should have the following: 1. Table of contents that list down all the Oracle Fusion Absence module topics. 2. Ensure that all Absence topics are covered in each slide and also provide details of Finnish Absence types with details about the absence policies for the country. 3. Add 1 slide by inserting a table with details of leave type, policy and entitlement days as per Finnish laws by referring the internet. This slide should have a table. 4. Keep the explanation of all the topics detailed in atleast 3-4 sentences. Provide examples wherever possible. 5. Cover all the topics and create different slides for each topic. Keep all the detailed text to the left below the title of each slide with 1.5 spacing between each line. use font as Aptos Narrow and font size 12. Any picture to be on the right side of the text.\n\nCopilot will create a new presentation using your current theme but will replace any content. Save a copy to avoid losing your work.\nGathering more ideas...\n\nStop generating\nESC\nGathering more ideas...Stop generatingESC.\n\n\n\n\nHeader\tDetails\t\nLeave Name\tHolidays\t\nLeave Reason\tNone\t\nLeave Type\tPaid\t\nUnit of Measure\tWorking Days\t\n\tBand\tEntitled days\n\tLOS < 2\t25\n\tLOS >= 2 and LOS < 4\t26\n\tLOS >= 4 and LOS < 6\t27\n\tLOS >= 6 and LOS < 8\t28\n\tLOS >= 8 and LOS < 10\t29\n\tLOS >= 10\t30\nEligibility\tAll Employees employed in Spain Legal Entities\t\nYear of Calculation\tCalendar Year (Jan to Dec)\t\nWho can raise this absence? (Employee/Manager/HR Self Service)\tEmployee\t\nMaximum duration per transaction\tUp to entitlement\t\nMinimum duration per transaction\t1\t\nValidation Rules\t1. Employee can apply for an absence only for current and future months. \t\nPartial Day allowed\tNo\t\nAccrual Applicable\tYes\t\nAccrual Frequency\tMonthly Accrual \t\nCarry-Over Applicable\tYes, valid until 31st of January next year\t\nCarry-Over Limit\tUp to entitlement\t\nCeiling Rule Applicable\tNo\t\nCeiling Rule Limit\tNone\t\nAttachment Required ?\tNone\t\nDiscretionary Disbursement (Not for Frontloaded Accrual Plan)\tNone\t\nFinal Disbursement\tNone\t\nWhen should an employee be enrolled in the accrual plan ? (In case of other please provide the details).\tHire Date\t\nWhen should the accrual plan enrollment terminated for the employee ? (In case of other please provide the details).\tEnd of employment Date\t\nFrontloaded\t\"Yes\nBut employee is required to view their balance in the begining. (in case of employee resignation before August, don't take into account 2 extra days)\"\t\n(If above is Yes) How many days frontloaded?\tEntitlement\t\nHow Mid term Hires and Terminations handled in this plan ? Please specify the proration rule (If any) which are to be used for this plan.\t\"Balance will be prorated as per the hire date of an employee. \nFor Mid-Calendar Year Terminations, balance will be prorated.\nProrata is rounded up when >= .5 and rounded down when < .5\"\t\nCarryovers expire after specific time?\tYes\t\n(If above is Yes) Condition? Specify Time Limit\t3 months, so 31/03\t\nIn the plan term, employee should apply for maximum? (Warning/Error)\tUp to entitlement\t\nIn the plan teerm, employee should apply for minimum? (Warning/Error)\t1\t\nNegative Balance Allowed?\tNo\t\n(If above is Yes) How much?\t\t\nIs balance adjustment feature required in this plan ?\tYes\t\nVesting Period\tNone\t\nWaiting Period\tNone",
-    "estimated_efforts": 0,
-    "actual_hours": 0,
-    "tools_used": "",
+    "service_line": "Oracle",
+    "sdlc_phase": "Implementation/Development",
+    "tools_used": [
+      "GPT-4"
+    ],
+    "project": "HCM",
+    "estimated_efforts": "11",
+    "actual_hours": "9",
     "comments": "Prompts",
+    "id": 140,
+    "userId": 1,
     "submittedAt": "14-Nov-24",
     "moderatedAt": "",
-    "status": "approved",
-    "userId": 1
+    "status": "approved"
   },
   {
     "id": 141,
@@ -2324,20 +2342,22 @@
     "status": "approved"
   },
   {
-    "id": 155,
-    "service_line": "Oracle",
-    "project": "HCM",
-    "sdlc_phase": "Discovery",
     "usecase": "HLA Minutes",
-    "prompts_used": "",
-    "estimated_efforts": 0,
-    "actual_hours": 0,
-    "tools_used": "",
+    "prompts_used": "HLA Minutes",
+    "service_line": "Oracle",
+    "sdlc_phase": "Discovery",
+    "tools_used": [
+      "Microsoft Copilot"
+    ],
+    "project": "HCM",
+    "estimated_efforts": "8",
+    "actual_hours": "5",
     "comments": "",
+    "id": 155,
+    "userId": 1,
     "submittedAt": "14-Nov-24",
     "moderatedAt": "",
-    "status": "approved",
-    "userId": 1
+    "status": "pending"
   },
   {
     "id": 156,
