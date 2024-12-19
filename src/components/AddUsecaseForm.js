@@ -108,7 +108,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
       case 'prompts_used':
         if (!value.trim()) return 'Prompts are required';
         if (value.length < 10) return 'Prompts must be at least 10 characters';
-        if (value.length > 1000) return 'Prompts must be less than 1000 characters';
+        if (value.length > 5000) return 'Prompts must be less than 5000 characters';
         return '';
 
       case 'service_line':
@@ -269,7 +269,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     const submitData = {
       ...formData,
       id: usecase?.id || Date.now(),
-      userId: user.id, // Include the logged in user's ID
+      userId: user.id,
       submittedAt: new Date().toLocaleDateString('en-GB'),
       moderatedAt: '',
       status: 'pending'
@@ -408,41 +408,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                 )}
               </Box>
             </Box>
-          </StyledSection>
-
-          {/* Details Section */}
-          <StyledSection>
-            <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
-              Details
-            </Typography>
-            <Stack spacing={2}>
-              <Box>
-                <TextField
-                  required
-                  fullWidth
-                  label="Prompts Used"
-                  name="prompts_used"
-                  value={formData.prompts_used}
-                  onChange={handleChange}
-                  onFocus={() => handleFocus('prompts_used')}
-                  onBlur={handleBlur}
-                  error={touched.prompts_used && Boolean(errors.prompts_used)}
-                  helperText={touched.prompts_used && errors.prompts_used}
-                  multiline
-                  rows={3}
-                  variant="outlined"
-                  size="small"
-                  inputProps={{ maxLength: 1000 }}
-                />
-                {focusedField === 'prompts_used' && (
-                  <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>
-                    Characters: {formData.prompts_used.length}/1000
-                  </Typography>
-                )}
-              </Box>
-
-              {/* Service Line and Delivery Phase sections */}
-              <FormControl 
+            {/* Service Line and Delivery Phase sections */}
+            <FormControl 
                 required
                 error={touched.service_line && Boolean(errors.service_line)}
                 component="fieldset"
@@ -491,6 +458,49 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                   <FormHelperText error>{errors.sdlc_phase}</FormHelperText>
                 )}
               </FormControl>
+          </StyledSection>
+
+          {/* Details Section */}
+          <StyledSection>
+            <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
+              Details
+            </Typography>
+            <Stack spacing={2}>
+              <Box>
+                <TextField
+                  required
+                  fullWidth
+                  label="Prompts Used"
+                  name="prompts_used"
+                  value={formData.prompts_used}
+                  onChange={handleChange}
+                  onFocus={() => handleFocus('prompts_used')}
+                  onBlur={handleBlur}
+                  error={touched.prompts_used && Boolean(errors.prompts_used)}
+                  helperText={touched.prompts_used && errors.prompts_used}
+                  multiline
+                  minRows={3}
+                  maxRows={10}
+                  variant="outlined"
+                  size="small"
+                  inputProps={{ maxLength: 5000 }}
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      height: 'auto',
+                      '& textarea': {
+                        resize: 'vertical',
+                        minHeight: '24px', // Approximately 1 row
+                        maxHeight: '240px', // Approximately 10 rows
+                      }
+                    }
+                  }}
+                />
+                {focusedField === 'prompts_used' && (
+                  <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>
+                    Characters: {formData.prompts_used.length}/5000
+                  </Typography>
+                )}
+              </Box>
             </Stack>
           </StyledSection>
 
@@ -602,11 +612,22 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                 onFocus={() => handleFocus('comments')}
                 onBlur={handleBlur}
                 multiline
-                rows={2}
+                minRows={2}
+                maxRows={10}
                 variant="outlined"
                 size="small"
                 placeholder="Add any additional comments or notes about this usecase"
                 inputProps={{ maxLength: 500 }}
+                sx={{
+                  '& .MuiInputBase-root': {
+                    height: 'auto',
+                    '& textarea': {
+                      resize: 'vertical',
+                      minHeight: '24px', // Approximately 1 row
+                      maxHeight: '240px', // Approximately 10 rows
+                    }
+                  }
+                }}
               />
               {focusedField === 'comments' && (
                 <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>

@@ -24,6 +24,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FolderIcon from '@mui/icons-material/Folder';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { useAuth } from '../context/AuthContext';
 import users from '../data/user.json';
 
@@ -41,6 +42,11 @@ const UsecaseDetail = ({ usecases }) => {
     if (usecase.prompts_used) {
       navigator.clipboard.writeText(usecase.prompts_used);
     }
+  };
+
+  const calculateEfficiencyGained = (estimated, actual) => {
+    if (!estimated || !actual || actual === 0) return 0;
+    return ((estimated / actual - 1) * 100).toFixed(2);
   };
 
   useEffect(() => {
@@ -215,6 +221,39 @@ const UsecaseDetail = ({ usecases }) => {
               </Stack>
               <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
                 {usecase.project}
+              </Typography>
+            </Paper>
+          </Grid>
+
+          {/* Efficiency Gained Section */}
+          <Grid item xs={12}>
+            <Paper 
+              elevation={0}
+              sx={{ 
+                p: 3,
+                borderRadius: 2,
+                bgcolor: 'white',
+                border: '1px solid',
+                borderColor: 'grey.200'
+              }}
+            >
+              <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
+                <TrendingUpIcon sx={{ color: 'primary.main', fontSize: 28 }} />
+                <Typography 
+                  variant="h6"
+                  sx={{ 
+                    fontWeight: 600,
+                    color: 'primary.main'
+                  }}
+                >
+                  Efficiency Gained
+                </Typography>
+              </Stack>
+              <Typography variant="h4" sx={{ color: 'text.primary', fontWeight: 500 }}>
+                {calculateEfficiencyGained(usecase.estimated_efforts, usecase.actual_hours)}%
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+                Based on estimated ({usecase.estimated_efforts} hours) vs actual ({usecase.actual_hours} hours) effort
               </Typography>
             </Paper>
           </Grid>
