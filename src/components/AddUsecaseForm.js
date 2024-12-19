@@ -14,10 +14,15 @@ import {
   DialogContent,
   DialogActions,
   Chip,
-  IconButton
+  IconButton,
+  Tooltip,
+  LinearProgress
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import TimerIcon from '@mui/icons-material/Timer';
+import SpeedIcon from '@mui/icons-material/Speed';
 import { useAuth } from '../context/AuthContext';
 
 const SERVICE_LINE = [
@@ -64,6 +69,32 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   }
 }));
 
+const StyledEfficiencyBox = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.divider}`,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '100px',
+  position: 'relative',
+  overflow: 'hidden'
+}));
+
+const EfficiencyProgress = styled(LinearProgress)(({ theme }) => ({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  height: '4px',
+  backgroundColor: theme.palette.grey[200],
+  '& .MuiLinearProgress-bar': {
+    backgroundColor: (props) => props.value >= 0 ? theme.palette.success.main : theme.palette.error.main
+  }
+}));
+
 const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
   const { user } = useAuth();
   const [customTools, setCustomTools] = useState(() => {
@@ -73,6 +104,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
   const [newTool, setNewTool] = useState('');
   const [showNewToolInput, setShowNewToolInput] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const [efficiencyPercentage, setEfficiencyPercentage] = useState(null);
 
   const [formData, setFormData] = useState({
     usecase: '',
@@ -90,6 +122,19 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
   const [touched, setTouched] = useState({});
 
   const TOOLS = [...DEFAULT_TOOLS.filter(tool => tool !== 'Others'), ...customTools, 'Others'];
+
+  const calculateEfficiency = (estimated, actual) => {
+    if (!estimated || !actual || actual === '0') return null;
+    const est = parseFloat(estimated);
+    const act = parseFloat(actual);
+    if (est <= 0 || act <= 0) return null;
+    return ((est/act - 1) * 100).toFixed(2);
+  };
+
+  useEffect(() => {
+    const efficiency = calculateEfficiency(formData.estimated_efforts, formData.actual_hours);
+    setEfficiencyPercentage(efficiency);
+  }, [formData.estimated_efforts, formData.actual_hours]);
 
   const validateField = (name, value) => {
     switch (name) {
@@ -268,11 +313,10 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
 
     const submitData = {
       ...formData,
-      // For new usecases, generate new id and set userId
-      // For editing, preserve the original id and userId
+      efficiency_percentage: efficiencyPercentage,
       ...(isEdit ? {
         id: usecase.id,
-        userId: usecase.userId,  // Preserve the original userId when editing
+        userId: usecase.userId,
         submittedAt: usecase.submittedAt
       } : {
         id: Date.now(),
@@ -300,6 +344,7 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
     setTouched({});
     setShowNewToolInput(false);
     setNewTool('');
+    setEfficiencyPercentage(null);
     onClose();
   };
 
@@ -496,8 +541,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                       height: 'auto',
                       '& textarea': {
                         resize: 'vertical',
-                        minHeight: '24px', // Approximately 1 row
-                        maxHeight: '240px', // Approximately 10 rows
+                        minHeight: '24px',
+                        maxHeight: '240px',
                       }
                     }
                   }}
@@ -566,41 +611,94 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
 
           {/* Effort Tracking Section */}
           <StyledSection>
-            <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
+            <Typography variant="subtitle1" gutterBottom sx={{ color: 'text.primary', mb: 3, fontWeight: 600 }}>
               Effort Tracking
             </Typography>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <TextField
-                required
-                fullWidth
-                label="Estimated(in hours)"
-                name="estimated_efforts"
-                value={formData.estimated_efforts}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.estimated_efforts && Boolean(errors.estimated_efforts)}
-                helperText={touched.estimated_efforts && errors.estimated_efforts}
-                type="number"
-                variant="outlined"
-                size="small"
-                InputProps={{ inputProps: { min: 0 } }}
-              />
+            <Box sx={{ display: 'flex', gap: 3, alignItems: 'stretch' }}>
+              <Box sx={{ flex: 1 }}>
+                <Tooltip title="Enter the estimated time in hours for this usecase">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <AccessTimeIcon color="primary" fontSize="small" />
+                    <Typography variant="body2" color="text.secondary">
+                      Estimated Hours
+                    </Typography>
+                  </Box>
+                </Tooltip>
+                <TextField
+                  required
+                  fullWidth
+                  name="estimated_efforts"
+                  value={formData.estimated_efforts}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.estimated_efforts && Boolean(errors.estimated_efforts)}
+                  helperText={touched.estimated_efforts && errors.estimated_efforts}
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  InputProps={{ 
+                    inputProps: { min: 0 },
+                    sx: { backgroundColor: 'background.paper' }
+                  }}
+                />
+              </Box>
 
-              <TextField
-                required
-                fullWidth
-                label="Actual(in hours)"
-                name="actual_hours"
-                value={formData.actual_hours}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.actual_hours && Boolean(errors.actual_hours)}
-                helperText={touched.actual_hours && errors.actual_hours}
-                type="number"
-                variant="outlined"
-                size="small"
-                InputProps={{ inputProps: { min: 0 } }}
-              />
+              <Box sx={{ flex: 1 }}>
+                <Tooltip title="Enter the actual time spent in hours">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <TimerIcon color="primary" fontSize="small" />
+                    <Typography variant="body2" color="text.secondary">
+                      Actual Hours
+                    </Typography>
+                  </Box>
+                </Tooltip>
+                <TextField
+                  required
+                  fullWidth
+                  name="actual_hours"
+                  value={formData.actual_hours}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.actual_hours && Boolean(errors.actual_hours)}
+                  helperText={touched.actual_hours && errors.actual_hours}
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  InputProps={{ 
+                    inputProps: { min: 0 },
+                    sx: { backgroundColor: 'background.paper' }
+                  }}
+                />
+              </Box>
+
+              <Box sx={{ flex: 1 }}>
+                <Tooltip title="Efficiency = ((Estimated/Actual) - 1) × 100">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <SpeedIcon color="primary" fontSize="small" />
+                    <Typography variant="body2" color="text.secondary">
+                      Efficiency Gained
+                    </Typography>
+                  </Box>
+                </Tooltip>
+                <StyledEfficiencyBox>
+                  <Typography 
+                    variant="h4" 
+                    color={efficiencyPercentage > 0 ? 'success.main' : efficiencyPercentage < 0 ? 'error.main' : 'text.primary'}
+                    sx={{ fontWeight: 600, mb: 1 }}
+                  >
+                    {efficiencyPercentage !== null ? `${efficiencyPercentage}%` : '-'}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {efficiencyPercentage > 0 ? 'Time Saved' : efficiencyPercentage < 0 ? 'Time Exceeded' : 'No Data'}
+                  </Typography>
+                  {efficiencyPercentage !== null && (
+                    <EfficiencyProgress 
+                      variant="determinate" 
+                      value={Math.min(Math.abs(efficiencyPercentage), 100)}
+                    />
+                  )}
+                </StyledEfficiencyBox>
+              </Box>
             </Box>
           </StyledSection>
 
@@ -630,8 +728,8 @@ const AddUsecaseForm = ({ open, onClose, onSubmit, usecase, isEdit }) => {
                     height: 'auto',
                     '& textarea': {
                       resize: 'vertical',
-                      minHeight: '24px', // Approximately 1 row
-                      maxHeight: '240px', // Approximately 10 rows
+                      minHeight: '24px',
+                      maxHeight: '240px',
                     }
                   }
                 }}
