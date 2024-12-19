@@ -25,19 +25,19 @@ const UsecasePage = ({ searchQuery, usecases }) => {
     // Parse service_line filters
     const serviceLines = searchParams.get('service_line')?.split(' ') || [];
     serviceLines.forEach(line => {
-      if (line) filtersFromUrl.service_line[line] = true;
+      if (line) filtersFromUrl.service_line[line.replace(/_/g, ' ')] = true;
     });
 
     // Parse sdlc_phase filters
     const phases = searchParams.get('sdlc_phase')?.split(' ') || [];
     phases.forEach(phase => {
-      if (phase) filtersFromUrl.sdlc_phase[phase] = true;
+      if (phase) filtersFromUrl.sdlc_phase[phase.replace(/_/g, ' ')] = true;
     });
 
     // Parse tools_used filters
     const tools = searchParams.get('tools_used')?.split(' ') || [];
     tools.forEach(tool => {
-      if (tool) filtersFromUrl.tools_used[tool] = true;
+      if (tool) filtersFromUrl.tools_used[tool.replace(/_/g, ' ')] = true;
     });
 
     // Only update if there are filters in the URL
@@ -190,7 +190,7 @@ const UsecasePage = ({ searchQuery, usecases }) => {
     Object.entries(filters).forEach(([category, values]) => {
       const selectedValues = Object.entries(values)
         .filter(([_, isSelected]) => isSelected)
-        .map(([value]) => value);
+        .map(([value]) => value.replace(/ /g, '_')); // Replace spaces with underscores
       
       if (selectedValues.length > 0) {
         params.append(category, selectedValues.join(' '));

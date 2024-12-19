@@ -123,7 +123,8 @@ const PieCharts = ({ usecases }) => {
       if (elements.length > 0) {
         const index = elements[0].index;
         const phase = sdlcChartData.labels[index];
-        navigate(`/usecases?sdlc_phase=${encodeURIComponent(phase)}`);
+        // Replace spaces with underscores
+        navigate(`/usecases?sdlc_phase=${phase.replace(/ /g, '_')}`);
       }
     }
   };
@@ -134,7 +135,8 @@ const PieCharts = ({ usecases }) => {
       if (elements.length > 0) {
         const index = elements[0].index;
         const tool = toolsChartData.labels[index];
-        navigate(`/usecases?tools_used=${encodeURIComponent(tool)}`);
+        // Replace spaces with underscores
+        navigate(`/usecases?tools_used=${tool.replace(/ /g, '_')}`);
       }
     }
   };
