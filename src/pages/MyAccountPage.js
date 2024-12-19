@@ -20,16 +20,24 @@ import {
   Tooltip,
   Grid,
   Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import BadgeIcon from '@mui/icons-material/Badge';
 import EmailIcon from '@mui/icons-material/Email';
 import { useNavigate } from 'react-router-dom';
+import { deleteUseCase } from '../services/api';
 
-const MyAccountPage = ({ onEdit, usecases: allUsecases }) => {
+const MyAccountPage = ({ onEdit, usecases: allUsecases, onUsecaseDeleted }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [usecaseToDelete, setUsecaseToDelete] = useState(null);
 
   // Filter usecases for the current user
   const userUsecases = allUsecases.filter(usecase => usecase.userId === user?.id);
@@ -43,6 +51,25 @@ const MyAccountPage = ({ onEdit, usecases: allUsecases }) => {
 
   const handleEdit = (usecase) => {
     onEdit(usecase);
+  };
+
+  const handleDeleteClick = (usecase) => {
+    setUsecaseToDelete(usecase);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await deleteUseCase(usecaseToDelete.id);
+      setDeleteDialogOpen(false);
+      setUsecaseToDelete(null);
+      if (onUsecaseDeleted) {
+        onUsecaseDeleted();
+      }
+    } catch (error) {
+      console.error('Error deleting usecase:', error);
+      // You might want to show an error message to the user here
+    }
   };
 
   const truncateText = (text, maxLength = 100) => {
@@ -142,6 +169,16 @@ const MyAccountPage = ({ onEdit, usecases: allUsecases }) => {
                     }}
                   >
                     Edit
+                  </Button>
+                  <Button
+                    startIcon={<DeleteIcon />}
+                    color="error"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteClick(usecase);
+                    }}
+                  >
+                    Delete
                   </Button>
                 </Stack>
               </TableCell>
@@ -265,6 +302,23 @@ const MyAccountPage = ({ onEdit, usecases: allUsecases }) => {
           </>
         )}
       </Box>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this usecase?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

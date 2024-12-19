@@ -433,6 +433,7 @@ function AppContent() {
                 <MyAccountPage 
                   onEdit={handleOpenDialog}
                   usecases={usecases}
+                  onUsecaseDeleted={loadUsecases}
                 />
               </ProtectedRoute>
             } 
