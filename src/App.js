@@ -430,7 +430,10 @@ function AppContent() {
             path="/my-account" 
             element={
               <ProtectedRoute>
-                <MyAccountPage />
+                <MyAccountPage 
+                  onEdit={handleOpenDialog}
+                  usecases={usecases}
+                />
               </ProtectedRoute>
             } 
           />

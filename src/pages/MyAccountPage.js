@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import usecases from '../data/usecases.json';
 import {
   Container,
   Typography,
@@ -27,13 +26,13 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import EmailIcon from '@mui/icons-material/Email';
 import { useNavigate } from 'react-router-dom';
 
-const MyAccountPage = () => {
+const MyAccountPage = ({ onEdit, usecases: allUsecases }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
 
   // Filter usecases for the current user
-  const userUsecases = usecases.filter(usecase => usecase.userId === user?.id);
+  const userUsecases = allUsecases.filter(usecase => usecase.userId === user?.id);
   const pendingUsecases = userUsecases.filter(usecase => usecase.status === 'pending');
   const approvedUsecases = userUsecases.filter(usecase => usecase.status === 'approved');
   const rejectedUsecases = userUsecases.filter(usecase => usecase.status === 'rejected');
@@ -43,8 +42,7 @@ const MyAccountPage = () => {
   };
 
   const handleEdit = (usecase) => {
-    // Handle edit action
-    navigate(`/usecases/edit/${usecase.id}`);
+    onEdit(usecase);
   };
 
   const truncateText = (text, maxLength = 100) => {
