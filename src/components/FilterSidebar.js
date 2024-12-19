@@ -44,6 +44,44 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
     category => Object.values(category).some(isSelected => isSelected)
   );
 
+  // Define the order for service lines
+  const serviceLineOrder = ['DE&E', 'Oracle', 'DA&AI', 'SFBU', 'CEMS'];
+
+  // Define the order for SDLC phases
+  const sdlcPhaseOrder = [
+    'Discovery',
+    'Design/Documentation',
+    'Implementation/Development',
+    'Testing',
+    'Deployment',
+    'Upgrade'
+  ];
+
+  // Sort service lines according to the defined order
+  const sortedServiceLines = Object.entries(filters.service_line).sort(([a], [b]) => {
+    const indexA = serviceLineOrder.indexOf(a);
+    const indexB = serviceLineOrder.indexOf(b);
+    if (indexA === -1 && indexB === -1) return 0;
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+
+  // Sort SDLC phases according to the defined order
+  const sortedSdlcPhases = Object.entries(filters.sdlc_phase).sort(([a], [b]) => {
+    const indexA = sdlcPhaseOrder.indexOf(a);
+    const indexB = sdlcPhaseOrder.indexOf(b);
+    if (indexA === -1 && indexB === -1) return 0;
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+
+  // Sort tools alphabetically
+  const sortedTools = Object.entries(filters.tools_used).sort(([a], [b]) => 
+    a.localeCompare(b)
+  );
+
   const FilterChip = ({ label, count, selected, onClick }) => (
     <Chip
       label={
@@ -147,7 +185,7 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
           </AccordionSummary>
           <AccordionDetails sx={{ p: 1 }}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', margin: -0.5 }}>
-              {Object.entries(filters.service_line).map(([value, count]) => (
+              {sortedServiceLines.map(([value, count]) => (
                 <FilterChip
                   key={value}
                   label={value}
@@ -191,7 +229,7 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
           </AccordionSummary>
           <AccordionDetails sx={{ p: 1 }}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', margin: -0.5 }}>
-              {Object.entries(filters.sdlc_phase).map(([value, count]) => (
+              {sortedSdlcPhases.map(([value, count]) => (
                 <FilterChip
                   key={value}
                   label={value}
@@ -235,7 +273,7 @@ const FilterSidebar = ({ filters, selectedFilters, onFilterChange }) => {
           </AccordionSummary>
           <AccordionDetails sx={{ p: 1 }}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', margin: -0.5 }}>
-              {Object.entries(filters.tools_used).map(([value, count]) => (
+              {sortedTools.map(([value, count]) => (
                 <FilterChip
                   key={value}
                   label={value}
